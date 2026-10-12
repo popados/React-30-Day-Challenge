@@ -1,0 +1,13 @@
+<!-- @dsCard group="Foundations" height=330 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Icon — preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var F = window.Fieldnote, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { className: 'fn-icons' },
+    F.Icon.names.map(function (n) { return h('figure', { key: n }, h(F.Icon, { name: n, size: 24 }), h('figcaption', null, n)); })));
+</script>
+</body>
+</html>

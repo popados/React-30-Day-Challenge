@@ -1,0 +1,19 @@
+<!-- @dsCard group="Actions" height=290 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Button — preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var F = window.Fieldnote, h = React.createElement;
+  var google = h('img', { src: '/_blob/a1c189798e75f0808741c08c56298b6e', alt: '' });
+  var apple = h('img', { src: '/_blob/8ff7637d3de9a31d93f4c62a427e99d0', alt: '' });
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { className: 'fn-stage' },
+    h(F.Button, { variant: 'primary', block: true, icon: h(F.Icon, { name: 'landmark' }) }, 'Continue with your institution'),
+    h(F.Button, { variant: 'google', block: true, icon: google }, 'Continue with Google'),
+    h(F.Button, { variant: 'apple', block: true, icon: apple }, 'Continue with Apple'),
+    h(F.Divider),
+    h(F.Button, { block: true, icon: h(F.Icon, { name: 'mail' }) }, 'Continue with email')));
+</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Fieldnote sign-up, editorial split</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#faf7f0}
+a{color:#2f5d50}a:hover{color:#264c42}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #2f5d50;outline-offset:2px}
+.fn-p:hover{background:#264c42 !important}
+.fn-s:hover{background:#efeae0 !important}
+@media (max-width:48em){.fn-excerpt{display:none !important}}
+</style>
+</helmet>
+<div style="min-height: 900px; box-sizing: border-box; background: #faf7f0; color: #1c1b19; font-family: Inter, ui-sans-serif, system-ui, sans-serif; display: flex; flex-wrap: wrap">
+  <section style="flex: 1 1 560px; box-sizing: border-box; background: #efeae0; padding: 48px 64px; display: flex; flex-direction: column; gap: 40px; border-right: 1px solid #e2dccf">
+    <div style="font-family: 'Source Serif 4', Georgia, serif; font-size: 24px; line-height: 32px; font-weight: 600">Fieldnote</div>
+    <div style="display: flex; flex-direction: column; gap: 16px; max-width: 560px">
+      <h1 style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-size: 56px; line-height: 64px; font-weight: 600; letter-spacing: -0.015em">Your research notes, <mark style="background: #f2c94c; color: #1c1b19; border-radius: 3px; padding: 0 6px">in one place</mark></h1>
+      <p style="margin: 0; font-size: 19px; line-height: 28px; color: #5f5b53">Free for students and researchers at 1,200+ institutions</p>
+    </div>
+    <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px; max-width: 480px">
+      <li style="display: flex; gap: 12px; align-items: flex-start"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2f5d50" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 2px"><path d="M5 12l5 5L20 7"></path></svg><span style="font-size: 16px; line-height: 24px">No new password. Sign in with your university login.</span></li>
+      <li style="display: flex; gap: 12px; align-items: flex-start"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2f5d50" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 2px"><path d="M5 12l5 5L20 7"></path></svg><span style="font-size: 16px; line-height: 24px">Your library access carries over.</span></li>
+      <li style="display: flex; gap: 12px; align-items: flex-start"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2f5d50" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 2px"><path d="M5 12l5 5L20 7"></path></svg><span style="font-size: 16px; line-height: 24px">Access starts and ends with your enrollment.</span></li>
+    </ul>
+    <figure class="fn-excerpt" role="img" aria-label="Excerpt from a sample Fieldnote notebook: Thesis: Urban heat islands, Chapter 2, with a highlighted quote." style="margin: auto 0 0; max-width: 520px; padding: 24px 28px; background: #faf7f0; border: 1px solid #e2dccf; border-radius: 12px">
+      <div aria-hidden="true" style="display: flex; flex-direction: column; gap: 12px">
+        <div style="font-size: 13px; line-height: 18px; font-weight: 500; color: #5f5b53; letter-spacing: 0.01em">Thesis: Urban heat islands, Ch. 2</div>
+        <p style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-style: italic; font-size: 17px; line-height: 28px">“Surface temperatures in dense cores ran <mark style="background: #f2c94c; color: #1c1b19; border-radius: 3px; padding: 0 2px">4–6 °C above the rural fringe</mark> on still summer nights.”</p>
+        <div style="font-size: 14px; line-height: 20px; color: #5f5b53">3 citations · 2 highlights</div>
+      </div>
+    </figure>
+  </section>
+  <main style="flex: 1 1 480px; box-sizing: border-box; padding: 48px 24px; display: flex; align-items: center; justify-content: center">
+    <div style="width: 100%; max-width: 400px; display: flex; flex-direction: column">
+      <h2 style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-size: 28px; line-height: 36px; font-weight: 600">Create your account</h2>
+      <div style="margin-top: 32px; display: flex; flex-direction: column; gap: 12px">
+        <button type="button" class="fn-p" aria-expanded="false" style="height: 56px; border: 1px solid transparent; border-radius: 8px; background: #2f5d50; color: #ffffff; font: 600 17px/24px Inter, sans-serif; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10l9-6 9 6"></path><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"></path><path d="M3 21h18"></path></svg>
+          Continue with your institution
+        </button>
+        <p style="margin: 0; font-size: 14px; line-height: 20px; color: #5f5b53; text-align: center">Use the login you already have at your university.</p>
+      </div>
+      <div style="margin: 28px 0; display: flex; align-items: center; gap: 12px; color: #5f5b53; font-size: 14px; font-weight: 500">
+        <span aria-hidden="true" style="flex: 1; height: 1px; background: #e2dccf"></span>or<span aria-hidden="true" style="flex: 1; height: 1px; background: #e2dccf"></span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+        <button type="button" class="fn-s" style="min-height: 48px; border: 1px solid #8a857b; border-radius: 8px; background: #faf7f0; color: #1c1b19; font: 600 15px/20px Inter, sans-serif; cursor: pointer">Continue with Google</button>
+        <button type="button" class="fn-s" style="min-height: 48px; border: 1px solid #8a857b; border-radius: 8px; background: #faf7f0; color: #1c1b19; font: 600 15px/20px Inter, sans-serif; cursor: pointer">Continue with Apple</button>
+      </div>
+      <label for="c-email" style="margin-top: 24px; font-size: 14px; line-height: 20px; font-weight: 500">Email</label>
+      <input id="c-email" type="email" autocomplete="email" placeholder="name@university.edu" style="margin-top: 8px; height: 48px; box-sizing: border-box; padding: 0 16px; border: 1px solid #8a857b; border-radius: 8px; background: #ffffff; color: #1c1b19; font: 400 16px/24px Inter, sans-serif">
+      <button type="button" class="fn-s" style="margin-top: 12px; height: 48px; border: 1px solid #8a857b; border-radius: 8px; background: #faf7f0; color: #1c1b19; font: 600 16px/24px Inter, sans-serif; cursor: pointer">Continue with email</button>
+      <p style="margin: 32px 0 0; font-size: 14px; line-height: 20px; color: #5f5b53">By continuing, you agree to Fieldnote's <a href="#terms">Terms</a> and <a href="#privacy">Privacy Policy</a>.</p>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

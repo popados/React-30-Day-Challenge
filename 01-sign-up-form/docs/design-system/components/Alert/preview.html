@@ -1,0 +1,16 @@
+<!-- @dsCard group="Feedback" height=440 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Alert — preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var F = window.Fieldnote, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { className: 'fn-stage' },
+    h(F.Alert, { tone: 'info' }, 'Looks like you’re at UT Austin. Continue with your UT EID login.'),
+    h(F.Alert, { tone: 'error' }, 'UT Austin didn’t share your email address. Enter it below to finish.'),
+    h(F.Alert, { tone: 'error' }, 'UT Austin isn’t on Fieldnote SSO yet. Sign up with your .edu email — we’ll link it when they join.'),
+    h(F.Alert, { tone: 'success', title: 'Welcome, Maya.', action: h(F.Button, { variant: 'primary' }, 'Create your first notebook') }, 'You’re signed in through UT Austin.')));
+</script>
+</body>
+</html>

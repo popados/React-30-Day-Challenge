@@ -1,0 +1,175 @@
+{
+  "version": 1,
+  "files": {
+    "01-sign-up-form\\.claude\\brand-voice-guidelines.md": {
+      "content_hash": "sha256:25dc88f8812eba61",
+      "headings": [
+        "Fieldnote Brand Voice Guidelines",
+        "Generation Metadata",
+        "Executive Summary",
+        "We Are / We Are Not",
+        "Voice Attributes Detail",
+        "1. Plain-spoken",
+        "2. Calm and reassuring",
+        "3. Specific",
+        "4. Scholarly and understated",
+        "5. Concise and action-led",
+        "6. Collegial",
+        "7. Always a way forward",
+        "Brand Personality",
+        "Messaging Framework",
+        "Primary Value Proposition",
+        "Key Message Pillars",
+        "Competitive Positioning",
+        "Tone-by-Context Matrix (Confidence: Medium)",
+        "Context-Specific Guidelines",
+        "Errors",
+        "Loading and redirect",
+        "Success and onboarding",
+        "Sign-up and marketing headlines",
+        "Transactional email †",
+        "Institutional partnership outreach and proposals †",
+        "Social media †",
+        "Terminology Guide (Confidence: High)",
+        "Must-Use Terms",
+        "Preferred Terms",
+        "Avoid These Terms",
+        "Never-Use Terms",
+        "Language to Avoid",
+        "Content Examples",
+        "Excellent Examples",
+        "Examples to Avoid",
+        "Confidence Scores",
+        "Open Questions for Team Discussion",
+        "High Priority (blocks guideline completion)",
+        "Medium Priority (improves quality)",
+        "Low Priority (nice to have)",
+        "Data Gaps & Recommendations",
+        "Appendix: Sources"
+      ],
+      "outgoing": [],
+      "frontmatter_deps": [],
+      "last_indexed": "2026-10-12T03:21:43.339166+00:00"
+    },
+    "01-sign-up-form\\docs\\fieldnote-campaign-plan.md": {
+      "content_hash": "sha256:bcca4e4a55c089b2",
+      "headings": [
+        "Campaign brief: \"In one place\"",
+        "1. Campaign overview",
+        "2. Target audience",
+        "3. Key messages",
+        "4. Channel strategy",
+        "5. Content calendar",
+        "6. Content pieces needed",
+        "7. Success metrics",
+        "8. Budget allocation",
+        "9. Risks and mitigations",
+        "10. Next steps"
+      ],
+      "outgoing": [
+        {
+          "target": "01-sign-up-form\\.claude\\brand-voice-guidelines.md",
+          "section": null,
+          "type": "markdown",
+          "line": 5
+        }
+      ],
+      "frontmatter_deps": [],
+      "last_indexed": "2026-10-12T03:40:35.650925+00:00"
+    },
+    "README.md": {
+      "content_hash": "sha256:c3a612502b5f50f7",
+      "headings": [
+        "React 30-Day UI",
+        "Days",
+        "Day 1: Fieldnote sign-up"
+      ],
+      "outgoing": [
+        {
+          "target": "daily-ui-challenge.md",
+          "section": null,
+          "type": "markdown",
+          "line": 3
+        },
+        {
+          "target": "01-sign-up-form/",
+          "section": null,
+          "type": "markdown",
+          "line": 11
+        },
+        {
+          "target": "daily-ui-challenge.md",
+          "section": null,
+          "type": "markdown",
+          "line": 12
+        },
+        {
+          "target": "01-sign-up-form\\README.md",
+          "section": null,
+          "type": "markdown",
+          "line": 34
+        },
+        {
+          "target": "01-sign-up-form\\docs\\fieldnote-signup-design-system.md",
+          "section": null,
+          "type": "markdown",
+          "line": 35
+        },
+        {
+          "target": "01-sign-up-form\\docs\\fieldnote-signup-mood-palettes.md",
+          "section": null,
+          "type": "markdown",
+          "line": 36
+        },
+        {
+          "target": "01-sign-up-form/docs/design-system/",
+          "section": null,
+          "type": "markdown",
+          "line": 37
+        },
+        {
+          "target": "01-sign-up-form\\docs\\fieldnote-signup-campaign-plan.md",
+          "section": null,
+          "type": "markdown",
+          "line": 38
+        },
+        {
+          "target": "01-sign-up-form\\PRD_Social_Sign-Up_Google_Apple_Microsoft.md",
+          "section": null,
+          "type": "markdown",
+          "line": 39
+        }
+      ],
+      "frontmatter_deps": [],
+      "last_indexed": "2026-10-12T03:45:22.128190+00:00"
+    },
+    "01-sign-up-form\\docs\\fieldnote-competitive-brief.md": {
+      "content_hash": "sha256:b338c5db57eb3bd0",
+      "headings": [
+        "Competitive brief: Fieldnote vs Zotero, Notion, Obsidian and Mendeley",
+        "1. Executive summary",
+        "2. Competitor profiles",
+        "Zotero",
+        "Notion",
+        "Obsidian",
+        "Mendeley (Elsevier)",
+        "3. Messaging comparison matrix",
+        "4. Positioning map",
+        "5. Content gap analysis",
+        "6. Opportunities",
+        "7. Threats",
+        "8. Recommended actions"
+      ],
+      "outgoing": [
+        {
+          "target": "01-sign-up-form\\docs\\fieldnote-signup-campaign-plan.md",
+          "section": null,
+          "type": "markdown",
+          "line": 3
+        }
+      ],
+      "frontmatter_deps": [],
+      "last_indexed": "2026-10-12T04:06:47.663483+00:00"
+    }
+  }
+}

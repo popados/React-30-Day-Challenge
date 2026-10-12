@@ -1,0 +1,23 @@
+<!-- @dsCard group="Sign-in" height=820 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>InstitutionPicker — preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var F = window.Fieldnote, h = React.createElement;
+  var list = [
+    { name: 'University of Texas at Austin', domain: 'utexas.edu' },
+    { name: 'University of Toronto', domain: 'utoronto.ca' },
+    { name: 'Utah State University', domain: 'usu.edu' },
+    { name: 'University of Utah', domain: 'utah.edu' }];
+  function cell(cap, el) { return h('div', null, h('p', { className: 'fn-cap' }, cap), el); }
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { className: 'fn-grid' },
+    cell('Results for “UT”', h(F.InstitutionPicker, { institutions: list, defaultQuery: 'UT', defaultOpen: true })),
+    cell('Empty', h(F.InstitutionPicker, { institutions: list, defaultOpen: true })),
+    cell('No match', h(F.InstitutionPicker, { institutions: list, defaultQuery: 'Univ of Westbrook', defaultOpen: true })),
+    cell('Loading', h(F.InstitutionPicker, { institutions: list, defaultQuery: 'UT', defaultOpen: true, state: 'loading' })),
+    cell('After a pick', h(F.InstitutionPicker, { state: 'redirecting', redirectTo: 'University of Texas at Austin' }))));
+</script>
+</body>
+</html>

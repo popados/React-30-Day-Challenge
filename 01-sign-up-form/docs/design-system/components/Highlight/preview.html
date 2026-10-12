@@ -1,0 +1,15 @@
+<!-- @dsCard group="Notes" height=150 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Highlight — preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var F = window.Fieldnote, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { className: 'fn-stage', style: { maxWidth: '560px' } },
+    h('p', { className: 'heading-sm', style: { margin: 0, fontFamily: 'var(--font-serif)' } }, 'Thesis: Urban heat islands, Ch. 2'),
+    h('p', { style: { margin: 0, font: 'italic 400 17px/28px var(--font-serif)' } },
+      'Dense cores, the authors note, ', h(F.Highlight, null, 'ran 4–6 °C warmer than the rural fringe after sunset'), ', with the gap widest on still nights.')));
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+# React 30-Day UI
+
+A 30-day UI challenge built in React: one screen a day, each in its own folder. The daily briefs, checklists and weekly themes are in [daily-ui-challenge.md](daily-ui-challenge.md). The weeks cover foundations, data and feedback, complex screens, and polish and systems, ending on Day 30 with a redesign of the Day 1 screen.
+
+Each day starts by filling in the brief template from the challenge doc (product, user goal, platform, content, states, constraints) and ends with its self-review checklist.
+
+## Days
+
+| Day | Screen | Folder | Status |
+| --- | --- | --- | --- |
+| 1 | Sign-up screen | [01-sign-up-form/](01-sign-up-form/) | In progress |
+| 2–30 | See [daily-ui-challenge.md](daily-ui-challenge.md) | — | Not started |
+
+## Day 1: Fieldnote sign-up
+
+**Fieldnote** is a fictional notes and citation workspace for graduate students, faculty and research staff. Reading notes, highlights and sources are kept together in notebooks tied to a project or thesis. Day 1 is its sign-up screen. The main path is "Continue with your institution", which lets researchers sign up with the university login they already have. Google, Apple and email are the alternatives.
+
+**Screen.** From top to bottom: heading, subhead, institution button, Google, Apple, an "or" divider, the email field with "Continue with email", and the terms line. On desktop (1440 × 900), the form is a centered 440px card beside a sample-notebook panel. On mobile (390 × 844), it's a single column. The institution picker covers every state: results, empty, no match, loading and redirecting.
+
+**Look.** The look is a quiet paper notebook in the Field Journal palette: kraft paper, near-black ink, pine green for actions, and a pale apricot highlighter used only for marked passages. There are light and dark themes. Headings use Source Serif 4 and the interface uses Inter. Every text pairing meets WCAG AA. Controls are at least 44px tall, and every one shows a visible focus ring.
+
+**Voice.** The copy is plain, calm and specific: sentence case, no exclamation marks or emoji, and errors that say what happened and what to do next without blaming the reader.
+
+**Stack.** React 19 (JavaScript), Vite, React Router, TanStack Query, Zustand, React Hook Form with Zod, Tailwind CSS v4, ESLint with Prettier, and Vitest with Testing Library.
+
+```bash
+cd 01-sign-up-form
+npm install
+npm run dev
+```
+
+**Documents**
+
+- [README.md](01-sign-up-form/README.md): setup, scripts and project layout
+- [Design system spec](01-sign-up-form/docs/fieldnote-signup-design-system.md): tokens, components, states and accessibility
+- [Mood palettes](01-sign-up-form/docs/fieldnote-signup-mood-palettes.md): nine alternate palettes, with Field Journal in light and dark
+- [Design system reference](01-sign-up-form/docs/design-system/): tokens, icons and component docs
+- [Campaign plan](01-sign-up-form/docs/fieldnote-signup-campaign-plan.md): a 12-week organic sign-up campaign
+- [Social sign-up PRD](01-sign-up-form/PRD_Social_Sign-Up_Google_Apple_Microsoft.md): general requirements for social sign-in
+
+**Status.** The design tokens and the core components are built and tested: Button, TextField, InstitutionPicker, Divider, Alert, Highlight and Icon. The sign-up screen itself is next.

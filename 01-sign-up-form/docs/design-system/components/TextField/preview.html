@@ -1,0 +1,14 @@
+<!-- @dsCard group="Forms" height=260 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>TextField — preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var F = window.Fieldnote, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { className: 'fn-stage', style: { gap: 'var(--space-6)' } },
+    h(F.TextField, { label: 'University email', placeholder: 'name@university.edu', type: 'email' }),
+    h(F.TextField, { label: 'University email', type: 'email', defaultValue: 'maya.chen@', error: 'Enter a full email address, like name@university.edu.' })));
+</script>
+</body>
+</html>

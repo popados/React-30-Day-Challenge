@@ -1,0 +1,242 @@
+{
+  "v": 3,
+  "assetGroups": {
+    "Logos": {
+      "name": "Logos",
+      "tile": "m",
+      "order": [
+        "google-g.svg",
+        "apple-left-black-medium.svg",
+        "apple-left-white-medium.svg",
+        "apple-logo-only-black.svg",
+        "apple-logo-only-white.svg"
+      ],
+      "files": {
+        "google-g.svg": {
+          "name": "google-g.svg",
+          "blob": "a1c189798e75f0808741c08c56298b6e",
+          "size": 1027,
+          "type": "image/svg+xml"
+        },
+        "apple-left-black-medium.svg": {
+          "name": "apple-left-black-medium.svg",
+          "blob": "8ff7637d3de9a31d93f4c62a427e99d0",
+          "size": 1761,
+          "type": "image/svg+xml"
+        },
+        "apple-left-white-medium.svg": {
+          "name": "apple-left-white-medium.svg",
+          "blob": "fbb262cd1902b20c10e89254df872250",
+          "size": 1761,
+          "type": "image/svg+xml"
+        },
+        "apple-logo-only-black.svg": {
+          "name": "apple-logo-only-black.svg",
+          "blob": "85ba755dc948911cb1521e3f8019fae0",
+          "size": 1720,
+          "type": "image/svg+xml"
+        },
+        "apple-logo-only-white.svg": {
+          "name": "apple-logo-only-white.svg",
+          "blob": "a79dd361a3884351754eadd1feee3008",
+          "size": 1722,
+          "type": "image/svg+xml"
+        }
+      }
+    },
+    "Icons": {
+      "name": "Icons",
+      "tile": "xs",
+      "order": [
+        "arrow-right.svg",
+        "book-open.svg",
+        "bookmark.svg",
+        "check.svg",
+        "chevron-down.svg",
+        "circle-alert.svg",
+        "circle-check.svg",
+        "external-link.svg",
+        "eye.svg",
+        "eye-off.svg",
+        "file-text.svg",
+        "graduation-cap.svg",
+        "highlighter.svg",
+        "info.svg",
+        "landmark.svg",
+        "library.svg",
+        "loader-circle.svg",
+        "mail.svg",
+        "notebook-pen.svg",
+        "quote.svg",
+        "search.svg",
+        "x.svg"
+      ],
+      "files": {
+        "arrow-right.svg": {
+          "name": "arrow-right.svg",
+          "blob": "9eb996d074c6f6de222f238de56a6178",
+          "size": 311,
+          "type": "image/svg+xml"
+        },
+        "book-open.svg": {
+          "name": "book-open.svg",
+          "blob": "05c608f028a4a5b73b82be543d7f3fb6",
+          "size": 437,
+          "type": "image/svg+xml"
+        },
+        "bookmark.svg": {
+          "name": "bookmark.svg",
+          "blob": "3138bd1d0e08e75093bf7c6b1dc0ccf3",
+          "size": 394,
+          "type": "image/svg+xml"
+        },
+        "check.svg": {
+          "name": "check.svg",
+          "blob": "f0e24460a9cdce2407f5a2d3ad6fee6f",
+          "size": 291,
+          "type": "image/svg+xml"
+        },
+        "chevron-down.svg": {
+          "name": "chevron-down.svg",
+          "blob": "7db4a1de88248dcff84ba1cd6139c9d5",
+          "size": 288,
+          "type": "image/svg+xml"
+        },
+        "circle-alert.svg": {
+          "name": "circle-alert.svg",
+          "blob": "15a83a1985ccc2beeb2cb13e71a15a27",
+          "size": 380,
+          "type": "image/svg+xml"
+        },
+        "circle-check.svg": {
+          "name": "circle-check.svg",
+          "blob": "bed7790fde477fea2a859c843718a8c0",
+          "size": 328,
+          "type": "image/svg+xml"
+        },
+        "external-link.svg": {
+          "name": "external-link.svg",
+          "blob": "e110da76172b5a5d5efa92f6c9d089e3",
+          "size": 380,
+          "type": "image/svg+xml"
+        },
+        "eye.svg": {
+          "name": "eye.svg",
+          "blob": "0813299d375957f055d0f0612ffe1643",
+          "size": 410,
+          "type": "image/svg+xml"
+        },
+        "eye-off.svg": {
+          "name": "eye-off.svg",
+          "blob": "58fd045f29d7181730ce53c43f0c8a79",
+          "size": 550,
+          "type": "image/svg+xml"
+        },
+        "file-text.svg": {
+          "name": "file-text.svg",
+          "blob": "835f8ebaed5fad16c31ba24d5fa2b432",
+          "size": 488,
+          "type": "image/svg+xml"
+        },
+        "graduation-cap.svg": {
+          "name": "graduation-cap.svg",
+          "blob": "b142d50b44d638df2f425ddd45bc8e35",
+          "size": 460,
+          "type": "image/svg+xml"
+        },
+        "highlighter.svg": {
+          "name": "highlighter.svg",
+          "blob": "356ce3c9fb3ba69a14cefe68ffcdb9db",
+          "size": 367,
+          "type": "image/svg+xml"
+        },
+        "info.svg": {
+          "name": "info.svg",
+          "blob": "ebdc3443c75c0b46bebcb710d6d6c15b",
+          "size": 342,
+          "type": "image/svg+xml"
+        },
+        "landmark.svg": {
+          "name": "landmark.svg",
+          "blob": "d815c5761f8eacd4bc3ef9ee6781ec04",
+          "size": 474,
+          "type": "image/svg+xml"
+        },
+        "library.svg": {
+          "name": "library.svg",
+          "blob": "61b169a94a1d18fd46b7909f80843e22",
+          "size": 350,
+          "type": "image/svg+xml"
+        },
+        "loader-circle.svg": {
+          "name": "loader-circle.svg",
+          "blob": "4592ab46189e6f735cdd6d9facea31d7",
+          "size": 303,
+          "type": "image/svg+xml"
+        },
+        "mail.svg": {
+          "name": "mail.svg",
+          "blob": "5f4dbb46e29390dc4785a37c8fe67f2c",
+          "size": 366,
+          "type": "image/svg+xml"
+        },
+        "notebook-pen.svg": {
+          "name": "notebook-pen.svg",
+          "blob": "430a8b4afd12adda6382588c3953cd4a",
+          "size": 561,
+          "type": "image/svg+xml"
+        },
+        "quote.svg": {
+          "name": "quote.svg",
+          "blob": "b6730f2846bf0acc7572c6154224676e",
+          "size": 541,
+          "type": "image/svg+xml"
+        },
+        "search.svg": {
+          "name": "search.svg",
+          "blob": "b4de50305aabfbe02d40b894af731c3f",
+          "size": 325,
+          "type": "image/svg+xml"
+        },
+        "x.svg": {
+          "name": "x.svg",
+          "blob": "b7299fb05993330d33185e7fba29fb6d",
+          "size": 310,
+          "type": "image/svg+xml"
+        }
+      }
+    }
+  },
+  "blobs": {},
+  "createdOnFiles": {
+    "at": "2026-10-11T14:58:00Z",
+    "v": 1
+  },
+  "docs": {
+    "sections": []
+  },
+  "groups": [
+    "Logos",
+    "Icons"
+  ],
+  "lastChange": {
+    "by": "nik",
+    "at": "2026-10-11T15:45:00Z",
+    "via": "Claude (Cowork)",
+    "note": "Replaced Google and Apple logos with the official files; Google and Apple button variants."
+  },
+  "layout": "files",
+  "libraries": [
+    {
+      "name": "react",
+      "version": "18"
+    },
+    {
+      "name": "react-dom",
+      "version": "18"
+    }
+  ],
+  "namespace": "Fieldnote",
+  "sections": {},
+  "title": "Fieldnote"
+}
