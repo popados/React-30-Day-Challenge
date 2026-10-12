@@ -1,0 +1,481 @@
+<!DOCTYPE html><html lang="en" data-theme="dark"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fieldnote Day 1: scaffold, palette and launch docs — walkthrough</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --bg-deep:#08090c; --bg-card:#0f1117; --bg-card-hover:#151821; --bg-elevated:#1a1d28; --bg-inset:#060709;
+  --border:#1e2230; --border-active:#2d3348; --border-strong:#3a4159;
+  --tp:#e8eaf0; --ts:#7d8399; --tm:#4a5068; --tf:#2e3349;
+  --blue:#3b82f6; --green:#22c55e; --amber:#f59e0b; --rose:#f43f5e; --purple:#a78bfa;
+  --accent:#22d3ee; --accent-glow:rgba(34,211,238,.16); --accent-soft:rgba(34,211,238,.08);
+  --blue-soft:rgba(59,130,246,.1); --green-soft:rgba(34,197,94,.1); --amber-soft:rgba(245,158,11,.1); --rose-soft:rgba(244,63,94,.1); --purple-soft:rgba(167,139,250,.1);
+  --mono:'JetBrains Mono',monospace; --serif:'Instrument Serif',serif; --sans:'DM Sans',sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+html[data-theme="light"]{
+  --bg-deep:#faf8f4; --bg-card:#fff; --bg-card-hover:#f5f1ea; --bg-elevated:#fff; --bg-inset:#f5f1ea;
+  --border:#e5dfd6; --border-active:#d8cfc1; --border-strong:#c9c0b3;
+  --tp:#2a2520; --ts:#6b6157; --tm:#9e9486; --tf:#c9c0b3;
+  --blue:#2d5fa0; --green:#2d7a3a; --amber:#b87333; --rose:#b83a3a; --purple:#7a3b8f;
+  --accent:#c05e2b; --accent-glow:rgba(192,94,43,.16); --accent-soft:rgba(192,94,43,.09);
+  --blue-soft:rgba(45,95,160,.1); --green-soft:rgba(45,122,58,.1); --amber-soft:rgba(184,115,51,.1); --rose-soft:rgba(184,58,58,.1); --purple-soft:rgba(122,59,143,.1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg-deep);color:var(--tp);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background .3s,color .3s;}
+body::after{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;height:54px;z-index:100;backdrop-filter:blur(20px) saturate(180%);background:color-mix(in srgb,var(--bg-deep) 82%,transparent);border-bottom:1px solid var(--border);}
+.nav-in{max-width:1180px;margin:0 auto;height:100%;display:flex;align-items:center;justify-content:space-between;padding:0 1.6rem;}
+.logo{font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.02em;}
+.logo span{color:var(--accent);}
+.nav-links{display:flex;gap:.3rem;font-family:var(--mono);font-size:.68rem;}
+.nav-links a{color:var(--ts);text-decoration:none;padding:.3rem .55rem;border-radius:6px;transition:.2s;}
+.nav-links a:hover,.nav-links a.on{color:var(--tp);background:var(--accent-soft);}
+.nav-meta{display:flex;align-items:center;gap:.45rem;font-family:var(--mono);font-size:.62rem;color:var(--tm);text-transform:uppercase;letter-spacing:.12em;}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2.5s infinite;}
+.theme-btn{cursor:pointer;font-family:var(--mono);font-size:.62rem;color:var(--ts);border:1px solid var(--border);padding:.28rem .6rem;border-radius:6px;background:none;}
+footer.wt-credit{border-top:1px solid var(--border);margin-top:4rem;padding:1.6rem 2rem 2rem;text-align:center;font-family:var(--mono);font-size:.62rem;color:var(--tm);text-transform:uppercase;letter-spacing:.12em;}
+footer.wt-credit a{color:var(--tm);text-decoration:none;border-bottom:1px solid var(--border);transition:color .2s;}
+footer.wt-credit a:hover{color:var(--accent);}
+.progress{position:fixed;top:54px;left:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--blue));z-index:101;width:0;box-shadow:0 0 8px var(--accent-glow);}
+main{max-width:1180px;margin:0 auto;padding:0 1.6rem;padding-top:78px;counter-reset:sec;}
+.eyebrow{font-family:var(--mono);font-size:.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:.18em;display:inline-flex;align-items:center;gap:.6rem;margin-bottom:.8rem;}
+.eyebrow::before{content:'';width:26px;height:1px;background:var(--accent);}
+h1{font-family:var(--serif);font-size:clamp(2.4rem,6vw,4rem);font-weight:400;line-height:1.04;letter-spacing:-.025em;margin:.2rem 0;max-width:880px;}
+h1 em,h2 em{font-style:italic;color:var(--accent);}
+h2{font-family:var(--serif);font-size:clamp(1.7rem,3.5vw,2.4rem);font-weight:400;line-height:1.15;margin:.2rem 0 .3rem;}
+.lede{color:var(--ts);font-size:1.08rem;line-height:1.7;max-width:720px;margin:.6rem 0 0;}
+p{color:var(--ts);font-size:.92rem;line-height:1.7;max-width:720px;}
+p code,li code{font-family:var(--mono);font-size:.8rem;background:var(--accent-soft);color:var(--accent);padding:1px 5px;border-radius:4px;}
+section{padding:4rem 0 2rem;scroll-margin-top:70px;transition:opacity .7s var(--ease),transform .7s var(--ease);}
+html.js section:not(.vis){opacity:0;transform:translateY(24px);}
+section.vis{opacity:1;transform:none;}
+.sec-label{counter-increment:sec;font-family:var(--mono);font-size:.65rem;color:var(--tm);text-transform:uppercase;letter-spacing:.15em;margin-bottom:.5rem;}
+.sec-label::before{content:counter(sec,decimal-leading-zero) " \2014 ";}
+/* hero stats */
+.hstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-top:1.8rem;}
+.hstat{background:var(--bg-card);padding:1.1rem 1.2rem;}
+.hstat .v{font-family:var(--serif);font-size:1.9rem;color:var(--tp);line-height:1;}
+.hstat .v em{font-style:italic;color:var(--accent);}
+.hstat .l{font-family:var(--mono);font-size:.6rem;color:var(--tm);text-transform:uppercase;letter-spacing:.1em;margin-top:.4rem;}
+/* detail panel */
+.panel{position:fixed;top:0;right:0;width:300px;height:100vh;background:var(--bg-card);border-left:1px solid var(--border-active);padding:24px 20px;overflow:auto;transform:translateX(100%);transition:transform .25s var(--ease);box-shadow:-20px 0 50px rgba(0,0,0,.3);z-index:200;}
+.panel.open{transform:none;}
+.panel .x{position:absolute;top:14px;right:16px;color:var(--tm);cursor:pointer;font-size:18px;}
+.panel .pk{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);}
+.panel h3{font-family:var(--serif);font-weight:400;font-size:1.4rem;margin:.2rem 0 .6rem;}
+.panel .pb{font-size:.86rem;color:var(--ts);line-height:1.6;}
+.panel code{font-family:var(--mono);font-size:.72rem;background:var(--accent-soft);color:var(--accent);padding:1px 5px;border-radius:4px;}
+.panel .sf-h{font-family:var(--serif);font-weight:400;font-size:1.4rem;margin:.2rem 0 .5rem;}
+.sf-summary{font-size:.86rem;color:var(--ts);line-height:1.6;margin:0 0 .8rem;}
+.sf-where{display:flex;flex-wrap:wrap;gap:.35rem;margin:.2rem 0 .8rem;}
+.sf-loc{font-family:var(--mono);font-size:.7rem;background:var(--accent-soft);color:var(--accent);padding:1px 6px;border-radius:4px;}
+.sf-code{margin:.2rem 0 .8rem;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.sf-code figcaption{font-family:var(--mono);font-size:.6rem;color:var(--tm);background:var(--bg-inset);padding:.3rem .6rem;}
+.sf-code pre{margin:0;padding:.6rem;overflow:auto;font-family:var(--mono);font-size:.72rem;color:var(--tp);}
+.sf-points{margin:.2rem 0 .8rem;padding-left:1.1rem;}
+.sf-points li{font-size:.84rem;color:var(--ts);margin:.25rem 0;}
+.sf-related{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.6rem;}
+.sf-related .chip{cursor:pointer;border:none;}
+dialog.sheet{max-width:min(900px,92vw);width:100%;max-height:86vh;border:1px solid var(--border-active);border-radius:14px;background:var(--bg-card);color:var(--tp);padding:0;overflow:hidden;box-shadow:0 30px 80px -20px rgba(0,0,0,.5);}
+dialog.sheet::backdrop{background:color-mix(in srgb,var(--bg-deep) 70%,transparent);backdrop-filter:blur(6px) saturate(140%);}
+dialog.sheet>.x{position:absolute;top:12px;right:14px;color:var(--tm);cursor:pointer;font-size:18px;background:none;border:none;z-index:1;}
+dialog.sheet .sf-body{padding:26px 24px;overflow:auto;flex:1;min-height:0;}
+dialog.sheet .sf-kicker{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);}
+dialog.sheet[open]{display:flex;flex-direction:column;animation:sheetIn .26s var(--ease);}
+@keyframes sheetIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){dialog.sheet[open]{animation:none;}}
+dialog.pane-dialog{max-width:min(360px,92vw);margin-right:0;margin-left:auto;height:100vh;max-height:100vh;border-radius:0;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media(max-width:780px){.nav-links{display:none}}
+.chip{display:inline-flex;align-items:center;gap:.35rem;font-family:var(--mono);font-size:.6rem;font-weight:500;text-transform:uppercase;letter-spacing:.06em;padding:.2rem .55rem;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);color:var(--ts);}
+.chip::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;}
+.chip.ok{color:var(--green);background:var(--green-soft);border-color:color-mix(in srgb,var(--green) 30%,transparent);}
+.chip.info{color:var(--blue);background:var(--blue-soft);border-color:color-mix(in srgb,var(--blue) 30%,transparent);}
+.chip.warn{color:var(--amber);background:var(--amber-soft);border-color:color-mix(in srgb,var(--amber) 30%,transparent);}
+.chip.danger{color:var(--rose);background:var(--rose-soft);border-color:color-mix(in srgb,var(--rose) 30%,transparent);}
+.chip.neutral{color:var(--ts);background:var(--bg-elevated);border-color:var(--border);}
+/* hero chip row */
+.chiprow{display:flex;flex-wrap:wrap;gap:.4rem;margin:.9rem 0 .2rem;}
+/* callouts */
+.callout{background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:.9rem 1.2rem;margin:1.1rem 0;max-width:820px;}
+.callout h4{font-family:var(--serif);font-weight:400;color:var(--accent);margin:0 0 .3rem;font-size:1.1rem;}
+.callout p{margin:0;font-size:.86rem;color:var(--ts);}
+.callout code{font-family:var(--mono);font-size:.78rem;background:var(--bg-card);color:var(--accent);padding:1px 5px;border-radius:4px;}
+/* key-value grid + open questions */
+.edge-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:.7rem;margin-top:1rem;}
+.edge{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem;}
+.edge .n{font-family:var(--mono);font-size:.62rem;color:var(--accent);}
+.edge .t{font-weight:600;margin:.2rem 0;font-size:.88rem;color:var(--tp);}
+.edge p{font-size:.78rem;margin:0;color:var(--ts);}
+.oq{display:flex;gap:.8rem;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem 1.1rem;margin-bottom:.6rem;max-width:880px;}
+.oq .q{font-family:var(--serif);font-style:italic;color:var(--accent);font-size:1.3rem;line-height:1;}
+.oq div{font-size:.86rem;color:var(--ts);}
+/* diff panes */
+.diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.2rem 0;}
+.diff-pane{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.diff-header{background:var(--bg-elevated);padding:.5rem .9rem;font-family:var(--mono);font-size:.66rem;font-weight:600;color:var(--tm);text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--border);}
+.diff-header.before{color:var(--amber);}
+.diff-header.after{color:var(--green);}
+.diff-body{margin:0;padding:.9rem 1rem;font-family:var(--mono);font-size:.78rem;line-height:1.6;color:var(--ts);white-space:pre;overflow-x:auto;}
+@media(max-width:780px){.diff-grid{grid-template-columns:1fr;}}
+/* comparison table */
+.compare-table{width:100%;border-collapse:separate;border-spacing:0;font-size:.82rem;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:1.2rem 0;}
+.compare-table th{font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--tm);padding:.85rem 1.25rem;text-align:left;background:var(--bg-elevated);border-bottom:1px solid var(--border);font-weight:500;}
+.compare-table td{padding:.6rem 1.25rem;border-bottom:1px solid var(--border);color:var(--ts);vertical-align:top;}
+.compare-table td code{font-family:var(--mono);font-size:.74rem;color:var(--tp);}
+.compare-table tr:last-child td{border-bottom:none;}
+.compare-table tr:hover td{background:var(--bg-card-hover);}
+.compare-table .label-cell{font-weight:500;color:var(--tp);font-size:.82rem;}
+.badge-upgraded{display:inline-flex;align-items:center;gap:.3rem;font-family:var(--mono);font-size:.68rem;color:var(--accent);background:var(--accent-soft);padding:.2rem .55rem;border-radius:4px;}
+.tbl-wrap{overflow-x:auto;}
+/* animated bar chart */
+.size-chart{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.5rem 1.8rem;margin:1.2rem 0;overflow:visible;}
+.size-header{display:grid;grid-template-columns:200px 1fr 70px;gap:1rem;padding-bottom:.5rem;margin-bottom:.5rem;border-bottom:2px solid var(--border-strong);}
+.size-header span{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tm);}
+.size-header span:last-child{text-align:right;}
+.size-row{display:grid;grid-template-columns:200px 1fr 70px;align-items:center;gap:1rem;padding:.7rem 0;border-bottom:1px solid var(--border);}
+.size-row:last-child{border-bottom:none;}
+.size-row .tool-name{font-family:var(--mono);font-size:.74rem;font-weight:500;color:var(--accent);}
+.size-bar-track{height:24px;background:var(--bg-inset);border-radius:6px;overflow:hidden;}
+.size-bar{height:100%;border-radius:6px;width:0;transition:width 1.2s var(--ease);display:flex;align-items:center;padding-left:8px;min-width:0;}
+.size-bar .bar-label{font-family:var(--mono);font-size:.6rem;color:var(--bg-deep);white-space:nowrap;opacity:.9;}
+.size-value{font-family:var(--mono);font-size:.78rem;font-weight:600;color:var(--tp);text-align:right;}
+@media(max-width:780px){.size-header,.size-row{grid-template-columns:120px 1fr 54px;}}
+/* legend */
+.legend{display:flex;gap:.6rem;flex-wrap:wrap;margin:1rem 0;}
+.lg{font-family:var(--mono);font-size:.6rem;color:var(--tp);padding:.5rem .7rem;border-radius:8px;border:1px solid var(--border);display:flex;align-items:center;gap:.5rem;background:var(--bg-card);}
+.lg i{width:14px;height:14px;border-radius:4px;display:inline-block;}
+/* filterable cards */
+.pills{display:flex;gap:.5rem;flex-wrap:wrap;margin:1rem 0;}
+.pill{font-family:var(--mono);font-size:.66rem;padding:.35rem .7rem;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);color:var(--ts);cursor:pointer;display:flex;align-items:center;gap:.4rem;transition:.2s;}
+.pill .s{width:9px;height:9px;border-radius:3px;}
+.pill.on{color:var(--tp);border-color:var(--border-strong);background:var(--bg-card-hover);}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.8rem;}
+.tcard{background:var(--bg-card);border:1px solid var(--border);border-left-width:3px;border-radius:10px;padding:.9rem 1rem;transition:.25s;cursor:pointer;}
+.tcard:hover{border-color:var(--border-strong);}
+.tcard.hidden{display:none;}
+.tcard .cat{font-family:var(--mono);font-size:.55rem;text-transform:uppercase;letter-spacing:.1em;}
+.tcard .tn{font-weight:600;margin:.25rem 0;font-size:.92rem;}
+.tcard .td{font-size:.8rem;color:var(--ts);}
+/* bespoke: positioning quadrant (2-D positioning; no catalog renderer draws a quadrant) */
+.quad-wrap{margin:1.4rem 0 .6rem;max-width:920px;}
+.qaxis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.6rem;color:var(--tm);text-transform:uppercase;letter-spacing:.1em;margin:.4rem .2rem;}
+.quad{display:grid;grid-template-columns:auto 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.qrow{background:var(--bg-elevated);font-family:var(--mono);font-size:.58rem;color:var(--tm);text-transform:uppercase;letter-spacing:.1em;writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;padding:.8rem .45rem;}
+.qcell{background:var(--bg-card);padding:1.1rem 1.2rem;min-height:150px;display:flex;flex-direction:column;gap:.55rem;}
+.qcell.target{background:var(--accent-soft);}
+.qcell .qempty{font-family:var(--mono);font-size:.62rem;color:var(--tm);}
+.qnode{display:flex;flex-direction:column;background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:.55rem .8rem;max-width:280px;}
+.qnode b{font-size:.88rem;color:var(--tp);font-weight:600;}
+.qnode span{font-size:.74rem;color:var(--ts);}
+.qnode.us{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 8px 32px -8px var(--accent-glow);}
+/* accordion */
+.acc{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:1rem;max-width:920px;}
+.acc details{border-bottom:1px solid var(--border);}
+.acc details:last-child{border-bottom:none;}
+.acc summary{list-style:none;padding:.85rem 1.1rem;cursor:pointer;display:flex;align-items:center;gap:.7rem;background:var(--bg-card);font-size:.9rem;}
+.acc summary::-webkit-details-marker{display:none;}
+.acc summary .badge{width:18px;height:18px;border-radius:5px;font-size:.7rem;display:flex;align-items:center;justify-content:center;font-family:var(--mono);flex-shrink:0;}
+.acc summary .chev{margin-left:auto;color:var(--tm);transition:transform .2s;}
+.acc details[open] summary .chev{transform:rotate(90deg);}
+.acc .ac-body{padding:.4rem 1.1rem 1rem 2.7rem;font-size:.84rem;color:var(--ts);background:var(--bg-card);}
+.acc .ref{font-family:var(--mono);font-size:.66rem;color:var(--accent);margin-top:.4rem;}
+/* file tree */
+.tree{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.3rem;font-family:var(--mono);font-size:.72rem;line-height:1.75;color:var(--ts);white-space:pre;overflow-x:auto;margin-top:1rem;}
+.tree .dir{color:var(--accent);}
+.tree .fl{color:var(--blue);cursor:pointer;}
+.tree .fl:hover{color:var(--tp);}
+.tree .nw{color:var(--green);font-size:.58rem;}
+.tree .ed{color:var(--amber);font-size:.58rem;}
+/* timeline */
+.timeline{position:relative;padding-left:2rem;margin:1.2rem 0;max-width:820px;}
+.timeline::before{content:'';position:absolute;left:7px;top:0;bottom:0;width:2px;background:var(--border);}
+.timeline-item{position:relative;padding-bottom:1.6rem;padding-left:1.5rem;}
+.timeline-item::before{content:'';position:absolute;left:-2rem;top:6px;width:16px;height:16px;border-radius:50%;border:2px solid var(--border);background:var(--bg-deep);}
+.timeline-item.active::before{border-color:var(--accent);background:var(--accent);box-shadow:0 0 12px var(--accent-glow);}
+.timeline-version{font-family:var(--mono);font-size:.82rem;font-weight:600;color:var(--tp);margin-bottom:.25rem;}
+.timeline-date{font-family:var(--mono);font-size:.68rem;color:var(--tm);margin-bottom:.3rem;}
+.timeline-desc{font-size:.82rem;color:var(--ts);line-height:1.6;}
+</style></head>
+<body>
+  <nav><div class="nav-in">
+    <div class="logo">◆ walk<span>through</span></div>
+    <div class="nav-links"><a href="#goal" class="on">Goal</a><a href="#scaffold">Scaffold</a><a href="#palette">Palette</a><a href="#docs">Docs</a><a href="#position">Position</a><a href="#decisions">Decisions</a><a href="#files">Files</a><a href="#timeline">Timeline</a><a href="#open">Open</a></div>
+    <div style="display:flex;align-items:center;gap:.8rem">
+      <div class="nav-meta"><span class="dot"></span> SESSION · 2026-10-11 → 12 · DAY 1</div>
+      <button class="theme-btn" onclick="tgl()">◑ THEME</button></div>
+  </div></nav>
+  <div class="progress" id="prog"></div>
+  <main>
+    <section id="top" class="vis">
+      <div class="eyebrow">session walkthrough · react-30-day-ui</div>
+      <h1>Fieldnote Day 1: from a scaffold to a <em>palette</em>, a voice and a launch plan.</h1>
+      <div class="chiprow"><span class="chip neutral">scaffold</span><span class="chip neutral">design-system</span><span class="chip neutral">accessibility</span><span class="chip neutral">docs</span><span class="chip neutral">marketing</span><span class="chip neutral">competitive-analysis</span></div>
+      <p class="lede">The session started by scaffolding a React app for the Day 1 sign-up screen, moved it into <code>01-signup-form/</code>, and fixed the tooling around it. It then switched the design to the Field Journal palette in both themes and softened the highlighter. Last came the written groundwork: brand voice guidelines, a 12-week campaign plan, a root README and a four-competitor brief.</p>
+      <div class="hstats">
+        <div class="hstat"><div class="v"><em>11</em></div><div class="l">tests passing</div></div>
+        <div class="hstat"><div class="v">19/19</div><div class="l">dark pairings meet AA</div></div>
+        <div class="hstat"><div class="v">4</div><div class="l">new docs written</div></div>
+        <div class="hstat"><div class="v">4</div><div class="l">competitors researched</div></div>
+        <div class="hstat"><div class="v">1</div><div class="l">sync cancelled</div></div>
+      </div>
+    </section>
+
+    <section id="goal">
+      <div class="sec-label">goal</div>
+      <h2>What the session set out to <em>do</em></h2>
+      <p class="lede">Day 1 of the 30-day UI challenge is a sign-up screen. The product is Fieldnote, a fictional notes and citation workspace for graduate students, faculty and research staff.</p>
+      <p>Every request was small and concrete: create the project, put it in the right folder, fix a config warning, change colours, then write the documents a real launch would need. Each change to code was verified with <code>npm run lint</code>, <code>format:check</code>, <code>test</code> and <code>build</code>, and every colour change was backed by computed WCAG contrast ratios, not estimates.</p>
+    </section>
+
+    <section id="scaffold">
+      <div class="sec-label">scaffold</div>
+      <h2>Scaffold, move, and <em>clean up</em> the tooling</h2>
+      <p class="lede">The <code>react-scaffold</code> skill created a Vite + React 19 project that passed lint, tests and build on the first run. The user then asked for it to live directly in <code>01-signup-form/</code> rather than a nested folder.</p>
+      <p>Moving the app up a level put reference material (mockups, mood images and, later, a <code>docs/</code> folder) inside the project's tooling scope. Three side effects had to be fixed.</p>
+      <div class="edge-grid">
+        <div class="edge"><div class="n">Prettier</div><div class="t">Mockup HTML failed format:check</div><p>Added <code>images</code>, <code>mockups</code> and <code>docs</code> to <code>.prettierignore</code>.</p></div>
+        <div class="edge"><div class="n">ESLint</div><div class="t">Ignored up front</div><p>Same folders added to <code>globalIgnores</code> so a mockup with JavaScript can't break lint later.</p></div>
+        <div class="edge"><div class="n">Tailwind v4</div><div class="t">Classes leaked from mockups</div><p>CSS grew from 9.61 kB to 9.86 kB. <code>source('../src')</code> limits scanning to <code>src/</code>.</p></div>
+      </div>
+      <p style="margin-top:1.4rem">Later the editor flagged <code>jsconfig.json</code>: <code>baseUrl</code> is deprecated and stops working in TypeScript 7. It was removed and the alias path made relative. The user said yes to fixing the skill's template too, so new projects don't inherit the warning.</p>
+      <div class="diff-grid">
+        <div class="diff-pane"><div class="diff-header before">before · jsconfig.json</div><pre class="diff-body">"baseUrl": ".",
+...
+"paths": {
+  "@/*": ["src/*"]
+}</pre></div>
+        <div class="diff-pane"><div class="diff-header after">after · jsconfig.json</div><pre class="diff-body">
+...
+"paths": {
+  "@/*": ["./src/*"]
+}</pre></div>
+      </div>
+    </section>
+
+    <section id="palette">
+      <div class="sec-label">palette</div>
+      <h2>Switching to <em>Field Journal</em>, then dark mode, then a softer mark</h2>
+      <p class="lede">The mood-palettes doc offered nine drop-in palettes. The user picked Field Journal: kraft paper, pine-green ink, apricot marks. Only the hex values changed; every token name stayed, so no component code moved.</p>
+      <p>The palette doc only defined light values, so dark mode was derived separately (warm brown-black paper, kraft-coloured ink, light pine) and checked pairing by pairing. When asked to "change the contrast of the highlight", the direction was ambiguous, so four measured options were offered. The user chose the softer one.</p>
+      <div class="tbl-wrap"><table class="compare-table">
+        <thead><tr><th>Token (hex)</th><th>Original light</th><th>Field Journal light</th><th>Field Journal dark</th></tr></thead>
+        <tbody>
+          <tr><td class="label-cell">paper</td><td><code>FAF7F0</code></td><td><code>F4ECDD</code></td><td><code>181612</code></td></tr>
+          <tr><td class="label-cell">paper-deep</td><td><code>EFEAE0</code></td><td><code>EAE2D2</code></td><td><code>24211B</code></td></tr>
+          <tr><td class="label-cell">ink</td><td><code>1C1B19</code></td><td><code>201C16</code></td><td><code>F4ECDD</code></td></tr>
+          <tr><td class="label-cell">graphite</td><td><code>5F5B53</code></td><td><code>5A5344</code></td><td><code>B8AD98</code></td></tr>
+          <tr><td class="label-cell">rule</td><td><code>8A857B</code></td><td><code>807562</code></td><td><code>857A66</code></td></tr>
+          <tr><td class="label-cell">moss (primary)</td><td><code>2F5D50</code></td><td><code>2F4A2B</code> pine</td><td><code>A3C495</code> light pine</td></tr>
+          <tr><td class="label-cell">on-moss</td><td><code>FFFFFF</code></td><td><code>FFFFFF</code></td><td><code>1A2618</code></td></tr>
+          <tr><td class="label-cell">error</td><td><code>B42318</code></td><td><code>A9271C</code></td><td><code>F4978A</code></td></tr>
+          <tr><td class="label-cell">highlighter</td><td><code>F2C94C</code></td><td><code>FBDCB4</code> <span class="badge-upgraded">softened from F6C48A</span></td><td><code>FBDCB4</code> (shared)</td></tr>
+        </tbody>
+      </table></div>
+      <div class="legend">
+        <span class="lg"><i style="background:var(--green)"></i>text pairing, needs 4.5:1</span>
+        <span class="lg"><i style="background:var(--amber)"></i>border pairing, needs 3:1</span>
+        <span class="lg"><i style="background:var(--rose)"></i>never allowed</span>
+      </div>
+      <div class="size-chart" id="sizeChart">
+        <div class="size-header"><span>Light pairing</span><span>contrast (out of 21:1)</span><span>ratio</span></div>
+        <div class="size-row"><div class="tool-name">Ink on paper</div><div class="size-bar-track"><div class="size-bar" style="background:var(--green)" data-width="69"><span class="bar-label">body text</span></div></div><div class="size-value">14.44</div></div>
+        <div class="size-row"><div class="tool-name">Ink on highlighter</div><div class="size-bar-track"><div class="size-bar" style="background:var(--green)" data-width="61"><span class="bar-label">after softening</span></div></div><div class="size-value">12.91</div></div>
+        <div class="size-row"><div class="tool-name">White on moss</div><div class="size-bar-track"><div class="size-bar" style="background:var(--green)" data-width="47"><span class="bar-label">primary button</span></div></div><div class="size-value">9.83</div></div>
+        <div class="size-row"><div class="tool-name">Moss link on paper</div><div class="size-bar-track"><div class="size-bar" style="background:var(--green)" data-width="40"><span class="bar-label">links, focus ring</span></div></div><div class="size-value">8.38</div></div>
+        <div class="size-row"><div class="tool-name">Graphite on paper</div><div class="size-bar-track"><div class="size-bar" style="background:var(--green)" data-width="31"><span class="bar-label">helper text</span></div></div><div class="size-value">6.49</div></div>
+        <div class="size-row"><div class="tool-name">Error on paper</div><div class="size-bar-track"><div class="size-bar" style="background:var(--green)" data-width="28"></div></div><div class="size-value">5.97</div></div>
+        <div class="size-row"><div class="tool-name">Rule on paper</div><div class="size-bar-track"><div class="size-bar" style="background:var(--amber)" data-width="18"></div></div><div class="size-value">3.86</div></div>
+        <div class="size-row"><div class="tool-name">White on highlighter</div><div class="size-bar-track"><div class="size-bar" style="background:var(--rose)" data-width="6"></div></div><div class="size-value">1.31</div></div>
+      </div>
+      <div class="callout"><h4>The trade-off the user accepted</h4><p>The softer highlighter makes highlighted text easier to read (12.9:1), but the mark itself nearly disappears against the notebook panel (1.02:1), which is where the home page's only highlight sits. The recommended stronger option, <code>EF9A4A</code>, would have kept the mark visible at 1.74:1.</p></div>
+    </section>
+
+    <section id="docs">
+      <div class="sec-label">documents</div>
+      <h2>The written <em>groundwork</em></h2>
+      <p class="lede">Most of the second half of the session produced documents rather than code. Filter by kind, and click a card for what it contains.</p>
+      <div class="pills">
+        <div class="pill on" data-f="project" role="button" tabindex="0" aria-label="Filter project docs" onclick="tog(this)"><span class="s" style="background:var(--blue)"></span>project</div>
+        <div class="pill on" data-f="design" role="button" tabindex="0" aria-label="Filter design docs" onclick="tog(this)"><span class="s" style="background:var(--purple)"></span>design</div>
+        <div class="pill on" data-f="brand" role="button" tabindex="0" aria-label="Filter brand docs" onclick="tog(this)"><span class="s" style="background:var(--green)"></span>brand</div>
+        <div class="pill on" data-f="marketing" role="button" tabindex="0" aria-label="Filter marketing docs" onclick="tog(this)"><span class="s" style="background:var(--amber)"></span>marketing</div>
+      </div>
+      <div class="cards">
+        <div class="tcard" data-cat="project" data-id="project-readme" role="button" tabindex="0" aria-label="Project README" onclick="openCard(this)" style="border-left-color:var(--blue)"><div class="cat" style="color:var(--blue)">project · rewritten</div><div class="tn">Project README</div><div class="td">Vite starter text replaced with a Fieldnote README.</div></div>
+        <div class="tcard" data-cat="project" data-id="root-readme" role="button" tabindex="0" aria-label="Root README" onclick="openCard(this)" style="border-left-color:var(--blue)"><div class="cat" style="color:var(--blue)">project · new</div><div class="tn">Root README</div><div class="td">The 30-day challenge plus a Day 1 section under 500 words.</div></div>
+        <div class="tcard" data-cat="design" data-id="mood-palettes" role="button" tabindex="0" aria-label="Mood palettes dark mode" onclick="openCard(this)" style="border-left-color:var(--purple)"><div class="cat" style="color:var(--purple)">design · edited</div><div class="tn">Field Journal dark mode</div><div class="td">A new section in the mood-palettes doc.</div></div>
+        <div class="tcard" data-cat="design" data-id="design-spec" role="button" tabindex="0" aria-label="Design system spec" onclick="openCard(this)" style="border-left-color:var(--purple)"><div class="cat" style="color:var(--purple)">design · edited</div><div class="tn">Design spec and tokens</div><div class="td">Hex values, contrast table and CSS export updated.</div></div>
+        <div class="tcard" data-cat="brand" data-id="brand-guidelines" role="button" tabindex="0" aria-label="Brand voice guidelines" onclick="openCard(this)" style="border-left-color:var(--green)"><div class="cat" style="color:var(--green)">brand · new</div><div class="tn">Brand voice guidelines</div><div class="td">Plain, calm, specific. Medium confidence, 10 open questions.</div></div>
+        <div class="tcard" data-cat="marketing" data-id="campaign-plan" role="button" tabindex="0" aria-label="Campaign plan" onclick="openCard(this)" style="border-left-color:var(--amber)"><div class="cat" style="color:var(--amber)">marketing · new</div><div class="tn">"In one place" campaign</div><div class="td">12 weeks, organic only, peaking at the spring term.</div></div>
+        <div class="tcard" data-cat="marketing" data-id="competitive-brief" role="button" tabindex="0" aria-label="Competitive brief" onclick="openCard(this)" style="border-left-color:var(--amber)"><div class="cat" style="color:var(--amber)">marketing · new</div><div class="tn">Competitive brief</div><div class="td">Zotero, Notion, Obsidian and Mendeley.</div></div>
+      </div>
+      <div class="callout"><h4>How the guidelines were checked</h4><p>A document-analysis agent extracted the voice from about 35 files, and a separate quality-assurance agent reviewed the draft. It found nothing critical but raised 11 fixes, the most visible being two examples that broke the guidelines' own "we only when promising" rule. All were applied.</p></div>
+    </section>
+
+    <section id="position">
+      <div class="sec-label">positioning</div>
+      <h2>Where Fieldnote <em>fits</em></h2>
+      <p class="lede">The competitive brief's main finding, redrawn here. The first version of this map in the brief had its axes reversed and was corrected before the session moved on.</p>
+      <div class="quad-wrap" role="img" aria-label="Positioning map: reference managers manage sources; note apps hold thinking but are set up by individuals; no tool holds research thinking and is provided by the institution, which is Fieldnote's target.">
+        <div class="qaxis"><span></span><span>Manages sources</span><span>Holds your thinking</span></div>
+        <div class="quad">
+          <div class="qrow">Provided by the institution</div>
+          <div class="qcell">
+            <div class="qnode"><b>Mendeley</b><span>Campus IP or email check; access can lapse</span></div>
+            <div class="qnode"><b>Zotero</b><span>Institution plans by email domain</span></div>
+          </div>
+          <div class="qcell target"><div class="qnode us"><b>Fieldnote (target)</b><span>Notebooks per thesis, university sign-in. No competitor is here today.</span></div></div>
+          <div class="qrow">Set up by the individual</div>
+          <div class="qcell"><span class="qempty">Personal reference-manager plans sit here too, but nothing distinctive.</span></div>
+          <div class="qcell">
+            <div class="qnode"><b>Notion</b><span>Free school-email plan; no citations</span></div>
+            <div class="qnode"><b>Obsidian</b><span>Local files, plugins for Zotero</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="callout"><h4>The line that came out of it</h4><p>"Zotero keeps your sources. Fieldnote keeps your thinking." The brief warns against attacking Zotero: it ships a major release every 6 to 10 weeks and academics are loyal to it.</p></div>
+    </section>
+
+    <section id="decisions">
+      <div class="sec-label">decisions</div>
+      <h2>Choices made <em>along the way</em></h2>
+      <div class="acc">
+        <details open><summary><span class="badge" style="background:var(--green-soft);color:var(--green)">✓</span> Put the app directly in <code>01-signup-form/</code><span class="chev">›</span></summary>
+          <div class="ac-body">A user correction. The scaffold first landed in a nested <code>sign-up-form/</code> folder; everything was moved up one level after checking for name conflicts, and the build output was dropped since it regenerates.</div></details>
+        <details><summary><span class="badge" style="background:var(--purple-soft);color:var(--purple)">·</span> Cancel the Claude Design sync<span class="chev">›</span></summary>
+          <div class="ac-body">At the time, <code>src/</code> held only the starter blue-and-grey Button and no Fieldnote tokens. Syncing would have taught the design agent a generic button. Options were offered (build components first, sync anyway, cancel); the user cancelled. Fieldnote components appeared in the project later in the session.</div></details>
+        <details><summary><span class="badge" style="background:var(--green-soft);color:var(--green)">✓</span> Map the palette's 14 roles onto the app's tokens<span class="chev">›</span></summary>
+          <div class="ac-body">The palette doc uses spec names (paper-200, moss-50, error-50); the app uses paper-deep, moss-soft and error-soft. The spec names were mapped directly, which matches the spec's own semantic table.</div></details>
+        <details><summary><span class="badge" style="background:var(--green-soft);color:var(--green)">✓</span> Derive dark mode rather than leave mint-teal<span class="chev">›</span></summary>
+          <div class="ac-body">The old dark moss would not have matched pine. New dark values were proposed, then checked: 18 pairings plus the 92% hover state all passed before anything was written.</div></details>
+        <details><summary><span class="badge" style="background:var(--amber-soft);color:var(--amber)">+</span> Soften the highlighter (user overrode the recommendation)<span class="chev">›</span></summary>
+          <div class="ac-body">Recommended: a stronger <code>EF9A4A</code>. Chosen: <code>FBDCB4</code>. Ink on it rises to 12.9:1, but the mark is nearly invisible on the panel. The spec and tokens record it as softened from the palette's value.</div></details>
+        <details><summary><span class="badge" style="background:var(--green-soft);color:var(--green)">✓</span> Keep brand guidelines in the Fieldnote folder<span class="chev">›</span></summary>
+          <div class="ac-body">Each challenge day is a different product, so the guidelines were saved to <code>01-signup-form/.claude/</code> rather than the repo root. All examples use the fictional Northfield University, following the brand's own rule to swap real institution names.</div></details>
+        <details><summary><span class="badge" style="background:var(--green-soft);color:var(--green)">✓</span> Plan an organic, 12-week campaign<span class="chev">›</span></summary>
+          <div class="ac-body">From the user's answers: drive sign-ups, all three audience segments, 8 to 12 weeks, no budget. The plan builds through the end-of-term crunch and peaks when the spring term starts.</div></details>
+        <details><summary><span class="badge" style="background:var(--amber-soft);color:var(--amber)">+</span> Default competitors after the question was skipped<span class="chev">›</span></summary>
+          <div class="ac-body">The user rejected the question and said "resume", so the brief used Zotero, Notion, Obsidian and Mendeley across all focus areas, researched by four parallel agents.</div></details>
+      </div>
+    </section>
+
+    <section id="files">
+      <div class="sec-label">files</div>
+      <h2>What <em>changed</em></h2>
+      <p class="lede">Click a blue file for a summary. One more edit lives outside the repo: the <code>react-scaffold</code> skill's <code>templates/jsconfig.json</code>.</p>
+      <div class="tree"><span class="dir">react-30-day-ui/</span>
+├── <span class="fl" role="button" tabindex="0" aria-label="Root README" onclick="openSurface('root-readme')">README.md</span>  <span class="nw">new</span>
+└── <span class="dir">01-signup-form/</span>
+    ├── <span class="fl" role="button" tabindex="0" aria-label="Brand voice guidelines" onclick="openSurface('brand-guidelines')">.claude/brand-voice-guidelines.md</span>  <span class="nw">new</span>
+    ├── <span class="fl" role="button" tabindex="0" aria-label="Project README" onclick="openSurface('project-readme')">README.md</span>  <span class="ed">rewritten</span>
+    ├── <span class="fl" role="button" tabindex="0" aria-label="jsconfig" onclick="openSurface('jsconfig')">jsconfig.json</span>  <span class="ed">edited</span>
+    ├── <span class="fl" role="button" tabindex="0" aria-label="Tooling ignores" onclick="openSurface('tooling-ignores')">.prettierignore, eslint.config.js</span>  <span class="ed">edited</span>
+    ├── <span class="dir">src/</span>
+    │   └── <span class="fl" role="button" tabindex="0" aria-label="index.css" onclick="openSurface('index-css')">index.css</span>  <span class="ed">edited</span>
+    └── <span class="dir">docs/</span>
+        ├── <span class="fl" role="button" tabindex="0" aria-label="tokens.json" onclick="openSurface('tokens-json')">design-system/tokens.json</span>  <span class="ed">edited</span>
+        ├── design-system/README.md, assets/Icons/*.svg  <span class="ed">edited</span>
+        ├── <span class="fl" role="button" tabindex="0" aria-label="Design spec" onclick="openSurface('design-spec')">fieldnote-signup-design-system.md</span>  <span class="ed">edited</span>
+        ├── <span class="fl" role="button" tabindex="0" aria-label="Mood palettes" onclick="openSurface('mood-palettes')">fieldnote-signup-mood-palettes.md</span>  <span class="ed">edited</span>
+        ├── <span class="fl" role="button" tabindex="0" aria-label="Campaign plan" onclick="openSurface('campaign-plan')">fieldnote-signup-campaign-plan.md</span>  <span class="nw">new</span>
+        └── <span class="fl" role="button" tabindex="0" aria-label="Competitive brief" onclick="openSurface('competitive-brief')">fieldnote-signup-competitive-brief.md</span>  <span class="nw">new</span></div>
+    </section>
+
+    <section id="timeline">
+      <div class="sec-label">timeline</div>
+      <h2>How it <em>unfolded</em></h2>
+      <div class="timeline">
+        <div class="timeline-item"><div class="timeline-version">Scaffold</div><div class="timeline-date">Oct 11</div><div class="timeline-desc">Created the app with react-scaffold; lint, tests (3) and build passed. Moved it into <code>01-signup-form/</code> and excluded mockups from the tooling.</div></div>
+        <div class="timeline-item"><div class="timeline-version">README and design sync</div><div class="timeline-date">Oct 11</div><div class="timeline-desc">Rewrote the project README from the design-system README. Started a Claude Design sync, found no Fieldnote components in code, and cancelled at the user's choice.</div></div>
+        <div class="timeline-item"><div class="timeline-version">jsconfig</div><div class="timeline-date">Oct 11</div><div class="timeline-desc">Removed the deprecated <code>baseUrl</code>, then applied the same fix to the skill template.</div></div>
+        <div class="timeline-item"><div class="timeline-version">Field Journal palette</div><div class="timeline-date">Oct 11</div><div class="timeline-desc">Light values, then derived dark values, then the softer highlighter. Tests grew to 11 as components landed; all passing.</div></div>
+        <div class="timeline-item"><div class="timeline-version">Palette doc</div><div class="timeline-date">Oct 11</div><div class="timeline-desc">Added the Field Journal dark mode section with 19 pairings.</div></div>
+        <div class="timeline-item"><div class="timeline-version">Brand voice</div><div class="timeline-date">Oct 11</div><div class="timeline-desc">Guidelines generated by an analysis agent, checked by a QA agent, 11 fixes applied.</div></div>
+        <div class="timeline-item"><div class="timeline-version">Campaign and README</div><div class="timeline-date">Oct 11</div><div class="timeline-desc">Campaign brief written, then saved as a markdown file. Root README written at 469 words.</div></div>
+        <div class="timeline-item"><div class="timeline-version">Competitive brief</div><div class="timeline-date">Oct 11</div><div class="timeline-desc">Four research agents ran in parallel; the brief was assembled and its positioning map corrected.</div></div>
+        <div class="timeline-item active"><div class="timeline-version">Locked commands and this page</div><div class="timeline-date">Oct 12</div><div class="timeline-desc">Looked into why slash commands appear locked, then generated this walkthrough.</div></div>
+      </div>
+    </section>
+
+    <section id="open">
+      <div class="sec-label">open questions</div>
+      <h2>Still <em>unresolved</em></h2>
+      <div class="oq"><span class="q">1</span><div><strong>Marketing claims are unconfirmed.</strong> "1,200+ institutions", "library access carries over" and the Zotero import appear in docs and the campaign, but nobody has approved them.</div></div>
+      <div class="oq"><span class="q">2</span><div><strong>Button wording.</strong> "Continue with …" (the design-system rule) or "Create your account" (the mockup)? The guidelines recommend the former.</div></div>
+      <div class="oq"><span class="q">3</span><div><strong>Is the softer highlight visible enough?</strong> At 1.02:1 against the notebook panel, marks may be hard to spot.</div></div>
+      <div class="oq"><span class="q">4</span><div><strong>Off-voice shipped copy.</strong> The wordmark renders "sign-up-form", the home page has scaffold headings, and one error shows a raw system message.</div></div>
+      <div class="oq"><span class="q">5</span><div><strong>Format check failing.</strong> <code>PRD_Social_Sign-Up_Google_Apple_Microsoft.md</code> fails Prettier; it was never touched in this session.</div></div>
+      <div class="oq"><span class="q">6</span><div><strong>Researcher sentiment unverified.</strong> No usable Reddit threads were found for the competitive brief; quotes should be checked by hand.</div></div>
+      <div class="callout"><h4>Why slash commands look locked</h4><p>Not confirmed. The likeliest cause is plugins whose connected services (Figma, Notion, Slack, Ahrefs, Amplitude and about 20 more) still need sign-in, plus one connector that failed to connect. The <code>claude</code> CLI isn't on this shell's path, so plugins couldn't be listed directly. The user later ran <code>/reload-plugins</code> (34 plugins, 324 skills).</p></div>
+    </section>
+  </main>
+  <footer class="wt-credit">generated by <a href="https://github.com/ApurvBazari/claude-plugins" target="_blank" rel="noopener">walkthrough</a></footer>
+  <aside class="panel" id="panel"><span class="x" role="button" tabindex="0" aria-label="Close detail" onclick="closeD()">✕</span>
+    <div class="pk" id="panelKicker">Detail</div>
+    <div class="pb" id="panelBody"></div></aside>
+  <div id="sheets"></div>
+  <dialog class="sheet pane-dialog" id="paneDialog"><button class="x" onclick="this.closest('dialog').close()">✕</button><div class="sf-body" id="paneDialogBody"></div></dialog>
+  <script type="application/json" id="wt-data">{"DET":{"root-readme":{"k":"File · new","h":"Root README","summary":"Introduces the 30-day challenge and links daily-ui-challenge.md, lists the days, and gives Day 1 a 346-word section drawn from the project docs: product, screen, look, voice, stack and document links. 469 words in total.","where":["README.md"]},"project-readme":{"k":"File · rewritten","h":"Project README","summary":"Replaced the Vite starter text with a Fieldnote README built from the design-system README: setup and scripts, the screen order, design rules, components and project layout.","where":["01-signup-form/README.md"],"related":["root-readme"]},"jsconfig":{"k":"Config","h":"jsconfig.json","summary":"Removed the deprecated baseUrl (TypeScript 7 drops it) and made the alias path ./src/*. Vite's own alias is separate, so the build was unaffected. The same fix went into the react-scaffold skill template.","where":["01-signup-form/jsconfig.json"]},"tooling-ignores":{"k":"Config","h":"Tooling ignores","summary":"Prettier and ESLint now skip images/, mockups and docs/, which are reference material. Tailwind's source() limits class scanning to src/, so mockup classes stop leaking into the app CSS.","where":["01-signup-form/.prettierignore","01-signup-form/eslint.config.js"]},"index-css":{"k":"File","h":"src/index.css","summary":"The colours the app actually uses. Light theme holds the Field Journal values, both dark blocks hold the derived pine values, and the highlighter is the softened FBDCB4 in both themes.","where":["01-signup-form/src/index.css"]},"tokens-json":{"k":"File","h":"tokens.json","summary":"Source of truth for the design tokens. Light and dark values updated, and each token's usage note now quotes contrast ratios recomputed with the WCAG luminance formula.","where":["01-signup-form/docs/design-system/tokens.json"],"related":["index-css"]},"design-spec":{"k":"Doc","h":"Design system spec","summary":"Sections 2.1, 2.2, 2.4 and 2.9 carry the Field Journal hex values, the recomputed contrast table and the CSS export, with a note that the highlighter is softened from the palette's F6C48A.","where":["01-signup-form/docs/fieldnote-signup-design-system.md"],"related":["tokens-json"]},"mood-palettes":{"k":"Doc","h":"Field Journal: dark mode","summary":"A new section after the light tables: 15 token rows, hover and pressed values derived from the button's 92% dimming, and 19 pairings that all meet AA. The lowest text pairing is the pressed button label at 5.80:1.","where":["01-signup-form/docs/fieldnote-signup-mood-palettes.md"],"related":["design-spec"]},"brand-guidelines":{"k":"Doc · new","h":"Brand voice guidelines","summary":"Built from 8 source groups (about 35 files), no transcripts. Medium confidence (0.80). Seven We Are / We Are Not rows, a tone matrix, terminology, and 10 open questions. Examples use the fictional Northfield University.","where":["01-signup-form/.claude/brand-voice-guidelines.md"],"related":["campaign-plan"]},"campaign-plan":{"k":"Doc · new","h":"\"In one place\" campaign","summary":"12 weeks, organic only, Nov 2 2026 to Jan 24 2027. Target: 1,000 accounts and 40% activation. Library and grad-school partnerships are the highest-leverage channel; week 1 is gated on the sign-up screen being live.","where":["01-signup-form/docs/fieldnote-signup-campaign-plan.md"],"related":["competitive-brief"]},"competitive-brief":{"k":"Doc · new","h":"Competitive brief","summary":"Zotero, Notion, Obsidian and Mendeley. No tool both holds research thinking and is provided by the institution. Biggest threat: Zotero's fast release pace into notes. Some claims are marked unverified.","where":["01-signup-form/docs/fieldnote-signup-competitive-brief.md"]}},"SURF":{"root-readme":"pane","project-readme":"pane","jsconfig":"pane","tooling-ignores":"pane","index-css":"pane","tokens-json":"pane","design-spec":"pane","mood-palettes":"pane","brand-guidelines":"pane","campaign-plan":"pane","competitive-brief":"pane"}}</script>
+  <script>// progressive-enhancement gate + inert-data load (must be first)
+document.documentElement.classList.add('js');
+const _WT=(()=>{try{return JSON.parse(document.getElementById('wt-data').textContent||'{}');}catch(e){return{};}})();
+const DET=_WT.DET||{}, SURF=_WT.SURF||{};
+// renderSurface — build a structured detail DOM from a DET record into `host`
+function renderSurface(d,host){if(!d||!host)return;let h='';
+ if(d.h)h+=`<h3 class="sf-h">${d.h}</h3>`;
+ if(d.summary)h+=`<p class="sf-summary">${d.summary}</p>`;
+ if(d.where&&d.where.length)h+=`<div class="sf-where">${d.where.map(w=>`<code class="sf-loc">${w}</code>`).join('')}</div>`;
+ if(d.code&&d.code.length)h+=d.code.map(c=>`<figure class="sf-code"><figcaption>${c.file||''}</figcaption><pre><code>${c.snippet||''}</code></pre></figure>`).join('');
+ if(d.points&&d.points.length)h+=`<ul class="sf-points">${d.points.map(p=>`<li>${p}</li>`).join('')}</ul>`;
+ if(d.components)h+=d.components;
+ if(d.related&&d.related.length)h+=`<div class="sf-related">${d.related.map(r=>`<button class="chip neutral" onclick="openSurface('${r}')">${r}</button>`).join('')}</div>`;
+ host.innerHTML=h;}
+const panel=document.getElementById('panel');
+function openPane(id){const d=DET[id];if(!d)return;
+ const k=document.getElementById('panelKicker');if(k)k.textContent=d.k||'Detail';
+ renderSurface(d,document.getElementById('panelBody'));panel.classList.add('open');}
+// Phase ③ router: pane vs sheet via SURF; sheets and nested panes stack as native <dialog>s in the top layer, capped at MAX_DEPTH (replace-topmost)
+const _stack=[]; const MAX_DEPTH=3;
+function _capPush(el){if(!el||el.open)return;if(_stack.length>=MAX_DEPTH){const t=_stack.pop();if(t)t.close();}el.showModal();_stack.push(el);}
+function openSurface(id){const k=(typeof SURF!=='undefined'&&SURF[id])||'pane';
+ if(k==='sheet'){const el=document.getElementById('sheet-'+id);_capPush(el);return;}
+ if(_stack.length){const pd=document.getElementById('paneDialog'),d=DET[id],b=document.getElementById('paneDialogBody');
+  // nested pane → shared paneDialog: render kicker + body, then stack it. Re-opening swaps content in place (no new depth level; _capPush no-ops on el.open).
+  renderSurface(d,b);if(d&&d.k)b.insertAdjacentHTML('afterbegin',`<div class="sf-kicker">${d.k}</div>`);_capPush(pd);}
+ else openPane(id);}
+// dialog housekeeping: pop on close, close on backdrop click
+document.querySelectorAll('dialog.sheet').forEach(dlg=>{
+ dlg.addEventListener('close',()=>{const i=_stack.indexOf(dlg);if(i>-1)_stack.splice(i,1);});
+ dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close();});});
+function openCard(el){if(!el)return;openPane(el.dataset.id||'');}
+function openD(id){openSurface(id);} // deprecated alias
+function closeD(){panel.classList.remove('open');}
+// keyboard: Escape closes the topmost surface; Enter/Space activates any focused [role="button"] (div/span interactives) — native <button>s are excluded (no role) and fire themselves
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'&&!_stack.length){closeD();return;}
+ if(e.key==='Enter'||e.key===' '){const b=e.target&&e.target.closest&&e.target.closest('[role="button"]');if(b){if(e.key===' ')e.preventDefault();b.click();}}});
+function setTab(app){document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.app===app));
+ document.querySelectorAll('.detail').forEach(d=>{const on=d.dataset.app===app;d.classList.toggle('show',on);if(on)animate(d);});}
+function animate(scope){scope.querySelectorAll('.fil').forEach(f=>{f.style.width='0';requestAnimationFrame(()=>requestAnimationFrame(()=>{f.style.width=f.dataset.w+'%';}));});}
+function tog(el){el.classList.toggle('on');const set=new Set([...document.querySelectorAll('.pill.on')].map(p=>p.dataset.f));
+ document.querySelectorAll('.tcard').forEach(c=>c.classList.toggle('hidden',!set.has(c.dataset.cat)));}
+function tgl(){const h=document.documentElement;const t=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',t);try{localStorage.setItem('wt-theme',t);}catch(e){}}
+(function(){try{const t=localStorage.getItem('wt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+// reveal + progress + animate-on-view
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');const d=e.target.querySelector('.detail.show');if(d)animate(d);}}),{threshold:.1});
+document.querySelectorAll('section').forEach(s=>io.observe(s));
+// failsafe: if the IO never fires (runtime error, detached observer), reveal everything after 2.5s
+setTimeout(()=>document.querySelectorAll('section').forEach(s=>s.classList.add('vis')),2500);
+addEventListener('scroll',()=>{const sc=scrollY/(document.body.scrollHeight-innerHeight)*100;if(prog)prog.style.width=sc+'%';
+ let cur='';document.querySelectorAll('section[id]').forEach(s=>{if(scrollY>=s.offsetTop-120)cur=s.id;});
+ document.querySelectorAll('.nav-links a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+cur));},{passive:true});
+// initial bar animation for the shown tab
+setTimeout(()=>{const d=document.querySelector('.detail.show');if(d)animate(d);},300);</script>
+  <script>// {{COMPONENT_JS}} — size-chart reveal
+const _sc=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.size-bar').forEach(b=>b.style.width=b.dataset.width+'%');_sc.disconnect();}}),{threshold:.2});
+const _scEl=document.getElementById('sizeChart');if(_scEl)_sc.observe(_scEl);</script>
+</body></html>

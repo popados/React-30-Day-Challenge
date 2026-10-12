@@ -8,12 +8,17 @@ Each day starts by filling in the brief template from the challenge doc (product
 
 | Day | Screen | Folder | Status |
 | --- | --- | --- | --- |
-| 1 | Sign-up screen | [01-sign-up-form/](01-sign-up-form/) | In progress |
-| 2–30 | See [daily-ui-challenge.md](daily-ui-challenge.md) | — | Not started |
+| 1 | Sign-up screen | [01-signup-form/](01-signup-form/) | In progress |
+| 2 | Checkout / payment form | [02-checkout-form/](02-checkout-form/) | Not started |
+| 3–30 | See [daily-ui-challenge.md](daily-ui-challenge.md) | — | Not started |
 
 ## Day 1: Fieldnote sign-up
 
-**Fieldnote** is a fictional notes and citation workspace for graduate students, faculty and research staff. Reading notes, highlights and sources are kept together in notebooks tied to a project or thesis. Day 1 is its sign-up screen. The main path is "Continue with your institution", which lets researchers sign up with the university login they already have. Google, Apple and email are the alternatives.
+- **Needs:** required fields, sign-in methods (email, Google, Apple), password rules, terms link, brand
+- **Key:** few fields, clear labels (not placeholder-only), visible password rules, one primary button
+- **Improve:** inline validation as the user types, show/hide password, social sign-in above the form, and a "why we ask" note for any sensitive field
+
+**Company.** Fieldnote is a fictional notes and citation workspace for graduate students, faculty and research staff. Reading notes, highlights and sources are kept together in notebooks tied to a project or thesis. Day 1 is its sign-up screen. The main path is "Continue with your institution", which lets researchers sign up with the university login they already have. Google, Apple and email are the alternatives.
 
 **Screen.** From top to bottom: heading, subhead, institution button, Google, Apple, an "or" divider, the email field with "Continue with email", and the terms line. On desktop (1440 × 900), the form is a centered 440px card beside a sample-notebook panel. On mobile (390 × 844), it's a single column. The institution picker covers every state: results, empty, no match, loading and redirecting.
 
@@ -24,18 +29,40 @@ Each day starts by filling in the brief template from the challenge doc (product
 **Stack.** React 19 (JavaScript), Vite, React Router, TanStack Query, Zustand, React Hook Form with Zod, Tailwind CSS v4, ESLint with Prettier, and Vitest with Testing Library.
 
 ```bash
-cd 01-sign-up-form
+cd 01-signup-form
 npm install
 npm run dev
 ```
 
 **Documents**
 
-- [README.md](01-sign-up-form/README.md): setup, scripts and project layout
-- [Design system spec](01-sign-up-form/docs/fieldnote-signup-design-system.md): tokens, components, states and accessibility
-- [Mood palettes](01-sign-up-form/docs/fieldnote-signup-mood-palettes.md): nine alternate palettes, with Field Journal in light and dark
-- [Design system reference](01-sign-up-form/docs/design-system/): tokens, icons and component docs
-- [Campaign plan](01-sign-up-form/docs/fieldnote-signup-campaign-plan.md): a 12-week organic sign-up campaign
-- [Social sign-up PRD](01-sign-up-form/PRD_Social_Sign-Up_Google_Apple_Microsoft.md): general requirements for social sign-in
+- [README.md](01-signup-form/README.md): setup, scripts and project layout
+- [Design system spec](01-signup-form/docs/fieldnote-signup-design-system.md): tokens, components, states and accessibility
+- [Mood palettes](01-signup-form/docs/fieldnote-signup-mood-palettes.md): nine alternate palettes, with Field Journal in light and dark
+- [Design system reference](01-signup-form/docs/design-system/): tokens, icons and component docs
+- [Campaign plan](01-signup-form/docs/fieldnote-signup-campaign-plan.md): a 12-week organic sign-up campaign
+- [Social sign-up PRD](01-signup-form/docs/fieldnote-signup-prd-google-apple-microsoft.md): general requirements for social sign-in
 
 **Status.** The design tokens and the core components are built and tested: Button, TextField, InstitutionPicker, Divider, Alert, Highlight and Icon. The sign-up screen itself is next.
+
+## Day 2: Checkout / payment form
+
+- **Needs:** order summary, payment methods, shipping vs. billing address, taxes and fees, security cues
+- **Key:** the total is always visible, card fields format automatically, errors appear next to the field
+- **Improve:** a progress indicator, address autocomplete, a "same as shipping" toggle, saved cards, and a clear edit path back to the cart
+
+**Company.** To be decided. Day 2 needs a fictional product that sells something, with an order to pay for.
+
+**Screen.** To be designed, covering the needs above.
+
+**Look.** To be decided. The text contrast, spacing scale and touch-target rules from the self-review checklist still apply.
+
+**Voice.** To be decided.
+
+**Stack.** To be decided. The folder is empty so far.
+
+**Documents**
+
+- [Day 2 brief](daily-ui-challenge.md#2-checkout--payment-form): needs, key points, improvements and the self-review checklist
+
+**Status.** Not started. The [02-checkout-form/](02-checkout-form/) folder exists but is empty.

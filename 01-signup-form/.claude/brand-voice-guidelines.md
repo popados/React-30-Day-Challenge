@@ -421,6 +421,6 @@ Overall: (0.30 × 1.0 + 0.25 × 0.6 + 0.20 × 0.6 + 0.15 × 1.0) ÷ 0.90 = **0.8
 | 3   | `docs/fieldnote-signup-design-system.md`                  | Local repo | OPERATIONAL                    | 2026-10-11 | Goals, states, decisions, open questions      | High       |
 | 4   | `images/mockups/html_mockups/Editorial-Sign-Up-Form.html` | Local repo | EXAMPLE                        | 2026-10    | Headline, value bullets, terms line           | Medium     |
 | 5   | `src/**/*.jsx`                                            | Local repo | EXAMPLE (shipped)              | 2026-10    | Implemented copy, off-brand patterns          | Medium     |
-| 6   | `PRD_Social_Sign-Up_Google_Apple_Microsoft.md`            | Local repo | OPERATIONAL (generic template) | 2026-10    | Conflicting label convention only             | Low        |
+| 6   | `docs/fieldnote-signup-prd-google-apple-microsoft.md`     | Local repo | OPERATIONAL (generic template) | 2026-10    | Conflicting label convention only             | Low        |
 | 7   | `README.md`                                               | Local repo | OPERATIONAL (developer)        | 2026-10    | Product description                           | Low        |
 | 8   | `docs/design-system/USING-IN-CODE.md`                     | Local repo | OPERATIONAL                    | 2026-10    | No voice content                              | Low        |

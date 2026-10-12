@@ -1,0 +1,160 @@
+# Day 1: Sign-up screen — Fieldnote
+
+The Day 1 entry of the [30-Day Daily UI Challenge](../daily-ui-challenge.md): a sign-up screen for **Fieldnote**, a notes and citation workspace for graduate students, faculty and research staff. Reading notes, highlights and sources live together in notebooks tied to a project or thesis.
+
+The look is a quiet paper notebook: kraft Paper, near-black Ink, one deep pine-green Moss for actions, and a pale apricot Highlighter kept for marked passages. This is the Field Journal palette from [docs/fieldnote-signup-mood-palettes.md](docs/fieldnote-signup-mood-palettes.md).
+
+## Challenge brief
+
+From [daily-ui-challenge.md](../daily-ui-challenge.md#1-sign-up-screen), Day 1: Sign-up screen.
+
+- **Needs:** required fields, sign-in methods (email, Google, Apple), password rules, terms link, brand
+- **Key:** few fields, clear labels (not placeholder-only), visible password rules, one primary button
+- **Improve:** inline validation as the user types, show/hide password, social sign-in above the form, and a "why we ask" note for any sensitive field
+
+**Self-review checklist**
+
+- [ ] **Hierarchy:** Can you tell what matters most in 3 seconds?
+- [ ] **Contrast:** Does text meet 4.5:1 against its background?
+- [ ] **Spacing:** Are you using a consistent spacing scale (such as 4 or 8px steps)?
+- [ ] **States:** Did you design empty, loading, and error states, not just the ideal one?
+- [ ] **Real content:** Does it still work with long names, missing photos, or big numbers?
+- [ ] **Touch targets:** Are buttons at least 44×44px on mobile?
+- [ ] **Consistency:** Do repeated elements look and behave the same everywhere?
+
+## Brief
+
+The [brief template](../daily-ui-challenge.md#brief-template-fill-this-in-each-day) from the challenge doc, filled in for Day 1.
+
+- **Product:** Fieldnote, a fictional notes and citation workspace for graduate students, faculty and research staff
+- **User goal:** create an account, ideally by signing in with the university login they already have
+- **Platform:** both; desktop at 1440×900 and mobile at 390×844
+- **Content:** real Fieldnote copy ("Your research notes, in one place", "Continue with your institution"), with fictional institution names in anything published
+- **States:** default; empty (picker before typing); loading (searching, and redirecting to the institution); error (no match, institution sign-in errors, invalid email); success ("Welcome, Maya.")
+- **Constraints:** the Field Journal palette, Source Serif 4 for headings and Inter for the interface, WCAG 2.2 AA, and tap targets of at least 44px
+
+## Overview
+
+From the [root README](../README.md#day-1-fieldnote-sign-up).
+
+**Company.** Fieldnote is a fictional notes and citation workspace for graduate students, faculty and research staff. Reading notes, highlights and sources are kept together in notebooks tied to a project or thesis. Day 1 is its sign-up screen. The main path is "Continue with your institution", which lets researchers sign up with the university login they already have. Google, Apple and email are the alternatives.
+
+**Screen.** From top to bottom: heading, subhead, institution button, Google, Apple, an "or" divider, the email field with "Continue with email", and the terms line. On desktop (1440 × 900), the form is a centered 440px card beside a sample-notebook panel. On mobile (390 × 844), it's a single column. The institution picker covers every state: results, empty, no match, loading and redirecting.
+
+**Look.** The look is a quiet paper notebook in the Field Journal palette: kraft paper, near-black ink, pine green for actions, and a pale apricot highlighter used only for marked passages. There are light and dark themes. Headings use Source Serif 4 and the interface uses Inter. Every text pairing meets WCAG AA. Controls are at least 44px tall, and every one shows a visible focus ring.
+
+**Voice.** The copy is plain, calm and specific: sentence case, no exclamation marks or emoji, and errors that say what happened and what to do next without blaming the reader.
+
+**Stack.** React 19 (JavaScript), Vite, React Router, TanStack Query, Zustand, React Hook Form with Zod, Tailwind CSS v4, ESLint with Prettier, and Vitest with Testing Library.
+
+**Documents**
+
+- [Design system spec](docs/fieldnote-signup-design-system.md): tokens, components, states and accessibility
+- [Mood palettes](docs/fieldnote-signup-mood-palettes.md): nine alternate palettes, with Field Journal in light and dark
+- [Design system reference](docs/design-system/): tokens, icons and component docs
+- [Campaign plan](docs/fieldnote-signup-campaign-plan.md): a 12-week organic sign-up campaign
+- [Social sign-up PRD](docs/fieldnote-signup-prd-google-apple-microsoft.md): general requirements for social sign-in
+
+**Status.** The design tokens and the core components are built and tested: Button, TextField, InstitutionPicker, Divider, Alert, Highlight and Icon. The sign-up screen itself is next.
+
+## Getting started
+
+```bash
+npm install
+npm run dev
+```
+
+| Script                 | What it does                   |
+| ---------------------- | ------------------------------ |
+| `npm run dev`          | Start the Vite dev server      |
+| `npm run build`        | Production build into `dist/`  |
+| `npm run preview`      | Serve the production build     |
+| `npm run lint`         | ESLint                         |
+| `npm run format`       | Format with Prettier           |
+| `npm run format:check` | Check formatting with Prettier |
+| `npm test`             | Run Vitest once                |
+| `npm run test:watch`   | Run Vitest in watch mode       |
+
+**Stack:** React 19 (JavaScript), Vite, React Router, TanStack Query, Zustand, React Hook Form + Zod, Tailwind CSS v4, ESLint + Prettier, Vitest + Testing Library.
+
+## The screen
+
+Sign-up order, top to bottom:
+
+1. Heading and subhead
+2. "Continue with your institution" (the one `primary` button), which opens the institution picker
+3. Continue with Google
+4. Continue with Apple
+5. "or" divider
+6. Email field with "Continue with email"
+7. Terms line
+
+**Frames:** desktop at 1440 × 900 shows a centered 440px card on `paper` with the sample-notebook panel on `paper-deep` beside it. Mobile at 390 × 844 shows the same content in one full-width column with no side panel.
+
+**States to cover:** the institution picker (results, empty, no match, loading, redirecting), email validation errors, SSO errors, the recognized-domain shortcut and the success message.
+
+## Design system
+
+The full spec is in [docs/design-system/](docs/design-system/README.md):
+
+- [`tokens.json`](docs/design-system/tokens.json): colours (light and dark), type, spacing, radii and sizes. Values marked **proposed** fill gaps the original brief left open.
+- [`assets/Icons/`](docs/design-system/assets/Icons/): Lucide line icons (v1.48.0)
+- [`assets/Logos/`](docs/design-system/assets/Logos/): official Google and Apple sign-in logos
+
+The rules that matter most while building:
+
+- **Colour:** `moss` is the only action colour (primary button, links, selected row, focus ring). `error` appears only alongside words and an icon. `highlighter` is used only as a mark behind `on-highlighter` text, never for a button or link. Use the tokens, not hard-coded white. In dark mode, the label on `moss` turns dark.
+- **Type:** Source Serif 4 for headings and notebook prose, Inter for the interface. Inputs stay at 16px.
+- **Space and shape:** a 4px spacing scale. Use borders instead of shadows: `radius-md` for controls and `radius-lg` for the card and panel.
+- **Accessibility:** WCAG AA contrast in both themes. Every control is keyboard-reachable with a 2px focus ring offset by 2px. Tap targets are at least 44px and controls are 48px tall. Text must still work at 200% zoom, so containers shouldn't have fixed heights. Spinners slow down when reduced motion is on.
+- **Copy:** speak to the user as "you". Use sentence case, with no exclamation marks and no emoji. Buttons start with a verb. Name the institution ("Taking you to UT Austin…"), not "your SSO provider".
+- **Logos:** "Fieldnote" set in Source Serif 4 serves as the wordmark. Provider logos are used unaltered and appear only inside the `google` and `apple` button variants.
+
+### Components
+
+| Component           | Purpose                                                         |
+| ------------------- | --------------------------------------------------------------- |
+| `Button`            | `primary`, `secondary`, `google` and `apple` variants           |
+| `InstitutionPicker` | Institution combobox; build its states first                    |
+| `TextField`         | Email entry with helper or error text                           |
+| `Divider`           | The lowercase "or"                                              |
+| `Alert`             | SSO errors, the recognized-domain shortcut and success messages |
+| `Highlight`         | Highlighter marks in notebook quotes                            |
+| `Icon`              | Lucide icons by name, coloured with `currentColor`              |
+
+## Project layout
+
+```text
+docs/design-system/            design spec, tokens, icons and logos
+images/                        mood images and HTML mockups (reference only)
+public/                        static files
+src/
+  app/          app shell, providers and router
+  components/   shared UI components and their tests
+  features/     feature modules (API calls, query hooks, views)
+  hooks/        shared hooks
+  lib/          API client and query client
+  pages/        route pages
+  stores/       Zustand stores
+  test/         Vitest setup
+```
+
+`docs/` and `images/` are excluded from ESLint, Prettier and Tailwind's class scanning.
+
+## Visual foundations
+
+**Colour.** Set every page and card on `paper`. Text is `ink`; helper text, placeholders and the terms line are `graphite`. Outline fields and secondary buttons with `rule` (3:1 non-text floor). `moss` is the one action colour: the primary button (label in `on-moss`), links (`link`), the selected picker row and the focus ring. `error` is for error text and icons only, always with words and an icon. `highlighter` appears only as a highlight mark behind `on-highlighter` text — never white text on it (1.6:1, fails), never a button or link. `paper-deep` holds the sample-notebook panel and skeleton rows; `hairline` draws decorative lines only.
+
+**Contrast.** Every text pairing above meets WCAG AA in both themes; `rule` meets 3:1 on `paper` and `paper-deep`. The dark theme lightens `moss`, so its label flips to dark `on-moss` — always use the token, not white.
+
+**Type.** Headings and notebook prose in Source Serif 4 (`--font-serif`): `heading-xl` for the desktop screen heading, `heading-lg` on mobile and in the card, `heading-md`/`heading-sm` inside notebooks, `note-quote` (italic) for quoted passages. Interface text in Inter (`--font-sans`): `body` for subheads and messages, `label` for buttons and field labels, `body-sm` for helper and footer text, `caption` for the "or" divider. Both faces load from Google Fonts. Inputs stay at 16px.
+
+**Space and layout.** A 4px scale: `space-2` label to field, `space-3` between stacked buttons, `space-6` between groups, `space-8` card padding, `space-4` mobile gutter. Desktop (1440 × 900): a centered `card-width` (440px) card on `paper` with a `hairline` outline and `radius-lg`, the sample-notebook panel beside it on `paper-deep`. Mobile (390 × 844): the same content as one full-width column, no side panel. Text must resize to 200% without breaking — let containers grow, never fix heights.
+
+**Shape and depth.** `radius-md` for buttons, fields, lists and alerts; `radius-lg` for the card and panel; `radius-sm` for highlight marks. Borders, not shadows — the system defines none.
+
+**Interaction states.** Every control is keyboard-reachable and shows a 2px (`focus-width`) `focus-ring` offset 2px. Targets are at least `target-min` (44px); controls use `control-height` (48px). Hover darkens a fill slightly or adds `paper-deep`/`moss-soft`. Spinners slow under reduced motion.
+
+## Before publishing
+
+The mockups use real university names to look realistic. Replace them with fictional ones before anything is published.

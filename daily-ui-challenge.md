@@ -16,6 +16,19 @@ For each challenge:
 - **States:** default, empty, loading, error, success
 - **Constraints:** brand colors, font, accessibility level (aim for WCAG AA)
 
+## README section template (fill this in each day)
+
+Each day gets a section in the root [README.md](README.md) with these headings, in this order:
+
+- **Needs, Key and Improve.** The day's three lines copied from this doc, so the goals sit next to the work that answers them.
+- **Company.** The fictional product and who it's for, because every design decision depends on knowing the user and what they're trying to do.
+- **Screen.** What's on the screen, from top to bottom, plus its frame sizes and states, because this is the part being designed and reviewed.
+- **Look.** Palette, typefaces and accessibility, because a reviewer needs to know which visual rules the screen follows to judge whether it meets them.
+- **Voice.** How the copy sounds, because words are part of the interface and should be as consistent as the visuals.
+- **Stack.** The libraries and tools used, plus how to run the project, so anyone can open the folder and see the screen working.
+- **Documents.** Links to the brief, specs and other docs, so the reasoning behind the screen can be found without searching.
+- **Status.** What's done and what's next, so it's clear at a glance how far the day has got.
+
 ---
 
 # Week 1: Foundations
