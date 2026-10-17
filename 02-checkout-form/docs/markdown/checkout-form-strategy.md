@@ -1,6 +1,6 @@
 # Product Strategy: Subscription Checkout
 
-*Draft · October 12, 2026 · Built from public research (Baymard Institute benchmarks, platform documentation, U.S. auto-renewal law) and a live walkthrough of Twitch's subscribe flow. No first-party analytics yet: every product-specific number is marked as an assumption to validate.*
+_Draft · October 12, 2026 · Built from public research (Baymard Institute benchmarks, platform documentation, U.S. auto-renewal law) and a live walkthrough of Twitch's subscribe flow. No first-party analytics yet: every product-specific number is marked as an assumption to validate._
 
 ---
 
@@ -8,7 +8,7 @@
 
 **Vision**: Subscribing should take under a minute, and nobody should ever be surprised by a charge.
 
-**The Big Bet**: Most subscription checkouts treat the renewal terms as fine print and the payment form as plumbing. We are betting that a checkout which is **transparent by default** (price per interval, tax, and renewal terms visible before the click) and **effortless by default** (saved methods, wallets, auto-formatted fields, inline errors) will convert better *and* retain better, because trust earned at signup reduces the refund requests, chargebacks and involuntary churn that follow surprise charges.
+**The Big Bet**: Most subscription checkouts treat the renewal terms as fine print and the payment form as plumbing. We are betting that a checkout which is **transparent by default** (price per interval, tax, and renewal terms visible before the click) and **effortless by default** (saved methods, wallets, auto-formatted fields, inline errors) will convert better _and_ retain better, because trust earned at signup reduces the refund requests, chargebacks and involuntary churn that follow surprise charges.
 
 ---
 
@@ -31,12 +31,12 @@ Why now: California's amended Automatic Renewal Law has applied since July 1, 20
 
 **Competitive Landscape**
 
-| Player | What they do well | Where they leave room |
-|---|---|---|
-| Stripe Checkout / Elements | Card brand detection, real-time validation, Link autofill, address autocomplete | Opt-in configuration; renewal copy is the merchant's job |
-| Shopify + Shop Pay | Saved details across stores, one-page layout with collapsing sections | Built for physical goods; subscription disclosure via apps |
-| Twitch (observed) | Clear tier ladder, gift path, wide payment-method menu | No interval or tax on price buttons; renewal not stated up front; account wall before payment |
-| Native app-store billing | Zero-form purchase with biometric confirm | Higher price, limited tiers, merchant loses the customer relationship |
+| Player                     | What they do well                                                               | Where they leave room                                                                         |
+| -------------------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Stripe Checkout / Elements | Card brand detection, real-time validation, Link autofill, address autocomplete | Opt-in configuration; renewal copy is the merchant's job                                      |
+| Shopify + Shop Pay         | Saved details across stores, one-page layout with collapsing sections           | Built for physical goods; subscription disclosure via apps                                    |
+| Twitch (observed)          | Clear tier ladder, gift path, wide payment-method menu                          | No interval or tax on price buttons; renewal not stated up front; account wall before payment |
+| Native app-store billing   | Zero-form purchase with biometric confirm                                       | Higher price, limited tiers, merchant loses the customer relationship                         |
 
 The status quo we are disrupting: "price on a button, terms in a footer link."
 
@@ -53,12 +53,12 @@ The status quo we are disrupting: "price on a button, terms in a footer link."
 
 **Key Research Findings**
 
-- **Field count matters more than step count.** Baymard: most checkouts need about 8 fields; the 2024 average was 11.3. *(Benchmark of leading sites.)*
-- **Basic input aids are still missing at scale.** 51% of sites don't auto-format card numbers; 31% have no inline validation; 34% wipe card data after an error. *(Baymard benchmark.)*
-- **Users verify against the summary.** Test participants repeatedly relied on the running order summary to check their data and selections. *(Baymard usability testing.)*
-- **Editing backwards is a trap.** 68% of sites send users backward in the flow to edit at the review step. *(Baymard benchmark.)*
-- **Subscription windows hide the most important term.** Twitch's subscribe window shows price without interval, tax or renewal on the first three screens. *(Live walkthrough, Oct 12, 2026.)*
-- **Disclosure and consent are now legal requirements.** California ARL as amended July 1, 2025. *(Law-firm analyses.)*
+- **Field count matters more than step count.** Baymard: most checkouts need about 8 fields; the 2024 average was 11.3. _(Benchmark of leading sites.)_
+- **Basic input aids are still missing at scale.** 51% of sites don't auto-format card numbers; 31% have no inline validation; 34% wipe card data after an error. _(Baymard benchmark.)_
+- **Users verify against the summary.** Test participants repeatedly relied on the running order summary to check their data and selections. _(Baymard usability testing.)_
+- **Editing backwards is a trap.** 68% of sites send users backward in the flow to edit at the review step. _(Baymard benchmark.)_
+- **Subscription windows hide the most important term.** Twitch's subscribe window shows price without interval, tax or renewal on the first three screens. _(Live walkthrough, Oct 12, 2026.)_
+- **Disclosure and consent are now legal requirements.** California ARL as amended July 1, 2025. _(Law-firm analyses.)_
 
 **Why These Pillars**
 
@@ -172,11 +172,11 @@ Consistent pricing and terms across web, app and partner surfaces; regional paym
 
 ## Appendix: Key Assumptions
 
-| Assumption | Validated? | How Validated | Risk if Wrong |
-|---|---|---|---|
-| Up-front renewal disclosure won't reduce conversion by more than 1 point | ❓ Unknown | Needs A/B test | If conversion drops more, iterate on placement and copy; disclosure itself is required regardless |
-| Form friction is a material share of our payment-step abandonment | ❓ Unknown (✅ industry-wide) | Baymard benchmark; needs our funnel data | If our drop-off is mostly price-driven, Pillar 2 delivers less than expected |
-| Surprise charges drive a meaningful share of refunds and chargebacks | ❓ Unknown | Needs support-ticket and dispute tagging | If not, Pillar 1 is mainly a compliance investment |
-| Saved methods and wallets lift returning-subscriber conversion | ✅ Industry evidence | Shop Pay returning-customer data (vendor-reported) | Vendor figures may overstate; measure our own lift |
-| Our audience is mobile-first | ❓ Unknown | Needs analytics | If desktop-heavy, re-prioritize mobile-specific work |
-| An account is required to deliver the subscription | ❓ Unknown | Product decision | If not required, guest subscribe could remove a full step |
+| Assumption                                                               | Validated?                    | How Validated                                      | Risk if Wrong                                                                                     |
+| ------------------------------------------------------------------------ | ----------------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Up-front renewal disclosure won't reduce conversion by more than 1 point | ❓ Unknown                    | Needs A/B test                                     | If conversion drops more, iterate on placement and copy; disclosure itself is required regardless |
+| Form friction is a material share of our payment-step abandonment        | ❓ Unknown (✅ industry-wide) | Baymard benchmark; needs our funnel data           | If our drop-off is mostly price-driven, Pillar 2 delivers less than expected                      |
+| Surprise charges drive a meaningful share of refunds and chargebacks     | ❓ Unknown                    | Needs support-ticket and dispute tagging           | If not, Pillar 1 is mainly a compliance investment                                                |
+| Saved methods and wallets lift returning-subscriber conversion           | ✅ Industry evidence          | Shop Pay returning-customer data (vendor-reported) | Vendor figures may overstate; measure our own lift                                                |
+| Our audience is mobile-first                                             | ❓ Unknown                    | Needs analytics                                    | If desktop-heavy, re-prioritize mobile-specific work                                              |
+| An account is required to deliver the subscription                       | ❓ Unknown                    | Product decision                                   | If not required, guest subscribe could remove a full step                                         |

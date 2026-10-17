@@ -9,6 +9,7 @@
 ## Scope
 
 ### In Scope
+
 - Three-step subscription checkout (Plan → Payment → Confirm) on web, desktop and mobile, meeting FR REQ-1 to REQ-14 and NFR-1 to NFR-6.
 - Plans: Plus monthly, Plus school-year (non-renewing), Family monthly (up to 4 learner profiles), Tutor add-on, college discount on Plus.
 - **Payer and learner as separate roles** throughout checkout, receipts, renewal reminders and cancellation.
@@ -20,6 +21,7 @@
 - Payer-facing online cancellation (FR REQ-14).
 
 ### Out of Scope
+
 - In-app purchase through the Apple App Store or Google Play.
 - School and district (B2B) licensing, purchase orders, or invoicing.
 - Tutor session scheduling, matching or rollover rules (checkout only displays the add-on's terms).
@@ -31,39 +33,39 @@
 
 ## Constraints
 
-| Type | Constraint | Confirmed / Assumed |
-|---|---|---|
-| Compliance | Learners under 13: no personal data collected before verifiable parental consent (COPPA). | Confirmed (law) — method to validate with Legal |
-| Compliance | Renewal terms disclosed next to the Subscribe action, affirmative consent captured, consent records retained ≥ 3 years or 1 year after termination, online cancellation (California ARL as amended July 1, 2025; Louisiana from Jan 1, 2027). | Confirmed (law) — copy to validate with Legal |
-| Compliance | Minors cannot be the contracting party for a recurring charge; the payer must be an adult who sees and accepts the terms. | Assumed — validate with Legal |
-| Compliance | Card data handled only by the payment processor; every script on payment steps inventoried, justified and integrity-protected, with change detection (PCI DSS 4.0.1 §6.4.3, §11.6.1). | Confirmed (standard) |
-| Compliance | WCAG 2.2 AA for all checkout and payer-link screens. | Confirmed (standard) |
-| Technical | Parent payment link must work on a device with no Tempest Line session. | Confirmed (FR intent) |
-| Technical | Learner age must be known before checkout renders payment fields. | Assumed — validate with Engineering (age source at signup) |
-| Dependency | Tax amount must come from a tax service using payer billing country and postal code before Confirm. | Assumed — validate with Finance |
-| Dependency | Payment processor supports wallets, saved methods and hosted card fields for the payer. | Assumed — validate with Payments Eng |
-| Dependency | School-email verification requires an email delivery path and a list or rule for eligible domains. | Assumed — validate with Product |
-| Performance | Subscribe window interactive ≤ 2.0 s and hosted fields ready ≤ 1.5 s at P75 on mid-tier mobile over 4G (FR NFR-3). | Assumed — validate with Engineering |
+| Type        | Constraint                                                                                                                                                                                                                                    | Confirmed / Assumed                                        |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| Compliance  | Learners under 13: no personal data collected before verifiable parental consent (COPPA).                                                                                                                                                     | Confirmed (law) — method to validate with Legal            |
+| Compliance  | Renewal terms disclosed next to the Subscribe action, affirmative consent captured, consent records retained ≥ 3 years or 1 year after termination, online cancellation (California ARL as amended July 1, 2025; Louisiana from Jan 1, 2027). | Confirmed (law) — copy to validate with Legal              |
+| Compliance  | Minors cannot be the contracting party for a recurring charge; the payer must be an adult who sees and accepts the terms.                                                                                                                     | Assumed — validate with Legal                              |
+| Compliance  | Card data handled only by the payment processor; every script on payment steps inventoried, justified and integrity-protected, with change detection (PCI DSS 4.0.1 §6.4.3, §11.6.1).                                                         | Confirmed (standard)                                       |
+| Compliance  | WCAG 2.2 AA for all checkout and payer-link screens.                                                                                                                                                                                          | Confirmed (standard)                                       |
+| Technical   | Parent payment link must work on a device with no Tempest Line session.                                                                                                                                                                       | Confirmed (FR intent)                                      |
+| Technical   | Learner age must be known before checkout renders payment fields.                                                                                                                                                                             | Assumed — validate with Engineering (age source at signup) |
+| Dependency  | Tax amount must come from a tax service using payer billing country and postal code before Confirm.                                                                                                                                           | Assumed — validate with Finance                            |
+| Dependency  | Payment processor supports wallets, saved methods and hosted card fields for the payer.                                                                                                                                                       | Assumed — validate with Payments Eng                       |
+| Dependency  | School-email verification requires an email delivery path and a list or rule for eligible domains.                                                                                                                                            | Assumed — validate with Product                            |
+| Performance | Subscribe window interactive ≤ 2.0 s and hosted fields ready ≤ 1.5 s at P75 on mid-tier mobile over 4G (FR NFR-3).                                                                                                                            | Assumed — validate with Engineering                        |
 
 ---
 
 ## Edge Cases
 
-| Scenario | Recommended Handling | Open? |
-|---|---|---|
-| Parent link is opened after the learner already subscribed another way | Show "Already active" with the plan and end date; take no payment | No |
-| Parent link is forwarded or opened by someone other than the intended payer | Link shows only learner first name and plan; payer still sees full terms. Expiry and single-use rules needed | Yes — Q2 |
-| Parent link expires before payment | Show expiry message and let the learner resend from the app | Yes — Q2 |
-| Two parents pay the same link at the same moment | Only one charge succeeds; the second sees "Already paid" | No |
-| Learner's stated age changes after a profile is created (e.g., turns 13 or 18) | Profile role updates; payer stays the payer until they transfer or cancel | Yes — Q4 |
-| Learner aged 13–17 has their own card and tries to pay | Payment fields not shown; route to parent link | Yes — Q3 |
-| School-year plan bought mid-year (e.g., January) | Price is prorated or full price — needs a decision | Yes — Q5 |
-| School-year plan ends while a tutor add-on is monthly | Add-on renewal behavior after the base plan ends needs a decision | Yes — Q6 |
-| Family plan: a 5th learner is added | Block with message offering a second Family plan; no silent charge | No |
-| College discount email can't be verified (no school email) | Allow purchase at full price; show "Verify later" to apply discount to next charge | Yes — Q7 |
-| Payer cancels while learner is mid-session with a tutor | Benefits continue to the end of the paid period; no mid-period cutoff | No |
-| May reminder sent but payer neither pauses nor cancels | Plan renews as normal; reminder copy must say so | No |
-| Tax service unavailable | Block Confirm with retry message; never charge an unconfirmed total (FR NFR-4) | No |
+| Scenario                                                                       | Recommended Handling                                                                                         | Open?    |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ | -------- |
+| Parent link is opened after the learner already subscribed another way         | Show "Already active" with the plan and end date; take no payment                                            | No       |
+| Parent link is forwarded or opened by someone other than the intended payer    | Link shows only learner first name and plan; payer still sees full terms. Expiry and single-use rules needed | Yes — Q2 |
+| Parent link expires before payment                                             | Show expiry message and let the learner resend from the app                                                  | Yes — Q2 |
+| Two parents pay the same link at the same moment                               | Only one charge succeeds; the second sees "Already paid"                                                     | No       |
+| Learner's stated age changes after a profile is created (e.g., turns 13 or 18) | Profile role updates; payer stays the payer until they transfer or cancel                                    | Yes — Q4 |
+| Learner aged 13–17 has their own card and tries to pay                         | Payment fields not shown; route to parent link                                                               | Yes — Q3 |
+| School-year plan bought mid-year (e.g., January)                               | Price is prorated or full price — needs a decision                                                           | Yes — Q5 |
+| School-year plan ends while a tutor add-on is monthly                          | Add-on renewal behavior after the base plan ends needs a decision                                            | Yes — Q6 |
+| Family plan: a 5th learner is added                                            | Block with message offering a second Family plan; no silent charge                                           | No       |
+| College discount email can't be verified (no school email)                     | Allow purchase at full price; show "Verify later" to apply discount to next charge                           | Yes — Q7 |
+| Payer cancels while learner is mid-session with a tutor                        | Benefits continue to the end of the paid period; no mid-period cutoff                                        | No       |
+| May reminder sent but payer neither pauses nor cancels                         | Plan renews as normal; reminder copy must say so                                                             | No       |
+| Tax service unavailable                                                        | Block Confirm with retry message; never charge an unconfirmed total (FR NFR-4)                               | No       |
 
 ---
 

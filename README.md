@@ -1,3 +1,25 @@
+---
+stale-refs:
+  - source: 01-signup-form\README.md
+    changed_at: "2026-10-17T16:24:43"
+    sections_changed: []
+    summary: externally modified
+  - source: 02-checkout-form\README.md
+    changed_at: "2026-10-17T16:24:43"
+    sections_changed: []
+    summary: externally modified
+  - source: 03-landing-page-hero\README.md
+    changed_at: "2026-10-17T16:24:43"
+    sections_changed: []
+    summary: externally modified
+---
+
+
+
+
+
+
+
 # React 30-Day UI
 
 A 30-day UI challenge built in React: one screen a day, each in its own folder. The daily briefs, checklists and weekly themes are in [daily-ui-challenge.md](daily-ui-challenge.md). The weeks cover foundations, data and feedback, complex screens, and polish and systems, ending on Day 30 with a redesign of the Day 1 screen.
@@ -9,7 +31,7 @@ Each day starts by filling in the brief template from the challenge doc (product
 | Day | Screen | Folder | Status |
 | --- | --- | --- | --- |
 | 1 | Sign-up screen | [01-signup-form/](01-signup-form/) | In progress |
-| 2 | Checkout / payment form | [02-checkout-form/](02-checkout-form/) | Scaffolded |
+| 2 | Checkout / payment form | [02-checkout-form/](02-checkout-form/) | Designed |
 | 3 | Landing page hero | [03-landing-page-hero/](03-landing-page-hero/) | Built |
 | 4 | Calculator | [04-calculator/](04-calculator/) | Scaffolded |
 | 5–30 | See [daily-ui-challenge.md](daily-ui-challenge.md) | — | Not started |
@@ -53,13 +75,13 @@ npm run dev
 - **Key:** the total is always visible, card fields format automatically, errors appear next to the field
 - **Improve:** a progress indicator, address autocomplete, a "same as shipping" toggle, saved cards, and a clear edit path back to the cart
 
-**Company.** To be decided. Day 2 needs a fictional product that sells something, with an order to pay for.
+**Company.** Tempest Line is a fictional study app for students, most of them under 18 and on their phones late at night, whose plans are usually paid for by a parent. Today its checkout assumes the learner is the payer: 46% of checkouts started by learners under 18 are abandoned, mostly for lack of a card, and parents surprised by summer charges cause a June spike in refund requests. Day 2 is the redesigned subscription checkout, which separates the learner who uses the plan from the parent who pays.
 
-**Screen.** To be designed, covering the needs above.
+**Screen.** Three steps, Plan, Payment and Confirm, with a progress indicator and an order summary that names both roles ("Plan for: Maya", "Paid by: Dana R.") and keeps the total visible. Plan offers Plus monthly ($9.99/month), Plus for the school year ($59.99, Aug–May, does not renew) and Family ($17.99/month for up to 4 learners), with an optional Tutor add-on. Payment has wallet buttons above hosted card fields that format themselves; learners under 18 see "Ask a parent to pay" instead, which sends a payment link by text or email. Confirm shows the renewal terms and an unticked consent box directly above Subscribe. On phones it's one column with the summary as a pinned bar; at 1024px and up, a 560px form column with the summary panel beside it.
 
-**Look.** To be decided. The text contrast, spacing scale and touch-target rules from the self-review checklist still apply.
+**Look.** Tempest Line's Blueprint palette, a worked problem on graph paper: blueprint blue for structure and one lime highlighter stroke for the thing that matters, such as the current step. There are three themes: Graph Paper (light), Blueprint (dark, the learner's late-night default) and High Contrast. Learner things are teal and payer things violet, always with a word or icon too. Headings use Bricolage Grotesque, the interface uses Atkinson Hyperlegible Next, and card numbers use Atkinson Hyperlegible Mono. Every text pair meets WCAG 2.2 AA, and every control shows a visible focus ring.
 
-**Voice.** To be decided.
+**Voice.** Plain English in sentence case, speaking to "you", with no hype, exclamation marks or emoji. A price never appears without its interval, every screen says what happens next and whether money moved ("Nothing was charged."), and errors say how to fix them ("ZIP code is 5 digits — you entered 4."). Learner copy is short; parent copy puts cost and terms first.
 
 **Stack.** React 19 (JavaScript), Vite, React Router, TanStack Query, Zustand, React Hook Form with Zod, Tailwind CSS v4, ESLint with Prettier, and Vitest with Testing Library.
 
@@ -73,9 +95,12 @@ npm run dev
 
 - [README.md](02-checkout-form/README.md): brief, criteria, setup, scripts and project layout
 - [Day 2 brief](daily-ui-challenge.md#2-checkout--payment-form): needs, key points, improvements and the self-review checklist
-- [Design system reference](02-checkout-form/docs/design-system/README.md): the Fieldnote design-system docs copied in with the scaffold
+- [Tempest Line design system](02-checkout-form/docs/design-system.md): tokens, type, themes and component rules
+- [PRD](02-checkout-form/docs/markdown/checkout-form-spec-subscription.md): goals, user stories and requirements for learners and payers
+- [Technical brief](02-checkout-form/docs/markdown/checkout-form-technical-brief.md): scope, constraints, edge cases and open questions
+- [Planning docs](02-checkout-form/docs/markdown/): strategy, feature request, palettes and an SEO content brief
 
-**Status.** Scaffolded, with Fieldnote's components and tokens copied in from the Day 1 starter. The checkout screen hasn't been started.
+**Status.** Designed on paper, not built. The PRD, technical brief, design system and palettes are written, and the project is scaffolded, but the code still uses the Fieldnote tokens and components from Day 1. Next: move `src/index.css` to the Tempest Line tokens, then build the Plan step.
 
 ## Day 3: Landing page hero
 
@@ -137,3 +162,6 @@ npm run dev
 - [Design system reference](04-calculator/docs/design-system/README.md): the Fieldnote design-system docs copied in with the scaffold
 
 **Status.** Scaffolded, with Fieldnote's components and tokens copied in from the Day 1 starter. The calculator hasn't been started.
+ calculator hasn't been started.
+er. The calculator hasn't been started.
+ calculator hasn't been started.

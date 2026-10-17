@@ -38,4 +38,19 @@ describe('Button', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Save' }))
     expect(onClick).not.toHaveBeenCalled()
   })
+
+  it('renders a link when given an href', () => {
+    render(
+      <Button variant="primary" href="#start">
+        Start free
+      </Button>,
+    )
+    expect(screen.getByRole('link', { name: 'Start free' })).toHaveAttribute('href', '#start')
+    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+  })
+
+  it('fills with the highlighter in the highlight variant', () => {
+    render(<Button variant="highlight">Start free</Button>)
+    expect(screen.getByRole('button')).toHaveClass('bg-highlighter', 'text-on-highlighter')
+  })
 })

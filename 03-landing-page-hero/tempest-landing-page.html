@@ -1,0 +1,1359 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <style>
+      :root {
+        color-scheme: light;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font:
+          14px -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: #fff;
+        color: #000;
+      }
+      img {
+        max-width: 100%;
+      }
+      [hidden]:not([hidden='until-found' i]) {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <title>Tempest Line Landing Page</title>
+    <meta name="claude:viewport-fit-sides" content="cover" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Atkinson+Hyperlegible+Next:wght@400;500;700&family=Atkinson+Hyperlegible+Mono:wght@400;500&display=swap"
+    />
+    <style>
+      /* Layout: divided hero (graph-paper copy | blueprint-blue worked problem), proof strip, then steps + media against a bento sidebar, closed by a full-bleed CTA band.
+   Skins come from the Tempest Line tokens: Blueprint (default, dark), Graph Paper (light), High Contrast. Picked with the switch in the top strip. */
+      :root {
+        --blueprint: #1f4fa3;
+        --blue-1: #1e4fa8;
+        --blue-2: #2a63d0;
+        --blue-3: #1b4596;
+        --highlighter: #d7f25c;
+        --on-hl: #0f1e3a;
+        --grid: rgba(98, 132, 196, 0.22);
+        --bg: #0b1a33;
+        --surface: #102446;
+        --raised: #16305a;
+        --border: #2a4372;
+        --control-border: #7d94c0;
+        --ink: #eaf1ff;
+        --muted: #a3b5d6;
+        --link: #9cc2ff;
+        --focus: #6fd6d0;
+        --learner: #6fd6d0;
+        --learner-soft: #0e3d45;
+        --payer: #cda8f0;
+        --payer-soft: #33215a;
+        --success: #5fd394;
+        --success-soft: #0f3a27;
+        --panel-ink: #eaf1ff;
+        --wave: #a9c4ff;
+        --shadow: 0 30px 60px rgba(4, 12, 30, 0.45);
+
+        --display: 'Bricolage Grotesque', 'Avenir Next', system-ui, sans-serif;
+        --body:
+          'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', 'Segoe UI', system-ui, sans-serif;
+        --mono: 'Atkinson Hyperlegible Mono', ui-monospace, Menlo, monospace;
+        --wrap: 1280px;
+        --radius: 14px;
+        color-scheme: dark;
+      }
+      :root[data-skin='graph'] {
+        --grid: #d5e0f2;
+        --bg: #f3f6fb;
+        --surface: #ffffff;
+        --raised: #e8eef8;
+        --border: #d0daeb;
+        --control-border: #7686a6;
+        --ink: #0f1e3a;
+        --muted: #4a5873;
+        --link: #1f4fa3;
+        --focus: #0f6e6e;
+        --learner: #0f6e6e;
+        --learner-soft: #ddf2f0;
+        --payer: #6e3aa5;
+        --payer-soft: #f1e6f8;
+        --success: #1a7a48;
+        --success-soft: #e3f4ea;
+        --shadow: 0 1px 2px #0f1e3a14, 0 18px 40px #0f1e3a33;
+        color-scheme: light;
+      }
+      :root[data-skin='contrast'] {
+        --blueprint: #0b2a66;
+        --blue-1: #0b2a66;
+        --blue-2: #0b2a66;
+        --blue-3: #0b2a66;
+        --on-hl: #000000;
+        --grid: #b8c2d6;
+        --bg: #ffffff;
+        --surface: #ffffff;
+        --raised: #f2f2f2;
+        --border: #000000;
+        --control-border: #000000;
+        --ink: #000000;
+        --muted: #262b40;
+        --link: #0b2a66;
+        --focus: #c25e00;
+        --learner: #004f56;
+        --learner-soft: #ffffff;
+        --payer: #4a1f86;
+        --payer-soft: #ffffff;
+        --success: #0a5a2f;
+        --success-soft: #ffffff;
+        --wave: #ffffff;
+        --shadow: none;
+        color-scheme: light;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--body);
+        font-size: 16px;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0 0 auto;
+        height: env(safe-area-inset-top, 0px);
+        z-index: 10;
+        background: var(--bg);
+      }
+      a {
+        color: inherit;
+      }
+      :focus-visible {
+        outline: 2px solid var(--focus);
+        outline-offset: 3px;
+        border-radius: 6px;
+      }
+
+      .gutter {
+        padding-left: max(24px, env(safe-area-inset-left, 0px));
+        padding-right: max(24px, env(safe-area-inset-right, 0px));
+      }
+      .wrap {
+        max-width: var(--wrap);
+        margin-inline: auto;
+      }
+
+      /* Theme strip */
+      .skin-bar {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        font-size: 0.85rem;
+      }
+      .skin-bar .wrap {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px 14px;
+        padding-block: 8px;
+      }
+      .skin-bar .lbl {
+        color: var(--muted);
+        font-weight: 700;
+      }
+      .seg {
+        display: inline-flex;
+        border: 1px solid var(--control-border);
+        border-radius: 999px;
+        padding: 2px;
+        gap: 2px;
+      }
+      .seg button {
+        font: inherit;
+        font-weight: 700;
+        color: var(--ink);
+        background: transparent;
+        border: 0;
+        border-radius: 999px;
+        padding: 6px 14px;
+        cursor: pointer;
+        min-height: 32px;
+      }
+      .seg button[aria-pressed='true'] {
+        background: var(--ink);
+        color: var(--bg);
+      }
+
+      /* Nav */
+      .nav {
+        border-bottom: 1px solid var(--border);
+      }
+      .nav .wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding-block: 16px;
+      }
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        min-height: 44px;
+      }
+      .brand span {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 1.4rem;
+        letter-spacing: -0.015em;
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 26px;
+        font-size: 0.95rem;
+        font-weight: 700;
+      }
+      .nav-links a {
+        text-decoration: none;
+      }
+      .nav-links a:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+      }
+      .btn-ghost {
+        border: 1px solid var(--control-border);
+        border-radius: 10px;
+        padding: 10px 18px;
+      }
+      .btn-ghost:hover {
+        background: var(--raised);
+        text-decoration: none !important;
+      }
+
+      /* Hero */
+      .hero {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+      .hero-copy {
+        background-color: var(--bg);
+        background-image:
+          linear-gradient(var(--grid) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+        background-size: 34px 34px;
+        background-position: -1px -1px;
+        display: flex;
+        align-items: center;
+        padding-block: 80px;
+        padding-left: max(48px, env(safe-area-inset-left, 0px));
+        padding-right: 48px;
+      }
+      .hero-copy-inner {
+        max-width: 600px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 22px;
+      }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--learner-soft);
+        color: var(--learner);
+        border: 1px solid color-mix(in srgb, var(--learner) 40%, transparent);
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 6px 13px;
+        border-radius: 999px;
+      }
+      .ico {
+        width: 18px;
+        height: 18px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex: none;
+      }
+      h1 {
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: clamp(2.6rem, 4.9vw, 4.3rem);
+        line-height: 1.03;
+        letter-spacing: -0.04em;
+        margin: 0;
+        max-width: 13ch;
+        text-wrap: balance;
+      }
+      h1 mark {
+        background: linear-gradient(
+          transparent 10%,
+          var(--highlighter) 10%,
+          var(--highlighter) 94%,
+          transparent 94%
+        );
+        color: var(--on-hl);
+        padding: 0 0.12em;
+        margin: 0 -0.04em;
+        border-radius: 4px;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+      }
+      .lede {
+        color: var(--muted);
+        font-size: 1.18rem;
+        line-height: 1.6;
+        max-width: 32em;
+        margin: 0;
+      }
+      .cta-block {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 4px;
+      }
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px 26px;
+      }
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: var(--highlighter);
+        color: var(--on-hl);
+        font-weight: 700;
+        font-size: 1.1rem;
+        text-decoration: none;
+        min-height: 56px;
+        padding: 0 30px;
+        border-radius: 10px;
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.15s ease;
+      }
+      :root[data-skin='graph'] .btn-primary,
+      :root[data-skin='contrast'] .btn-primary {
+        background: var(--blueprint);
+        color: #ffffff;
+      }
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 24px rgba(31, 79, 163, 0.3);
+      }
+      .link-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--link);
+        font-weight: 700;
+        text-underline-offset: 5px;
+        text-decoration-thickness: 1.5px;
+        min-height: 44px;
+      }
+      .link-secondary:hover {
+        text-decoration-thickness: 2.5px;
+      }
+      .fine {
+        color: var(--muted);
+        font-size: 0.88rem;
+        margin: 0;
+      }
+      .rating {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px 14px;
+      }
+      .stars {
+        display: flex;
+        gap: 2px;
+        color: var(--ink);
+      }
+      .stars svg {
+        width: 19px;
+        height: 19px;
+        fill: currentColor;
+      }
+      .rating p {
+        margin: 0;
+        font-size: 0.95rem;
+      }
+      .rating p span {
+        color: var(--muted);
+      }
+
+      .hero-visual {
+        position: relative;
+        overflow: hidden;
+        background: radial-gradient(
+          120% 90% at 90% 10%,
+          var(--blue-2) 0%,
+          var(--blue-1) 70%,
+          var(--blue-3) 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-block: 72px 88px;
+        padding-left: 32px;
+        padding-right: max(32px, env(safe-area-inset-right, 0px));
+      }
+      .waves {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      .waves path {
+        stroke: var(--wave);
+      }
+
+      .work {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 440px;
+      }
+      .card {
+        background: var(--surface);
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+      }
+      .card-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+        padding: 16px 22px;
+        background: var(--raised);
+        border-bottom: 1px solid var(--border);
+      }
+      .card-head strong {
+        font-weight: 700;
+        font-size: 0.95rem;
+      }
+      .card-head span {
+        color: var(--muted);
+        font-size: 0.85rem;
+        font-variant-numeric: tabular-nums;
+      }
+      .card-body {
+        padding: 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .cap {
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .problem {
+        margin: 4px 0 0;
+        font-family: var(--mono);
+        font-size: 1.5rem;
+        letter-spacing: 0.02em;
+      }
+      .wsteps {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .wsteps li {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+      }
+      .wsteps li.now {
+        background: var(--raised);
+        border: 2px solid var(--ink);
+      }
+      .dot {
+        width: 26px;
+        height: 26px;
+        border-radius: 999px;
+        flex: none;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 0.85rem;
+        border: 2px solid var(--ink);
+      }
+      .dot.ok {
+        background: var(--success);
+        border-color: var(--success);
+        color: var(--surface);
+      }
+      .dot.ok svg {
+        width: 14px;
+        height: 14px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .wsteps b {
+        display: block;
+        font-size: 0.95rem;
+      }
+      .wsteps .m {
+        font-family: var(--mono);
+        font-size: 1rem;
+      }
+      .wsteps .m.dim {
+        color: var(--muted);
+      }
+      .wsteps .why {
+        display: block;
+        color: var(--muted);
+        font-size: 0.88rem;
+        line-height: 1.4;
+        margin-top: 2px;
+      }
+      .checked {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--success-soft);
+        color: var(--success);
+        border: 1px solid color-mix(in srgb, var(--success) 45%, transparent);
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-weight: 700;
+        font-size: 0.95rem;
+      }
+      .ask {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid var(--control-border);
+        border-radius: 999px;
+        padding: 6px 6px 6px 18px;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+      .ask span:first-child {
+        flex-grow: 1;
+        min-width: 0;
+      }
+      .ask .go {
+        width: 36px;
+        height: 36px;
+        border-radius: 999px;
+        background: var(--raised);
+        display: grid;
+        place-items: center;
+        color: var(--ink);
+      }
+      .payer-chip {
+        position: absolute;
+        right: -10px;
+        bottom: -20px;
+        z-index: 2;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--payer-soft);
+        color: var(--payer);
+        border: 1px solid color-mix(in srgb, var(--payer) 45%, transparent);
+        border-radius: 999px;
+        padding: 8px 14px;
+        font-weight: 700;
+        font-size: 0.88rem;
+        box-shadow: var(--shadow);
+      }
+
+      /* Proof strip */
+      .proof {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+      }
+      .proof .wrap {
+        padding-block: 28px 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px 32px;
+      }
+      .stat .v {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 2rem;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        font-variant-numeric: tabular-nums;
+      }
+      .stat .k {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+      .logo-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px 14px;
+        border-top: 1px solid var(--border);
+        padding-top: 20px;
+      }
+      .logo-row .cap {
+        margin-right: 8px;
+        letter-spacing: 0.04em;
+        text-transform: none;
+        font-size: 0.88rem;
+      }
+      .logo-slot {
+        min-height: 36px;
+        min-width: 120px;
+        padding: 0 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1.2px dashed var(--control-border);
+        border-radius: 6px;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      /* Main split */
+      .main {
+        padding-block: 80px 104px;
+      }
+      .main .wrap {
+        display: grid;
+        grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+        gap: 34px;
+        align-items: start;
+      }
+      .flow {
+        display: flex;
+        flex-direction: column;
+        gap: 26px;
+        min-width: 0;
+      }
+      h2 {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: clamp(2rem, 3.2vw, 2.6rem);
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+        margin: 0 0 6px;
+      }
+      .steps {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+      }
+      .step {
+        display: grid;
+        grid-template-columns: 52px minmax(0, 1fr);
+        gap: 26px;
+        align-items: center;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 30px;
+      }
+      .num {
+        width: 52px;
+        height: 52px;
+        border-radius: 9px;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 1.2rem;
+        font-variant-numeric: tabular-nums;
+        border: 1.5px solid var(--control-border);
+      }
+      .step:first-child .num {
+        background: var(--highlighter);
+        color: var(--on-hl);
+        border-color: var(--highlighter);
+      }
+      .step h3 {
+        margin: 0 0 4px;
+        font-size: 1.22rem;
+        font-weight: 700;
+      }
+      .step p {
+        margin: 0;
+        color: var(--muted);
+      }
+      .media {
+        border: 1.5px dashed var(--control-border);
+        border-radius: var(--radius);
+        aspect-ratio: 16 / 5.5;
+        max-width: 100%;
+        min-height: 220px;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        padding: 24px;
+        color: var(--muted);
+        font-size: 1.05rem;
+      }
+
+      /* Bento */
+      .bento {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        min-width: 0;
+      }
+      .tile {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px 26px;
+        min-width: 0;
+      }
+      .tile.span {
+        grid-column: 1 / -1;
+      }
+      .tile.big {
+        background: linear-gradient(140deg, #2152b0, #1c4597);
+        color: #ffffff;
+        border-color: transparent;
+        padding: 28px 30px 30px;
+      }
+      :root[data-skin='contrast'] .tile.big {
+        background: var(--blueprint);
+      }
+      .tile.big .v {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: clamp(2.6rem, 3.6vw, 3.2rem);
+        letter-spacing: -0.03em;
+        line-height: 1;
+        margin-top: 10px;
+        font-variant-numeric: tabular-nums;
+      }
+      .tile.small {
+        padding: 22px 20px;
+      }
+      .tile.small .v {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 1.85rem;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+      }
+      .tile.small .k {
+        color: var(--muted);
+        font-size: 0.82rem;
+        line-height: 1.35;
+        margin-top: 4px;
+      }
+      .tile h4 {
+        margin: 0 0 14px;
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: var(--muted);
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .chip {
+        background: var(--raised);
+        border-radius: 999px;
+        padding: 6px 13px;
+        font-size: 0.9rem;
+      }
+      .tile.parent {
+        background: var(--payer-soft);
+        border-color: color-mix(in srgb, var(--payer) 40%, transparent);
+      }
+      .tile.parent h4 {
+        color: var(--payer);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .tile.parent p {
+        margin: 0;
+        font-size: 0.95rem;
+      }
+      .tile.quote {
+        background: var(--raised);
+      }
+      .tile.quote blockquote {
+        margin: 0;
+        font-weight: 700;
+        font-size: 1.1rem;
+        line-height: 1.5;
+      }
+      .tile.quote cite {
+        display: block;
+        margin-top: 16px;
+        color: var(--muted);
+        font-style: normal;
+        font-size: 0.9rem;
+      }
+
+      /* CTA band */
+      .band {
+        background: radial-gradient(
+          120% 140% at 50% 120%,
+          var(--blue-2) 0%,
+          var(--blue-1) 55%,
+          var(--blue-3) 100%
+        );
+        color: #ffffff;
+      }
+      .band .wrap {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px 40px;
+        padding-block: 88px;
+      }
+      .band h2 {
+        font-weight: 800;
+        font-size: clamp(2rem, 3.6vw, 3.1rem);
+        letter-spacing: -0.04em;
+        margin: 0;
+        min-width: 0;
+        max-width: 18ch;
+        text-wrap: balance;
+      }
+      .band .cta-block {
+        align-items: flex-start;
+      }
+      .band .btn-primary {
+        background: var(--highlighter) !important;
+        color: #0f1e3a !important;
+      }
+      .band .fine {
+        color: rgba(255, 255, 255, 0.82);
+      }
+      .foot {
+        padding-block: 56px;
+      }
+
+      /* Responsive */
+      @media (max-width: 1080px) {
+        .main .wrap {
+          grid-template-columns: 1fr;
+        }
+        .bento {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+        .bento .tile.big,
+        .bento .tile.subjects,
+        .bento .tile.parent,
+        .bento .tile.quote {
+          grid-column: span 2;
+        }
+        .bento .tile.small {
+          grid-column: span 1;
+        }
+      }
+      @media (max-width: 880px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+        .hero-copy {
+          padding-block: 60px;
+          padding-left: max(24px, env(safe-area-inset-left, 0px));
+          padding-right: max(24px, env(safe-area-inset-right, 0px));
+        }
+        .hero-visual {
+          padding-block: 56px 72px;
+          padding-left: max(24px, env(safe-area-inset-left, 0px));
+          padding-right: max(24px, env(safe-area-inset-right, 0px));
+        }
+        .bento {
+          grid-template-columns: 1fr 1fr;
+        }
+        .bento .tile.big,
+        .bento .tile.subjects,
+        .bento .tile.parent,
+        .bento .tile.quote {
+          grid-column: 1 / -1;
+        }
+      }
+      @media (max-width: 720px) {
+        .nav-links .hide-sm {
+          display: none;
+        }
+        .stats {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+      }
+      @media (max-width: 560px) {
+        .gutter,
+        .hero-copy,
+        .hero-visual {
+          padding-left: max(16px, env(safe-area-inset-left, 0px));
+          padding-right: max(16px, env(safe-area-inset-right, 0px));
+        }
+        .skin-bar .wrap {
+          justify-content: center;
+        }
+        .seg button {
+          padding: 6px 10px;
+        }
+        .hero-copy {
+          padding-block: 44px;
+        }
+        .hero-copy-inner {
+          gap: 18px;
+        }
+        .lede {
+          font-size: 1.05rem;
+        }
+        .cta-row {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .btn-primary {
+          width: 100%;
+        }
+        .link-secondary {
+          justify-content: center;
+        }
+        .fine {
+          text-align: center;
+        }
+        .hero-visual {
+          padding-block: 40px 60px;
+        }
+        .card-head,
+        .card-body {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+        .payer-chip {
+          right: 8px;
+        }
+        .main {
+          padding-block: 56px 72px;
+        }
+        .step {
+          grid-template-columns: 44px minmax(0, 1fr);
+          gap: 16px;
+          padding: 22px 18px;
+          align-items: start;
+        }
+        .num {
+          width: 44px;
+          height: 44px;
+          font-size: 1.05rem;
+        }
+        .step h3 {
+          font-size: 1.1rem;
+        }
+        .media {
+          aspect-ratio: 4 / 3;
+          min-height: 0;
+        }
+        .bento {
+          gap: 14px;
+        }
+        .band .wrap {
+          padding-block: 60px;
+        }
+        .band .cta-block {
+          width: 100%;
+          align-items: stretch;
+        }
+        .band .fine {
+          text-align: left;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+
+    <div class="skin-bar gutter">
+      <div class="wrap">
+        <span class="lbl" id="skin-lbl">Theme</span>
+        <div class="seg" role="group" aria-labelledby="skin-lbl">
+          <button type="button" id="skin-graph" data-skin="graph" aria-pressed="false">
+            Graph Paper
+          </button>
+          <button type="button" id="skin-blueprint" data-skin="blueprint" aria-pressed="true">
+            Blueprint
+          </button>
+          <button type="button" id="skin-contrast" data-skin="contrast" aria-pressed="false">
+            High Contrast
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <header class="nav gutter">
+      <div class="wrap">
+        <a class="brand" href="#top" id="top">
+          <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+            <rect x="1" y="1" width="26" height="26" rx="6" fill="#1F4FA3"></rect>
+            <path
+              d="M8 19 L14 9 L20 19"
+              stroke="#D7F25C"
+              stroke-width="2.5"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>
+          </svg>
+          <span>Tempest Line</span>
+        </a>
+        <nav class="nav-links" aria-label="Main">
+          <a class="hide-sm" href="#how">How it works</a>
+          <a class="hide-sm" href="#parents">For parents</a>
+          <a class="hide-sm" href="#pricing">Pricing</a>
+          <a class="btn-ghost" href="#login">Log in</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="hero-copy-inner">
+          <span class="eyebrow">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M22 10 12 5 2 10l10 5 10-5Z"></path>
+              <path d="M6 12v5c3 2 9 2 12 0v-5"></path>
+            </svg>
+            For students, any subject, any hour
+          </span>
+          <h1>Stuck on homework? Get it explained <mark>step by step.</mark></h1>
+          <p class="lede">
+            Snap or type any problem. Tempest Line walks you through each step and checks your
+            answer, until it clicks.
+          </p>
+          <div class="cta-block">
+            <div class="cta-row">
+              <a class="btn-primary" href="#start"
+                >Start free
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 12h14"></path>
+                  <path d="m13 6 6 6-6 6"></path>
+                </svg>
+              </a>
+              <a class="link-secondary" href="#how">
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9"></circle>
+                  <path d="m10 8.5 5 3.5-5 3.5Z"></path>
+                </svg>
+                See how it works
+              </a>
+            </div>
+            <p class="fine">No card needed. A parent can add a plan later from $9.99/month.</p>
+          </div>
+          <div class="rating">
+            <div class="stars" role="img" aria-label="Rated [4.8] out of 5">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="m12 2.8 2.8 5.8 6.3.9-4.6 4.5 1.1 6.3L12 17.3l-5.6 3 1.1-6.3-4.6-4.5 6.3-.9Z"
+                ></path>
+              </svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="m12 2.8 2.8 5.8 6.3.9-4.6 4.5 1.1 6.3L12 17.3l-5.6 3 1.1-6.3-4.6-4.5 6.3-.9Z"
+                ></path>
+              </svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="m12 2.8 2.8 5.8 6.3.9-4.6 4.5 1.1 6.3L12 17.3l-5.6 3 1.1-6.3-4.6-4.5 6.3-.9Z"
+                ></path>
+              </svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="m12 2.8 2.8 5.8 6.3.9-4.6 4.5 1.1 6.3L12 17.3l-5.6 3 1.1-6.3-4.6-4.5 6.3-.9Z"
+                ></path>
+              </svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="m12 2.8 2.8 5.8 6.3.9-4.6 4.5 1.1 6.3L12 17.3l-5.6 3 1.1-6.3-4.6-4.5 6.3-.9Z"
+                ></path>
+              </svg>
+            </div>
+            <p>
+              <strong>[4.8]</strong> <span>from [12,000] App Store and Google Play reviews</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <svg class="waves" viewBox="0 0 640 600" preserveAspectRatio="none" aria-hidden="true">
+          <path
+            d="M0 128 C 120 100, 260 110, 420 104 S 600 80, 640 60"
+            fill="none"
+            stroke-opacity="0.45"
+            stroke-width="2"
+          />
+          <path
+            d="M0 470 C 140 420, 300 400, 460 360 S 600 320, 640 300"
+            fill="none"
+            stroke-opacity="0.3"
+            stroke-width="1.2"
+          />
+          <path
+            d="M0 530 C 160 480, 320 470, 480 420 S 610 380, 640 370"
+            fill="none"
+            stroke-opacity="0.24"
+            stroke-width="1.2"
+          />
+          <path
+            d="M0 590 C 180 540, 340 530, 500 480 S 620 440, 640 430"
+            fill="none"
+            stroke-opacity="0.18"
+            stroke-width="1.2"
+          />
+        </svg>
+        <div class="work">
+          <article class="card" aria-label="Example: a worked problem in Tempest Line">
+            <div class="card-head"><strong>Algebra · Homework 4</strong><span>11:42 pm</span></div>
+            <div class="card-body">
+              <div>
+                <div class="cap">Your problem</div>
+                <p class="problem">3x + 7 = 22</p>
+              </div>
+              <ol class="wsteps">
+                <li>
+                  <span class="dot ok"
+                    ><svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="m5 12 5 5 9-10"></path></svg
+                  ></span>
+                  <div><b>Take 7 from both sides</b><span class="m dim">3x = 15</span></div>
+                </li>
+                <li class="now">
+                  <span class="dot">2</span>
+                  <div>
+                    <b>Divide both sides by 3</b><span class="m">x = 15 ÷ 3 = 5</span
+                    ><span class="why">Why? Dividing undoes the 3 that is multiplying x.</span>
+                  </div>
+                </li>
+              </ol>
+              <div class="checked">
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m5 12 5 5 9-10"></path>
+                </svg>
+                Checked: 3(5) + 7 = 22
+              </div>
+              <div class="ask" aria-hidden="true">
+                <span>Ask why, or try one like it…</span>
+                <span class="go"
+                  ><svg class="ico" viewBox="0 0 24 24">
+                    <path d="M5 12h14"></path>
+                    <path d="m13 6 6 6-6 6"></path></svg
+                ></span>
+              </div>
+            </div>
+          </article>
+          <div class="payer-chip">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="6" width="18" height="13" rx="2"></rect>
+              <path d="M3 10h18"></path>
+            </svg>
+            Paid by a parent · no surprise charges
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof gutter" aria-label="Proof">
+      <div class="wrap">
+        <div class="stats">
+          <div class="stat">
+            <div class="v">[250,000]</div>
+            <div class="k">students learning this term</div>
+          </div>
+          <div class="stat">
+            <div class="v">[9 million]</div>
+            <div class="k">problems explained step by step</div>
+          </div>
+          <div class="stat">
+            <div class="v">[1,200]</div>
+            <div class="k">schools recommend it to families</div>
+          </div>
+        </div>
+        <div class="logo-row">
+          <span class="cap">Used by students at</span>
+          <span class="logo-slot">[School logo]</span>
+          <span class="logo-slot">[School logo]</span>
+          <span class="logo-slot">[District logo]</span>
+          <span class="logo-slot">[Press logo]</span>
+          <span class="logo-slot">[Award badge]</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="main gutter" id="how">
+      <div class="wrap">
+        <div class="flow">
+          <h2>How it works</h2>
+          <ol class="steps">
+            <li class="step">
+              <span class="num">1</span>
+              <div>
+                <h3>Snap or type the problem</h3>
+                <p>Take a photo of the page or type it in. Math, science or writing, any hour.</p>
+              </div>
+            </li>
+            <li class="step">
+              <span class="num">2</span>
+              <div>
+                <h3>Work through it step by step</h3>
+                <p>
+                  Each step comes with the reason behind it, and you try the next move yourself.
+                </p>
+              </div>
+            </li>
+            <li class="step">
+              <span class="num">3</span>
+              <div>
+                <h3>Check your answer</h3>
+                <p>
+                  Tempest Line checks your work, then gives you one like it to practise until it
+                  clicks.
+                </p>
+              </div>
+            </li>
+          </ol>
+          <div class="media" role="img" aria-label="Placeholder for product media">
+            [Product photo or short demo video]
+          </div>
+        </div>
+
+        <aside class="bento" aria-label="Proof and details">
+          <div class="tile span big">
+            <div>Students learning this term</div>
+            <div class="v">[250,000]</div>
+          </div>
+          <div class="tile small">
+            <div class="v">[9M]</div>
+            <div class="k">problems explained step by step</div>
+          </div>
+          <div class="tile small">
+            <div class="v">[4.8]★</div>
+            <div class="k">from [12,000] reviews</div>
+          </div>
+          <div class="tile span subjects">
+            <h4>Covers</h4>
+            <div class="chips">
+              <span class="chip">Algebra</span><span class="chip">Geometry</span
+              ><span class="chip">Chemistry</span> <span class="chip">Physics</span
+              ><span class="chip">Biology</span><span class="chip">Essays</span>
+            </div>
+          </div>
+          <div class="tile span parent" id="parents">
+            <h4>
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="6" width="18" height="13" rx="2"></rect>
+                <path d="M3 10h18"></path></svg
+              >For parents
+            </h4>
+            <p>
+              Students start free. A parent can add a plan later from $9.99/month, with no surprise
+              charges.
+            </p>
+          </div>
+          <figure class="tile span quote" style="margin: 0">
+            <blockquote>
+              “[Student or parent quote about homework finally making sense.]”
+            </blockquote>
+            <cite>[Name], [Grade or role]</cite>
+          </figure>
+        </aside>
+      </div>
+    </section>
+
+    <section class="band gutter" id="start">
+      <div class="wrap">
+        <h2>Stuck tonight? Get unstuck one step at a time.</h2>
+        <div class="cta-block">
+          <a class="btn-primary" href="#start"
+            >Start free
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12h14"></path>
+              <path d="m13 6 6 6-6 6"></path>
+            </svg>
+          </a>
+          <p class="fine">No card needed.</p>
+        </div>
+      </div>
+    </section>
+    <div class="foot" aria-hidden="true"></div>
+
+    <script>
+      ;(function () {
+        var root = document.documentElement
+        var buttons = document.querySelectorAll('.seg button')
+        function apply(skin) {
+          if (skin === 'blueprint') root.removeAttribute('data-skin')
+          else root.setAttribute('data-skin', skin)
+          buttons.forEach(function (b) {
+            b.setAttribute('aria-pressed', String(b.dataset.skin === skin))
+          })
+        }
+        var saved = null
+        try {
+          saved = localStorage.getItem('tl-skin')
+        } catch (e) {}
+        if (saved === 'graph' || saved === 'contrast' || saved === 'blueprint') apply(saved)
+        buttons.forEach(function (b) {
+          b.addEventListener('click', function () {
+            apply(b.dataset.skin)
+            try {
+              localStorage.setItem('tl-skin', b.dataset.skin)
+            } catch (e) {}
+          })
+        })
+      })()
+    </script>
+  </body>
+</html>

@@ -1,7 +1,7 @@
 import { Button } from '@/components/Button'
 import { Highlight } from '@/components/Highlight'
 import { RecapCard } from '@/features/landing/RecapCard'
-import { WaveLines } from '@/features/landing/WaveLines'
+import { WaveLines } from '@/components/WaveLines'
 
 export function Hero() {
   return (
@@ -37,7 +37,7 @@ export function Hero() {
       </div>
 
       <div className="bg-blueprint-glow relative flex items-center justify-center overflow-hidden px-4 py-16 md:px-12">
-        <WaveLines />
+        <WaveLines className="text-white" accentClassName="text-learner" />
         <div className="relative w-full max-w-[420px]">
           <RecapCard />
         </div>

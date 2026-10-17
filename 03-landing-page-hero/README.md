@@ -1,3 +1,11 @@
+---
+stale-refs:
+  - source: README.md
+    changed_at: '2026-10-17T16:24:43'
+    sections_changed: []
+    summary: externally modified
+---
+
 # Day 3: Landing page hero
 
 The Day 3 entry of the [30-Day Daily UI Challenge](../daily-ui-challenge.md): the landing page for Minutely, a fictional meeting assistant.

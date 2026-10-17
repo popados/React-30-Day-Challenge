@@ -202,8 +202,79 @@
     ellipse at 70% 15%,
     color-mix(in srgb, var(--blueprint), white 12%),
     var(--blueprint) 55%,
-    color-mix(in srgb, var(--blueprint), var(--bg) 25%)
+    color-mix(in srgb, var(--blueprint), black 20%)
   );
+}
+
+/*
+ * Other Tempest Line themes, scoped to an element with data-skin so a page can
+ * switch theme without touching the rest of the app. Blueprint is the default.
+ */
+[data-skin='graph'] {
+  color-scheme: light;
+  --grid: #d5e0f2;
+  --bg: #f3f6fb;
+  --surface: #ffffff;
+  --surface-raised: #e8eef8;
+  --border: #d0daeb;
+  --control-border: #7686a6;
+  --ink: #0f1e3a;
+  --ink-muted: #4a5873;
+  --action: #1f4fa3;
+  --action-hover: #173f86;
+  --on-action: #ffffff;
+  --action-disabled: #c8d2e4;
+  --on-action-disabled: #4a5873;
+  --link: #1f4fa3;
+  --focus-ring: #0f6e6e;
+  --learner: #0f6e6e;
+  --learner-soft: #ddf2f0;
+  --payer: #6e3aa5;
+  --payer-soft: #f1e6f8;
+  --success: #1a7a48;
+  --success-soft: #e3f4ea;
+  --danger: #b42332;
+  --danger-soft: #fbe7e9;
+  --caution: #8a5800;
+  --caution-soft: #fff3d1;
+  --shadow-raised: 0 1px 2px #0f1e3a14, 0 8px 24px #0f1e3a14;
+}
+
+[data-skin='contrast'] {
+  color-scheme: light;
+  --blueprint: #0b2a66;
+  --on-highlighter: #000000;
+  --grid: #b8c2d6;
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-raised: #f2f2f2;
+  --border: #000000;
+  --control-border: #000000;
+  --ink: #000000;
+  --ink-muted: #262b40;
+  --action: #0b2a66;
+  --action-hover: #000000;
+  --on-action: #ffffff;
+  --action-disabled: #bdbdbd;
+  --on-action-disabled: #000000;
+  --link: #0b2a66;
+  --focus-ring: #c25e00;
+  --learner: #004f56;
+  --learner-soft: #ffffff;
+  --payer: #4a1f86;
+  --payer-soft: #ffffff;
+  --success: #0a5a2f;
+  --success-soft: #ffffff;
+  --danger: #9a0012;
+  --danger-soft: #ffffff;
+  --caution: #6b4100;
+  --caution-soft: #ffffff;
+  --shadow-raised: none;
+}
+
+/* High Contrast separates surfaces with borders, not shade: flat blueprint. */
+[data-skin='contrast'] .bg-blueprint-glow {
+  background-image: none;
 }
 
 @layer base {
