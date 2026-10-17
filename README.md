@@ -1,25 +1,3 @@
----
-stale-refs:
-  - source: 01-signup-form\README.md
-    changed_at: "2026-10-17T16:24:43"
-    sections_changed: []
-    summary: externally modified
-  - source: 02-checkout-form\README.md
-    changed_at: "2026-10-17T16:24:43"
-    sections_changed: []
-    summary: externally modified
-  - source: 03-landing-page-hero\README.md
-    changed_at: "2026-10-17T16:24:43"
-    sections_changed: []
-    summary: externally modified
----
-
-
-
-
-
-
-
 # React 30-Day UI
 
 A 30-day UI challenge built in React: one screen a day, each in its own folder. The daily briefs, checklists and weekly themes are in [daily-ui-challenge.md](daily-ui-challenge.md). The weeks cover foundations, data and feedback, complex screens, and polish and systems, ending on Day 30 with a redesign of the Day 1 screen.
@@ -102,19 +80,19 @@ npm run dev
 
 **Status.** Designed on paper, not built. The PRD, technical brief, design system and palettes are written, and the project is scaffolded, but the code still uses the Fieldnote tokens and components from Day 1. Next: move `src/index.css` to the Tempest Line tokens, then build the Plan step.
 
-## Day 3: Landing page hero
+## Day 3: Tempest Line landing page
 
 - **Needs:** product value proposition, audience, main call to action, one supporting visual, any proof (users, ratings)
 - **Key:** a headline that says what it does in under 10 words, one dominant button, strong visual hierarchy
 - **Improve:** a secondary low-commitment action ("see how it works"), a trust strip with logos or stats, and a version tested at phone width
 
-**Company.** Minutely is a fictional meeting assistant. It joins calls from the calendar, catches every commitment, and sends each attendee a short list of what they promised to do, with an owner and a date on each item.
+**Company.** Tempest Line is a fictional study app for students, most of them under 18 and studying late at night, whose plans are usually paid for by a parent. Students snap or type any problem, and it walks them through each step and checks their answer. Students start free; a parent can add a plan later from $9.99/month, with no surprise charges. Day 3 is its landing page, the same company as the Day 2 checkout.
 
-**Screen.** Built from the "Divided hero + bento sidebar (Tempest Line)" mockup in [images/mockups/](03-landing-page-hero/images/mockups/). From top to bottom: a header with the name, nav links and "Sign in"; a split hero with the headline "Meetings in. Action items out." on graph paper, the main "Try it on your next call" button and a "See how it works" link, beside a blueprint panel showing a sample meeting recap; "How it works" in three numbered steps with a demo placeholder, next to a bento sidebar of usage, time saved, rating, integrations, a customer quote and logo slots; and a closing call-to-action band. At phone width (390px) everything stacks into one column. Stats, the quote, trial terms and logos are bracketed placeholders.
+**Screen.** Built from the mockup in [second-tempest-lines.html](03-landing-page-hero/second-tempest-lines.html). From top to bottom: a theme switch; a header with the name, nav links and "Log in"; a split hero with the headline "Stuck on homework? Get it explained step by step." on graph paper, the main "Start free" button, a "See how it works" link and a rating, beside a blueprint panel showing a worked algebra problem and a "Paid by a parent" tag; a proof strip of stats and logo slots; "How it works" in three numbered steps with a media placeholder, next to a bento of stats, subjects, a parent note and a quote; and a closing "Start free" band. On desktop (1280px) the hero is split in two; at phone width (390px) everything stacks into one column. Stats, ratings, the quote and logos are bracketed placeholders.
 
-**Look.** Tempest Line's dark Blueprint theme: deep navy, graph-paper lines, blueprint-blue panels and one lime highlighter for the headline and main buttons. Headings use Bricolage Grotesque and the interface uses Atkinson Hyperlegible Next. Text meets WCAG AA, controls are at least 44px tall, and every control shows a visible focus ring.
+**Look.** Tempest Line in three themes, picked with the switch at the top and remembered per browser: Blueprint (dark, the default), Graph Paper (light) and High Contrast. Graph-paper lines, blueprint-blue panels and one lime highlighter for the headline. Headings use Bricolage Grotesque, the interface uses Atkinson Hyperlegible Next, and the worked problem uses Atkinson Hyperlegible Mono. Text meets WCAG AA, controls are at least 44px tall, and every control shows a visible focus ring. There's no logo mark yet, so the name is set as a wordmark.
 
-**Voice.** Short and concrete: sentence case, verbs first on buttons, no exclamation marks or emoji.
+**Voice.** Plain and encouraging: sentence case, verbs first on buttons, no exclamation marks or emoji. Every price comes with its interval.
 
 **Stack.** React 19 (JavaScript), Vite, React Router, TanStack Query, Zustand, React Hook Form with Zod, Tailwind CSS v4, ESLint with Prettier, and Vitest with Testing Library.
 
@@ -126,12 +104,13 @@ npm run dev
 
 **Documents**
 
-- [README.md](03-landing-page-hero/README.md): brief, criteria, setup, scripts and project layout
+- [README.md](03-landing-page-hero/README.md): brief, criteria, where the page differs from the mockup, setup and project layout
 - [Day 3 brief](daily-ui-challenge.md#3-landing-page-hero): needs, key points, improvements and the self-review checklist
-- [Mockups](03-landing-page-hero/images/mockups/): the five layout options and the Tempest Line mockup the page is built from
-- [Tempest Line design system](03-landing-page-hero/docs/tempest-line-design-system.md): the tokens, type and component rules the page uses
+- [Mockup](03-landing-page-hero/second-tempest-lines.html): the Tempest Line landing page the app follows
+- [Tempest Line design system](03-landing-page-hero/docs/tempest-line-design-system.md): the tokens, type, themes and component rules the page uses
+- [Earlier mockups](03-landing-page-hero/images/mockups/): the five layout options and the Minutely mockup from the first version
 
-**Status.** Built and tested at desktop and phone widths. Next: real stats, quote, logos and trial terms in place of the placeholders, and destinations for the "Try it on your next call", "Sign in" and "Pricing" links.
+**Status.** Built and tested in all three themes, at desktop and phone widths. The first version, a Minutely landing page, was replaced and is still in the git history. Next: real stats, ratings, quote and logos in place of the placeholders, and destinations for "Log in", "Pricing" and "Start free".
 
 ## Day 4: Calculator
 
@@ -164,4 +143,5 @@ npm run dev
 **Status.** Scaffolded, with Fieldnote's components and tokens copied in from the Day 1 starter. The calculator hasn't been started.
  calculator hasn't been started.
 er. The calculator hasn't been started.
+ calculator hasn't been started.
  calculator hasn't been started.

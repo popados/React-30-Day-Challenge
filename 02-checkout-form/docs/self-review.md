@@ -1,6 +1,6 @@
 # Day 2 self-review
 
-*October 17, 2026 · The README self-review checklist, answered against `prototype/checkout.html` and the docs in this folder.*
+_October 17, 2026 · The README self-review checklist, answered against `prototype/checkout.html` and the docs in this folder._
 
 ## How this was checked
 
@@ -14,17 +14,17 @@ Line numbers refer to `prototype/checkout.html`.
 
 ## Summary
 
-| Check | Verdict |
-|---|---|
-| Hierarchy | **Pass** |
-| Contrast | **Pass** (disabled Subscribe button is low, but WCAG exempts disabled controls) |
-| Spacing | **Mostly pass**: on a 4px scale with a handful of off-scale values |
-| States | **Pass** with two gaps: empty and error share one message, and the wallet has no failure state |
-| Real content | **Partial**: long text wraps, but big numbers have no thousands separator |
-| Touch targets | **Partial**: three controls are under 44px tall |
-| Consistency | **Partial**: consistent inside the prototype, but it doesn't use the current design system |
-| Keyboard and screen readers | **Mostly pass**: checkout works without a mouse, with focus loss in four places and two axe issues |
-| Account safety | **Partial**: duplicate emails are caught, but there's no guard against a mistyped email, and a guest has no way back to the subscription |
+| Check                       | Verdict                                                                                                                                  |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Hierarchy                   | **Pass**                                                                                                                                 |
+| Contrast                    | **Pass** (disabled Subscribe button is low, but WCAG exempts disabled controls)                                                          |
+| Spacing                     | **Mostly pass**: on a 4px scale with a handful of off-scale values                                                                       |
+| States                      | **Pass** with two gaps: empty and error share one message, and the wallet has no failure state                                           |
+| Real content                | **Partial**: long text wraps, but big numbers have no thousands separator                                                                |
+| Touch targets               | **Partial**: three controls are under 44px tall                                                                                          |
+| Consistency                 | **Partial**: consistent inside the prototype, but it doesn't use the current design system                                               |
+| Keyboard and screen readers | **Mostly pass**: checkout works without a mouse, with focus loss in four places and two axe issues                                       |
+| Account safety              | **Partial**: duplicate emails are caught, but there's no guard against a mistyped email, and a guest has no way back to the subscription |
 
 The biggest finding isn't on the checklist. `docs/design-system.md` was switched to the **Tempest Line Blueprint** system (blueprint blue, lime highlighter, Atkinson Hyperlegible and Bricolage Grotesque) after the prototype was built. The prototype still uses the **Fieldnote** palette and fonts (moss green, Inter, Source Serif; lines 9 and 13–23). The contrast, spacing and consistency verdicts below apply to the prototype as built. They would need to be checked again after a re-skin.
 
@@ -48,13 +48,13 @@ The biggest finding isn't on the checklist. `docs/design-system.md` was switched
 
 Lowest measured pairs:
 
-| Pair | Light | Dark |
-|---|---|---|
-| Muted text (`graphite`) on summary panel or selected card | 5.64:1 | 6.39:1 |
-| Error text on error fill | 5.64:1 | 7.03:1 |
-| Link (`moss`) on summary panel | 6.25:1 | 7.16:1 |
-| White button text on moss | 7.49:1 | 8.48:1 (dark text) |
-| Control border (`rule`) on selected fill | 3.07:1 | 3.21:1 |
+| Pair                                                      | Light  | Dark               |
+| --------------------------------------------------------- | ------ | ------------------ |
+| Muted text (`graphite`) on summary panel or selected card | 5.64:1 | 6.39:1             |
+| Error text on error fill                                  | 5.64:1 | 7.03:1             |
+| Link (`moss`) on summary panel                            | 6.25:1 | 7.16:1             |
+| White button text on moss                                 | 7.49:1 | 8.48:1 (dark text) |
+| Control border (`rule`) on selected fill                  | 3.07:1 | 3.21:1             |
 
 Body text is 14:1 or higher everywhere.
 
@@ -118,11 +118,11 @@ Plan radios, the Tutor checkbox and the consent checkbox are 20px inputs, but th
 
 **Under 44px:**
 
-| Control | Measured | Where |
-|---|---|---|
-| "Save this card for future purchases" row | 327×24 | Payment step (line 660); the label has no padding, unlike the consent row |
-| "Not you?" link | 60×20 | Plan step when signed in (line 613); `.linkbtn.inline` sets `min-height: 0` (line 189) |
-| "Sign in" link inside the account-exists error | about 20 tall | Plan step email error (line 550); same class |
+| Control                                        | Measured      | Where                                                                                  |
+| ---------------------------------------------- | ------------- | -------------------------------------------------------------------------------------- |
+| "Save this card for future purchases" row      | 327×24        | Payment step (line 660); the label has no padding, unlike the consent row              |
+| "Not you?" link                                | 60×20         | Plan step when signed in (line 613); `.linkbtn.inline` sets `min-height: 0` (line 189) |
+| "Sign in" link inside the account-exists error | about 20 tall | Plan step email error (line 550); same class                                           |
 
 **Fix:** give the save-card row the same padding as the consent row. For the inline links, either drop `.inline` or add vertical padding plus a negative margin, so the tap area grows without moving the text.
 
@@ -173,6 +173,7 @@ Plan radios, the Tutor checkbox and the consent checkbox are 20px inputs, but th
 
    A screen-reader user hears nothing during "Processing…".
    **Fix:** keep focus on the button and use `aria-disabled` rather than `disabled` while processing, announce "Processing payment" in the live region, and after each redraw focus the step heading or the new control.
+
 2. **axe `definition-list` (serious).** The Confirm recap puts the "Change" `<button>` straight inside each `<dl>` row (line 733), which isn't valid list markup. Screen readers can misreport the list.
    **Fix:** move the button into the `<dd>`.
 3. **axe `page-has-heading-one` (moderate).** Every step heading is an `<h2>`, and the brand name is a `<span>`, so there is no `<h1>`.

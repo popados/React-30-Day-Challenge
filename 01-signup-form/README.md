@@ -1,12 +1,3 @@
----
-stale-refs:
-  - source: README.md
-    changed_at: "2026-10-17T16:24:43"
-    sections_changed: []
-    summary: externally modified
----
-
-
 # Day 1: Sign-up screen — Fieldnote
 
 The Day 1 entry of the [30-Day Daily UI Challenge](../daily-ui-challenge.md): a sign-up screen for **Fieldnote**, a notes and citation workspace for graduate students, faculty and research staff. Reading notes, highlights and sources live together in notebooks tied to a project or thesis.

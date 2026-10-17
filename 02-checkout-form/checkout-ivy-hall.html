@@ -1,0 +1,1042 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ivy Hall Checkout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+<style>
+/* Layout: Fieldnote paper notebook. Steps on the left, sticky order summary on the right (>=1024),
+   summary on top (768-1023), pinned total bar at the bottom (<768). Tokens from docs/design-system/tokens.json. */
+/* Colour tokens: Ivy Hall palette (palettes.md). Names map to the design system as
+   --bg=bg, --paper=surface, --paper-deep=surface-raised, --hairline=border, --rule=control-border,
+   --graphite=ink-muted, --moss=action, --on-moss=on-action, --error=danger. Hairline, hover, soft and
+   disabled values are retints; palettes.md doesn't list them for Ivy Hall. */
+:root {
+  color-scheme: light;
+  --bg: #f7f6f1; --paper: #ffffff; --paper-deep: #eeede6; --hairline: #dedcd2; --ink: #1a2238; --graphite: #535b70;
+  --rule: #7d8396; --moss: #1f2f4d; --on-moss: #ffffff; --moss-hover: #2c3f63; --moss-soft: #e5e7ec;
+  --action-disabled: #eeede6; --on-action-disabled: #535b70;
+  --error: #b3261e; --error-soft: #fbe7e9; --highlighter: #c9a227; --on-highlighter: #1a2238;
+  --wallet-bg: #000000; --wallet-fg: #ffffff;
+  --focus-ring: #2f6b4f; --link: #1f2f4d;
+  --font-serif: "Source Serif 4", "Source Serif Pro", Georgia, serif;
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --radius-sm: 3px; --radius-md: 8px; --radius-lg: 12px;
+  --control: 48px; --target: 44px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0f1626; --paper: #17213a; --paper-deep: #1f2b48; --hairline: #2c3a5c; --ink: #eef0f5; --graphite: #a7afc2;
+    --rule: #7e89a6; --moss: #d9b54a; --on-moss: #1a2238; --moss-hover: #e3c46c; --moss-soft: #353a3e;
+    --action-disabled: #1f2b48; --on-action-disabled: #a7afc2;
+    --error: #ff8a80; --error-soft: #4a1520; --highlighter: #d9b54a; --on-highlighter: #1a2238;
+    --focus-ring: #d9b54a; --link: #d9b54a;
+    --wallet-bg: #ffffff; --wallet-fg: #000000;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0f1626; --paper: #17213a; --paper-deep: #1f2b48; --hairline: #2c3a5c; --ink: #eef0f5; --graphite: #a7afc2;
+  --rule: #7e89a6; --moss: #d9b54a; --on-moss: #1a2238; --moss-hover: #e3c46c; --moss-soft: #353a3e;
+  --action-disabled: #1f2b48; --on-action-disabled: #a7afc2;
+  --error: #ff8a80; --error-soft: #4a1520; --highlighter: #d9b54a; --on-highlighter: #1a2238;
+  --focus-ring: #d9b54a; --link: #d9b54a;
+  --wallet-bg: #ffffff; --wallet-fg: #000000;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 400 16px/24px var(--font-sans); -webkit-font-smoothing: antialiased; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+h1, h2, h3 { font-family: var(--font-serif); font-weight: 600; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.ic { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ic.sm { width: 16px; height: 16px; }
+.spin { animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spin { animation-duration: 3s; } html { scroll-behavior: auto; } }
+.num-t { font-variant-numeric: tabular-nums; }
+
+/* Header */
+.top { border-bottom: 1px solid var(--hairline); padding-inline: 16px; }
+.top-in { max-width: 1120px; margin: 0 auto; min-height: 64px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; }
+.back { justify-self: start; display: inline-flex; align-items: center; gap: 8px; min-height: var(--target); padding: 0 8px 0 0; background: none; border: 0; color: var(--link); font-weight: 500; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.mark { font: 600 22px/28px var(--font-serif); letter-spacing: -0.01em; }
+.secure-tag { justify-self: end; display: inline-flex; align-items: center; gap: 6px; color: var(--graphite); font-size: 14px; line-height: 20px; }
+@media (max-width: 560px) { .secure-tag span { display: none; } .back span.long { display: none; } }
+@media (min-width: 561px) { .back span.short { display: none; } }
+
+/* Shell */
+.shell { max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 24px 48px; }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; align-items: start; }
+.layout > * { min-width: 0; }
+@media (min-width: 1024px) {
+  .shell { padding-block: 40px 64px; }
+  .layout { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 48px; }
+  .summary { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); }
+}
+@media (min-width: 768px) and (max-width: 1023px) { .summary { order: -1; } }
+@media (max-width: 767px) { .layout > .summary { display: none; } .shell { padding-block: 16px 140px; } }
+
+/* Progress */
+.progress ol { list-style: none; margin: 0 0 32px; padding: 0; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.progress li { display: flex; align-items: center; gap: 8px; color: var(--graphite); font-weight: 500; }
+.progress li + li::before { content: ""; width: 28px; height: 1px; background: var(--rule); }
+.progress .pstep { display: inline-flex; align-items: center; gap: 8px; min-height: var(--target); padding: 0 4px; }
+.progress button.pstep { background: none; border: 0; cursor: pointer; color: var(--link); text-decoration: underline; text-underline-offset: 3px; }
+.progress .num { width: 28px; height: 28px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 14px; border: 1px solid var(--rule); font-variant-numeric: tabular-nums; text-decoration: none; }
+.progress li[aria-current] { color: var(--ink); }
+@media (max-width: 480px) {
+  .progress ol { flex-wrap: nowrap; justify-content: space-between; gap: 4px; margin-bottom: 24px; }
+  .progress li + li::before { width: 12px; }
+  .progress .pstep { gap: 6px; padding: 0; }
+  .progress .num { width: 24px; height: 24px; font-size: 13px; }
+}
+@media (max-width: 360px) { .progress li { font-size: 14px; } .progress li + li::before { width: 8px; } }
+#step > div:empty { display: none; }
+.progress li[aria-current] .num { background: var(--highlighter); border-color: var(--rule); color: var(--on-highlighter); font-weight: 600; }
+.progress li.done .num { background: var(--moss-soft); border-color: var(--moss); color: var(--moss); }
+
+/* Step */
+.step { display: flex; flex-direction: column; gap: 24px; }
+.step-h { font-size: 32px; line-height: 40px; letter-spacing: -0.01em; }
+.step-h:focus { outline: none; }
+.step-h:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 4px; }
+@media (min-width: 1024px) { .step-h { font-size: 40px; line-height: 48px; } }
+.lede { color: var(--graphite); max-width: 60ch; }
+.group-label { font-weight: 500; margin-bottom: 12px; }
+fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+legend { padding: 0; }
+
+/* Plan cards */
+.plans { display: grid; gap: 12px; }
+.plan-card { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 12px; padding: 16px; border: 1px solid var(--rule); border-radius: var(--radius-md); background: var(--paper); cursor: pointer; }
+.plan-card:hover { background: var(--paper-deep); }
+.plan-card.selected { border: 2px solid var(--moss); padding: 15px; background: var(--moss-soft); }
+.plan-card input, .check input { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--moss); }
+.plan-card input:focus-visible { outline-offset: 3px; }
+.pc-body { display: grid; gap: 4px; min-width: 0; }
+.pc-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; align-items: baseline; }
+.pc-name { font-weight: 600; }
+.pc-price { font-weight: 500; font-variant-numeric: tabular-nums; }
+.pc-desc { color: var(--graphite); font-size: 14px; line-height: 20px; }
+.pc-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 14px; line-height: 20px; }
+.tag { display: inline-flex; align-items: center; gap: 4px; padding: 0 6px; border-radius: var(--radius-sm); background: var(--highlighter); color: var(--on-highlighter); font-size: 13px; line-height: 20px; font-weight: 500; }
+.skel { border-radius: var(--radius-md); background: var(--paper-deep); height: 92px; }
+.skel.line { height: 16px; border-radius: var(--radius-sm); }
+.skel-stack { display: grid; gap: 12px; }
+
+.check { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; cursor: pointer; }
+.addon { padding: 16px; border: 1px solid var(--rule); border-radius: var(--radius-md); }
+.addon.on { border: 2px solid var(--moss); padding: 15px; background: var(--moss-soft); }
+.addon-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; }
+.muted { color: var(--graphite); font-size: 14px; line-height: 20px; }
+
+/* Fields */
+.field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.field label, .field .lbl { font-weight: 500; }
+.control { position: relative; }
+.control input, .control select { width: 100%; min-height: var(--control); border: 1px solid var(--rule); border-radius: var(--radius-md); background: var(--paper); padding: 0 16px; font-size: 16px; }
+.control input::placeholder { color: var(--graphite); opacity: 1; }
+.control select { appearance: none; padding-right: 44px; cursor: pointer; }
+.control .chev { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--graphite); }
+.field.has-error input, .field.has-error select { border: 2px solid var(--error); padding-left: 15px; }
+.field.with-brand input { padding-right: 76px; }
+.field.with-brand.has-error input { padding-right: 75px; }
+.msg { font-size: 14px; line-height: 20px; color: var(--graphite); display: flex; gap: 8px; align-items: flex-start; }
+.msg:empty { display: none; }
+.has-error .msg { color: var(--error); }
+.brand-slot { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); }
+.row-2 { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 375px) { .row-2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+
+/* Brand chips: smaller than labels */
+.brand { display: inline-grid; place-items: center; min-width: 38px; height: 22px; padding: 0 5px; border-radius: 4px; border: 1px solid var(--hairline); background: var(--paper); font: 700 10px/1 var(--font-sans); letter-spacing: 0.04em; color: var(--ink); }
+.brand.visa { color: #1a1f71; background: #ffffff; border-color: #c9ccdc; font-style: italic; }
+.brand.mastercard { color: #ffffff; background: #252525; border-color: #252525; }
+.brand.amex { color: #ffffff; background: #1f6fbf; border-color: #1f6fbf; }
+.brand.discover { color: #1c1b19; background: #ffffff; border-color: #e6a46a; }
+.brands { list-style: none; display: flex; gap: 6px; padding: 0; margin: 0; flex-wrap: wrap; }
+
+/* Secure group */
+.secure { border: 1px solid var(--rule); border-radius: var(--radius-lg); padding: 20px 16px; display: grid; gap: 16px; background: var(--paper); }
+@media (min-width: 560px) { .secure { padding: 24px; } }
+.secure-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.secure legend { float: left; width: 100%; }
+.secure-title { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; }
+.secure-note { font-size: 14px; line-height: 20px; color: var(--graphite); }
+.billing { display: grid; gap: 16px; }
+.billing legend { font-weight: 600; margin-bottom: 16px; }
+
+/* Wallets and divider */
+.wallets { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 480px) { .wallets.two { grid-template-columns: 1fr 1fr; } }
+.wallet { min-height: var(--control); border-radius: var(--radius-md); border: 1px solid var(--wallet-bg); background: var(--wallet-bg); color: var(--wallet-fg); font-weight: 600; font-size: 17px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; }
+.wallet .pre { font-weight: 500; font-size: 15px; }
+.divider { display: flex; align-items: center; gap: 12px; color: var(--graphite); font-size: 13px; line-height: 18px; font-weight: 500; letter-spacing: 0.01em; }
+.divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--hairline); }
+
+/* Saved card */
+.saved { display: grid; grid-template-columns: auto 1fr; gap: 12px; padding: 15px; border: 2px solid var(--moss); border-radius: var(--radius-md); background: var(--moss-soft); }
+.saved-main { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; align-items: baseline; }
+.radio-dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--moss); display: grid; place-items: center; margin-top: 2px; }
+.radio-dot::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--moss); }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: var(--control); min-width: var(--target); padding: 0 20px; border-radius: var(--radius-md); border: 1px solid var(--rule); background: var(--paper); font-weight: 500; cursor: pointer; text-align: center; line-height: 22px; }
+.btn:hover { background: var(--paper-deep); }
+.btn.primary { background: var(--moss); border-color: var(--moss); color: var(--on-moss); }
+.btn.primary:hover { background: var(--moss-hover); border-color: var(--moss-hover); }
+.btn:disabled, .btn.primary:disabled { cursor: not-allowed; background: var(--action-disabled); border-color: var(--action-disabled); color: var(--on-action-disabled); }
+.btn.block { width: 100%; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.actions .btn.primary { flex: 1 1 220px; }
+@media (min-width: 768px) { .actions .btn.primary { flex: 0 1 auto; min-width: 240px; } }
+.linkbtn { background: none; border: 0; padding: 0 4px; min-height: var(--target); color: var(--link); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font-weight: 500; }
+.linkbtn.inline { min-height: 0; padding: 0; }
+
+/* Alerts */
+.alert { display: flex; gap: 8px; align-items: flex-start; padding: 12px 16px; border-radius: var(--radius-md); background: var(--moss-soft); }
+.alert.error { background: var(--error-soft); }
+.alert.error > .ic { color: var(--error); margin-top: 2px; }
+.alert.info > .ic { color: var(--moss); margin-top: 2px; }
+.alert strong { display: block; font-weight: 600; }
+.alert ul { margin: 4px 0 0; padding-left: 20px; }
+.alert li { margin-top: 2px; }
+.alert a { color: var(--ink); text-underline-offset: 3px; }
+.alert .act { margin-top: 8px; }
+.alert:focus { outline: none; }
+.alert:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+/* Summary */
+.sum-card { background: var(--paper-deep); border-radius: var(--radius-lg); padding: 24px; display: grid; gap: 16px; }
+@media (min-width: 1024px) { .sum-card { padding: 32px; } }
+.sum-h { font-size: 20px; line-height: 28px; }
+.sum-prod { display: grid; gap: 2px; }
+.sum-prod .p { font: 600 18px/26px var(--font-serif); }
+.lines { margin: 0; display: grid; gap: 12px; }
+.lines > div { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+.lines dt { display: grid; min-width: 0; }
+.lines dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lines small, .lines .small { font-size: 14px; line-height: 20px; color: var(--graphite); }
+.lines .sep { border-top: 1px solid var(--hairline); padding-top: 12px; }
+.tax-wait { display: inline-flex; align-items: center; gap: 6px; color: var(--graphite); font-size: 14px; }
+.total { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; border-top: 1px solid var(--rule); padding-top: 16px; }
+.total .t { font-weight: 600; }
+.total .amt { font: 600 28px/34px var(--font-serif); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.total .amt small { font: 400 14px/20px var(--font-sans); color: var(--graphite); }
+.then { font-size: 14px; line-height: 20px; color: var(--graphite); }
+
+/* Confirm */
+.recap { margin: 0; border: 1px solid var(--hairline); border-radius: var(--radius-lg); }
+.recap > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 16px; align-items: start; }
+.recap > div + div { border-top: 1px solid var(--hairline); }
+.recap dt { font-size: 14px; line-height: 20px; color: var(--graphite); font-weight: 500; grid-column: 1; }
+.recap dd { margin: 0; grid-column: 1; overflow-wrap: anywhere; }
+.recap .linkbtn { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+.totals-box { background: var(--paper-deep); border-radius: var(--radius-lg); padding: 20px; display: grid; gap: 12px; }
+.disclosure { max-width: 62ch; }
+.disclosure strong { font-weight: 600; }
+.consent { padding: 16px; border: 1px solid var(--rule); border-radius: var(--radius-md); }
+.consent.on { border-color: var(--moss); background: var(--moss-soft); }
+.hint { display: flex; gap: 8px; align-items: flex-start; color: var(--graphite); font-size: 14px; line-height: 20px; }
+.fine { color: var(--graphite); font-size: 14px; line-height: 20px; text-align: center; }
+
+/* Success */
+.done { display: grid; gap: 24px; max-width: 560px; }
+.done-mark { width: 56px; height: 56px; border-radius: 50%; background: var(--moss-soft); color: var(--moss); display: grid; place-items: center; }
+.done-mark .ic { width: 28px; height: 28px; }
+.done dl { margin: 0; display: grid; gap: 12px; border-top: 1px solid var(--hairline); padding-top: 16px; }
+.done dl > div { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.done dt { color: var(--graphite); }
+.done dd { margin: 0; font-weight: 500; font-variant-numeric: tabular-nums; }
+mark { background: var(--highlighter); color: var(--on-highlighter); border-radius: var(--radius-sm); padding: 0 3px; }
+
+/* Mobile summary bar */
+.sumbar { display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; background: var(--paper); border-top: 1px solid var(--rule); padding-bottom: env(safe-area-inset-bottom, 0px); }
+@media (max-width: 767px) { .sumbar { display: block; } }
+.sumbar-btn { width: 100%; min-height: 60px; display: flex; align-items: center; gap: 12px; padding: 0 16px; background: none; border: 0; cursor: pointer; text-align: left; }
+.sumbar-btn .lbl { flex: 1; font-weight: 500; }
+.sumbar-btn .amt { font: 600 20px/28px var(--font-serif); font-variant-numeric: tabular-nums; }
+.sumbar-btn .chev { transition: transform 0.2s; }
+.sumbar-btn[aria-expanded="true"] .chev { transform: rotate(180deg); }
+.sheet { max-height: 65vh; overflow-y: auto; padding: 16px 16px 0; }
+.sheet .sum-card { padding: 20px; }
+@media (prefers-reduced-motion: reduce) { .sumbar-btn .chev { transition: none; } }
+
+/* Prototype controls */
+.devpanel { max-width: 1120px; margin: 0 auto 48px; padding-inline: 16px; }
+.dev-in { border: 1px dashed var(--rule); border-radius: var(--radius-lg); padding: 20px; display: grid; gap: 16px; }
+.dev-in h2 { font-size: 20px; line-height: 28px; }
+.dev-toggles { display: grid; gap: 4px 24px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.dev-toggles label { display: flex; gap: 10px; align-items: center; min-height: var(--target); cursor: pointer; }
+.dev-toggles input { width: 20px; height: 20px; accent-color: var(--moss); }
+.tv-wrap { overflow-x: auto; }
+.tv { border-collapse: collapse; width: 100%; font-size: 14px; line-height: 20px; }
+.tv th, .tv td { text-align: left; padding: 6px 12px 6px 0; border-bottom: 1px solid var(--hairline); vertical-align: middle; }
+.tv th { color: var(--graphite); font-weight: 500; }
+.tv code { font: 500 13px/20px ui-monospace, "SF Mono", Consolas, monospace; white-space: nowrap; }
+.tv .btn { min-height: 36px; padding: 0 12px; font-size: 14px; }
+
+#pay-alerts:empty, #err-summary:empty, #confirm-alert:empty { display: none; }
+
+/* Success view: summary is history, not a live order */
+body.is-done .layout > .summary, body.is-done .sumbar { display: none !important; }
+body.is-done .shell { padding-block-end: 48px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <button class="back" id="back-plans" type="button"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg><span class="long">Back to plans</span><span class="short">Plans</span></button>
+    <span class="mark">Tempest Line</span>
+    <span class="secure-tag"><svg class="ic sm" viewBox="0 0 24 24" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Secure checkout</span></span>
+  </div>
+</header>
+
+<div class="shell">
+  <div class="layout">
+    <main id="main">
+      <nav class="progress" aria-label="Checkout progress" id="progress"><ol id="progress-list"></ol></nav>
+      <section class="step" id="step" aria-labelledby="step-h"></section>
+    </main>
+    <aside class="summary" id="summary" aria-label="Order summary"></aside>
+  </div>
+</div>
+
+<section class="devpanel" aria-labelledby="dev-h">
+  <div class="dev-in">
+    <div>
+      <h2 id="dev-h">Prototype controls</h2>
+      <p class="muted">Not part of the checkout design. Use these to reach each state from the requirements.</p>
+    </div>
+    <div class="dev-toggles">
+      <label><input type="checkbox" id="dev-saved"> Returning user with a saved card</label>
+      <label><input type="checkbox" id="dev-apple"> Device supports Apple Pay</label>
+      <label><input type="checkbox" id="dev-google"> Device supports Google Pay</label>
+      <label><input type="checkbox" id="dev-empty"> Plans service returns no plans</label>
+    </div>
+    <div class="tv-wrap">
+      <table class="tv">
+        <thead><tr><th scope="col">Test value</th><th scope="col">What happens</th><th scope="col"><span class="sr-only">Action</span></th></tr></thead>
+        <tbody>
+          <tr><td><code>4242 4242 4242 4242</code></td><td>Payment succeeds</td><td><button class="btn" type="button" data-fill="4242424242424242">Fill card</button></td></tr>
+          <tr><td><code>4000 0000 0000 0002</code></td><td>Card is declined</td><td><button class="btn" type="button" data-fill="4000000000000002">Fill card</button></td></tr>
+          <tr><td><code>4000 0000 0000 0119</code></td><td>Payment times out</td><td><button class="btn" type="button" data-fill="4000000000000119">Fill card</button></td></tr>
+          <tr><td><code>3782 822463 10005</code></td><td>American Express, 4-digit CVC</td><td><button class="btn" type="button" data-fill="378282246310005">Fill card</button></td></tr>
+          <tr><td><code>00000</code></td><td>ZIP code makes the tax service fail</td><td></td></tr>
+          <tr><td><code>taken@example.com</code></td><td>Email already has an account</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div><button class="btn" type="button" id="restart">Start over</button></div>
+  </div>
+</section>
+
+<div class="sumbar" id="sumbar">
+  <div class="sheet" id="sheet" hidden></div>
+  <button class="sumbar-btn" type="button" id="sumbar-btn" aria-expanded="false" aria-controls="sheet">
+    <span class="lbl">Total due today</span>
+    <span class="amt" id="sb-amt"></span>
+    <svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>
+    <span class="sr-only">, show order summary</span>
+  </button>
+</div>
+
+<div class="sr-only" aria-live="polite" id="live-step"></div>
+<div class="sr-only" aria-live="polite" id="live-total"></div>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var ICONS = {
+    alert: '<circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/>',
+    info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
+    check: '<path d="M20 6 9 17l-5-5"/>',
+    lock: '<rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+    card: '<rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>',
+    loader: '<path d="M21 12a9 9 0 1 1-6.219-8.56"/>',
+    chevdown: '<path d="m6 9 6 6 6-6"/>',
+    calendar: '<rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'
+  };
+  function icon(n, cls) { return '<svg class="ic ' + (cls || '') + '" viewBox="0 0 24 24" aria-hidden="true">' + ICONS[n] + '</svg>'; }
+  var money = function (n) { return '$' + n.toFixed(2); };
+  var round2 = function (n) { return Math.round(n * 100) / 100; };
+  var digits = function (v) { return String(v || '').replace(/\D/g, ''); };
+
+  /* ---------- Dates ---------- */
+  var TODAY = new Date();
+  function addMonths(d, n) { var r = new Date(d); var day = r.getDate(); r.setDate(1); r.setMonth(r.getMonth() + n); var last = new Date(r.getFullYear(), r.getMonth() + 1, 0).getDate(); r.setDate(Math.min(day, last)); return r; }
+  var fmtDate = function (d) { return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); };
+  var NEXT_CHARGE = fmtDate(addMonths(TODAY, 1));
+  var SY_END = fmtDate(new Date(TODAY.getMonth() >= 5 ? TODAY.getFullYear() + 1 : TODAY.getFullYear(), 4, 31));
+
+  /* ---------- Catalog (mock) ---------- */
+  var TUTOR = 24.99; // assumed price, the docs don't set one
+  var PLANS = [
+    { id: 'plus-monthly', name: 'Plus monthly', product: 'Tempest Line Plus', price: 9.99, renews: true, unit: '/month', priceText: '$9.99/month', billed: 'Billed monthly', desc: 'Full practice library, spaced review and progress reports for one learner.' },
+    { id: 'plus-year', name: 'Plus school year', product: 'Tempest Line Plus', price: 59.99, renews: false, unit: ' for the school year', priceText: '$59.99 for the school year (Aug–May)', billed: 'One payment, Aug–May', desc: 'Everything in Plus monthly for one learner, paid once.' },
+    { id: 'family-monthly', name: 'Family monthly', product: 'Tempest Line Family', price: 17.99, renews: true, unit: '/month', priceText: '$17.99/month for up to 4 learners', billed: 'Billed monthly · up to 4 learners', desc: 'Plus for up to 4 learner profiles under one payment.' }
+  ];
+  var SAVED = { brand: 'visa', last4: '4242', exp: '08/28', country: 'US', zip: '78701' };
+  var SIGNED_EMAIL = 'maya.okafor@example.com';
+  var COUNTRIES = {
+    US: { name: 'United States', postal: true }, CA: { name: 'Canada', postal: true }, GB: { name: 'United Kingdom', postal: true },
+    AU: { name: 'Australia', postal: true }, DE: { name: 'Germany', postal: true }, IE: { name: 'Ireland', postal: true },
+    HK: { name: 'Hong Kong', postal: false }, AE: { name: 'United Arab Emirates', postal: false }
+  };
+  var BRAND_NAMES = { visa: 'Visa', mastercard: 'Mastercard', amex: 'American Express', discover: 'Discover' };
+  var BRAND_SHORT = { visa: 'VISA', mastercard: 'MC', amex: 'AMEX', discover: 'DISC' };
+  var TAKEN = 'You already have an account. Sign in to continue.';
+  /* ---------- Card helpers (would live in features/checkout/card.js) ---------- */
+  function detectBrand(d) {
+    if (/^3[47]/.test(d)) return 'amex';
+    if (/^4/.test(d)) return 'visa';
+    if (/^(5[1-5]|2(2[2-9]|[3-6]\d|7[01]|720))/.test(d)) return 'mastercard';
+    if (/^(6011|65|64[4-9])/.test(d)) return 'discover';
+    return null;
+  }
+  function formatCard(d, brand) {
+    if (brand === 'amex') return [d.slice(0, 4), d.slice(4, 10), d.slice(10, 15)].filter(Boolean).join(' ');
+    return d.match(/.{1,4}/g) ? d.match(/.{1,4}/g).join(' ') : '';
+  }
+  function luhn(d) { var sum = 0, alt = false; for (var i = d.length - 1; i >= 0; i--) { var n = +d[i]; if (alt) { n *= 2; if (n > 9) n -= 9; } sum += n; alt = !alt; } return sum % 10 === 0; }
+  function brandChip(b) { return b ? '<span class="brand ' + b + '" role="img" aria-label="' + BRAND_NAMES[b] + '">' + BRAND_SHORT[b] + '</span>' : ''; }
+
+  /* ---------- Mock services (would live in features/checkout/api.js) ---------- */
+  var TAX_BY_PREFIX = { 0: 6.35, 1: 8.875, 2: 6, 3: 7, 4: 6, 5: 7.5, 6: 8.25, 7: 8.25, 8: 8.6, 9: 8.625 };
+  function getTax(country, zip) {
+    return new Promise(function (res, rej) {
+      setTimeout(function () {
+        if (country !== 'US') return res({ rate: 0 });
+        if (zip.slice(0, 5) === '00000') return rej(new Error('tax'));
+        res({ rate: TAX_BY_PREFIX[zip[0]] });
+      }, 700);
+    });
+  }
+  function submitPayment(p) {
+    return new Promise(function (res, rej) {
+      var num = p.kind === 'card' ? p.digits : '';
+      if (num === '4000000000000119') return setTimeout(function () { rej(new Error('timeout')); }, 3000);
+      setTimeout(function () {
+        if (num === '4000000000000002') return rej(new Error('declined'));
+        res({ charged: p.amount });
+      }, 1400);
+    });
+  }
+
+  /* ---------- State. Card number and CVC stay in memory only. ---------- */
+  var S;
+  function freshState() {
+    return {
+      step: 'plan', plansStatus: 'loading', planId: 'plus-monthly', tutor: false, email: '',
+      signedIn: false, dev: { apple: false, google: false, empty: false },
+      card: { number: '', exp: '', cvc: '', name: '', country: 'US', zip: '', save: false },
+      useSaved: true, billing: null, tax: { status: 'idle', rate: 0, key: '' }, taxPromise: null,
+      payment: null, consent: false, returnToConfirm: false, submitting: false, payAlert: null, confirmAlert: null,
+      errors: {}, result: null, walletBusy: null, lastTotal: null
+    };
+  }
+  var hasApple = !!window.ApplePaySession;
+  var hasGoogle = /Android/i.test(navigator.userAgent) && /Chrome/i.test(navigator.userAgent);
+  var walletOn = function (k) { return k === 'apple' ? (hasApple || S.dev.apple) : (hasGoogle || S.dev.google); };
+  var plan = function () { return PLANS.filter(function (p) { return p.id === S.planId; })[0]; };
+
+  function totals() {
+    var sub = round2(plan().price + (S.tutor ? TUTOR : 0));
+    var known = S.tax.status === 'ready';
+    var tax = known ? round2(sub * S.tax.rate / 100) : 0;
+    return { sub: sub, tax: tax, known: known, total: round2(sub + tax) };
+  }
+
+  /* ---------- Tax ---------- */
+  function setBilling(loc) { S.billing = loc; return requestTax(); }
+  function billingValid(loc) {
+    if (!loc) return false;
+    if (!COUNTRIES[loc.country].postal || loc.country !== 'US') return true;
+    return /^\d{5}(-\d{4})?$/.test(loc.zip || '');
+  }
+  function requestTax() {
+    var loc = S.billing;
+    if (!billingValid(loc)) { S.tax = { status: 'idle', rate: 0, key: '' }; S.taxPromise = null; renderSummary(); renderPayAlerts(); return Promise.resolve(); }
+    var key = loc.country + ':' + (loc.zip || '');
+    if (S.tax.key === key && S.tax.status !== 'error' && S.taxPromise) return S.taxPromise;
+    S.tax = { status: 'loading', rate: 0, key: key };
+    renderSummary(); renderPayAlerts();
+    var p = getTax(loc.country, loc.zip || '').then(function (r) {
+      if (S.tax.key !== key) return;
+      S.tax = { status: 'ready', rate: r.rate, key: key, country: loc.country, zip: loc.zip };
+      renderSummary(); renderPayAlerts();
+    }, function () {
+      if (S.tax.key !== key) return;
+      S.tax = { status: 'error', rate: 0, key: key };
+      renderSummary(); renderPayAlerts();
+    });
+    S.taxPromise = p;
+    return p;
+  }
+
+  /* ---------- Summary ---------- */
+  function thenText() {
+    var p = plan(), t = totals();
+    if (p.renews) return 'Then ' + money(t.sub) + '/month plus tax from ' + NEXT_CHARGE + '. Cancel anytime.';
+    return 'The school-year plan does not renew. Access ends ' + SY_END + '.' + (S.tutor ? ' Tutor renews at ' + money(TUTOR) + '/month plus tax and stops when your plan ends.' : '');
+  }
+  function summaryHTML() {
+    if (S.plansStatus === 'loading') {
+      return '<div class="sum-card" aria-busy="true"><h2 class="sum-h">Order summary</h2><div class="skel-stack"><div class="skel line" style="width:60%"></div><div class="skel line"></div><div class="skel line"></div><div class="skel line" style="width:40%"></div></div><span class="sr-only">Loading your order</span></div>';
+    }
+    if (S.plansStatus === 'empty') {
+      return '<div class="sum-card"><h2 class="sum-h">Order summary</h2><p class="muted">Your order will show here once a plan is available.</p></div>';
+    }
+    var p = plan(), t = totals();
+    var taxCell, taxLabel = 'Sales tax';
+    if (S.tax.status === 'ready') {
+      if (S.tax.country !== 'US') { taxLabel = 'Tax'; taxCell = money(0); }
+      else { taxLabel = 'Sales tax <small>' + (+S.tax.rate.toFixed(3)) + '% · ZIP ' + esc(S.tax.zip.slice(0, 5)) + '</small>'; taxCell = money(t.tax); }
+    } else if (S.tax.status === 'loading') {
+      taxCell = '<span class="tax-wait">' + icon('loader', 'sm spin') + 'Calculating…</span>';
+    } else if (S.tax.status === 'error') {
+      taxCell = '<span class="small">Couldn’t calculate</span>';
+    } else {
+      taxCell = '<span class="small">' + (S.step === 'plan' ? 'Calculated at next step' : 'Added after billing ZIP') + '</span>';
+    }
+    if (S.tax.status === 'ready' && S.tax.country !== 'US') taxLabel = 'Tax <small>Not collected outside the US</small>';
+    var then = thenText();
+    return '<div class="sum-card">' +
+      '<h2 class="sum-h">Order summary</h2>' +
+      '<div class="sum-prod"><span class="p">' + p.product + '</span><span class="muted">' + p.billed + '</span></div>' +
+      '<dl class="lines">' +
+        '<div><dt>' + p.name + '<small>' + (p.renews ? 'Renews monthly' : 'Does not renew') + '</small></dt><dd>' + money(p.price) + (p.renews ? '<small>/mo</small>' : '') + '</dd></div>' +
+        (S.tutor ? '<div><dt>Tutor add-on<small>4 live 30-minute sessions/month</small></dt><dd>' + money(TUTOR) + '<small>/mo</small></dd></div>' : '') +
+        '<div class="sep"><dt>Subtotal</dt><dd>' + money(t.sub) + '</dd></div>' +
+        '<div><dt>' + taxLabel + '</dt><dd>' + taxCell + '</dd></div>' +
+      '</dl>' +
+      '<div class="total"><span class="t">Total due today</span><span class="amt">' + money(t.total) + (t.known ? '' : ' <small>+ tax</small>') + '</span></div>' +
+      '<p class="then">' + then + '</p>' +
+    '</div>';
+  }
+  function renderSummary() {
+    var html = summaryHTML();
+    $('#summary').innerHTML = html; $('#sheet').innerHTML = html;
+    updateCommit();
+    var amt = '—';
+    if (S.plansStatus === 'ready') { var t = totals(); amt = money(t.total) + (t.known ? '' : ' + tax'); }
+    $('#sb-amt').textContent = amt;
+    if (S.plansStatus === 'ready') {
+      if (S.lastTotal !== null && S.lastTotal !== amt) $('#live-total').textContent = 'Total due today ' + amt;
+      S.lastTotal = amt;
+    }
+  }
+
+  /* ---------- Fields ---------- */
+  function field(o) {
+    var id = 'f-' + o.key;
+    var ctrl;
+    if (o.select) {
+      ctrl = '<select id="' + id + '" name="' + o.key + '" autocomplete="' + o.auto + '" aria-describedby="' + id + '-msg">' + o.select + '</select><span class="chev">' + icon('chevdown') + '</span>';
+    } else {
+      ctrl = '<input id="' + id + '" name="' + o.key + '" type="' + (o.type || 'text') + '"' + (o.auto ? ' autocomplete="' + o.auto + '"' : '') + (o.inputmode ? ' inputmode="' + o.inputmode + '"' : '') +
+        (o.placeholder ? ' placeholder="' + esc(o.placeholder) + '"' : '') + ' value="' + esc(o.value || '') + '" aria-describedby="' + id + '-msg"' + (o.extra || '') + '>' +
+        (o.key === 'number' ? '<span class="brand-slot" id="brand-slot"></span>' : '');
+    }
+    return '<div class="field' + (o.key === 'number' ? ' with-brand' : '') + '" data-key="' + o.key + '" data-helper="' + esc(o.helper || '') + '"' + (o.hidden ? ' hidden' : '') + '>' +
+      '<label for="' + id + '">' + o.label + '</label><div class="control">' + ctrl + '</div>' +
+      '<p class="msg" id="' + id + '-msg">' + esc(o.helper || '') + '</p></div>';
+  }
+  function showError(key, msg) {
+    var w = $('.field[data-key="' + key + '"]'); if (!w) return;
+    var inp = $('input,select', w), m = $('.msg', w);
+    S.errors[key] = msg || null;
+    if (msg) {
+      w.classList.add('has-error'); inp.setAttribute('aria-invalid', 'true');
+      m.innerHTML = icon('alert', 'sm') + '<span>' + esc(msg) + (msg === TAKEN ? ' <button type="button" class="linkbtn inline" data-action="signin">Sign in</button>' : '') + '</span>';
+    } else {
+      w.classList.remove('has-error'); inp.removeAttribute('aria-invalid'); m.textContent = w.dataset.helper;
+    }
+  }
+  var LABELS = { email: 'Email', number: 'Card number', exp: 'Expiry date', cvc: 'Security code', name: 'Name on card', zip: 'ZIP code' };
+  var V = {
+    email: function (v) { v = v.trim(); if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return 'Enter an email like name@example.com'; if (v.toLowerCase() === 'taken@example.com') return TAKEN; return null; },
+    number: function (v) { var d = digits(v); if (!d) return 'Enter your card number'; var need = detectBrand(d) === 'amex' ? 15 : 16; if (d.length !== need) return 'Card number is ' + need + ' digits. You entered ' + d.length + '.'; if (!luhn(d)) return 'Check the card number. It doesn’t look right.'; return null; },
+    exp: function (v) { var d = digits(v); if (d.length !== 4) return 'Enter the expiry as MM / YY'; var mm = +d.slice(0, 2), yy = +d.slice(2); if (mm < 1 || mm > 12) return 'Enter the expiry as MM / YY'; var cy = TODAY.getFullYear() % 100, cm = TODAY.getMonth() + 1; if (yy < cy || (yy === cy && mm < cm)) return 'This card has expired'; return null; },
+    cvc: function (v) { var amex = detectBrand(digits(S.card.number)) === 'amex'; if (digits(v).length === (amex ? 4 : 3)) return null; return amex ? 'Enter the 4-digit code on the front of your card' : 'Enter the 3-digit code on the back of your card'; },
+    name: function (v) { return v.trim().length >= 2 ? null : 'Enter the name shown on your card'; },
+    zip: function (v) { var c = S.card.country; if (!COUNTRIES[c].postal) return null; if (c === 'US') return /^\d{5}(-\d{4})?$/.test(v.trim()) ? null : 'Enter a 5-digit ZIP code'; return v.trim().length >= 3 ? null : 'Enter your postal code'; }
+  };
+  function valueOf(key) { return key === 'email' ? S.email : S.card[key]; }
+  function errorSummary(list) {
+    var box = $('#err-summary');
+    if (!list.length) { box.innerHTML = ''; return; }
+    box.innerHTML = '<div class="alert error" role="alert" tabindex="-1" id="err-box">' + icon('alert') + '<div><strong>' +
+      (list.length === 1 ? 'Fix 1 thing to continue' : 'Fix ' + list.length + ' things to continue') + '</strong><ul>' +
+      list.map(function (e) { return '<li><a href="#' + e.target + '" data-focus="' + e.target + '">' + e.label + ': ' + esc(e.msg) + '</a></li>'; }).join('') +
+      '</ul></div></div>';
+    $('#err-box').focus();
+  }
+  function validateKeys(keys) {
+    var list = [];
+    keys.forEach(function (k) { var m = V[k](valueOf(k)); showError(k, m); if (m) list.push({ target: 'f-' + k, label: k === 'zip' && S.card.country !== 'US' ? 'Postal code' : LABELS[k], msg: m }); });
+    return list;
+  }
+
+  /* ---------- Progress ---------- */
+  var STEPS = [['plan', 'Plan'], ['payment', 'Payment'], ['confirm', 'Confirm']];
+  function stepIndex() { for (var i = 0; i < STEPS.length; i++) if (STEPS[i][0] === S.step) return i; return 3; }
+  function renderProgress() {
+    var idx = stepIndex();
+    $('#progress').hidden = S.step === 'done';
+    $('#progress-list').innerHTML = STEPS.map(function (s, i) {
+      if (i < idx) return '<li class="done"><button type="button" class="pstep" data-goto="' + s[0] + '"><span class="num">' + icon('check', 'sm') + '</span>' + s[1] + '<span class="sr-only">, completed. Go back to this step</span></button></li>';
+      if (i === idx) return '<li aria-current="step"><span class="pstep"><span class="num">' + (i + 1) + '</span>' + s[1] + '</span></li>';
+      return '<li><span class="pstep"><span class="num">' + (i + 1) + '</span>' + s[1] + '</span></li>';
+    }).join('');
+  }
+
+  /* ---------- Step: Plan ---------- */
+  function planStepHTML() {
+    var h = '<p class="lede">Every plan includes the full practice library, spaced review and weekly progress reports.</p>';
+    if (S.plansStatus === 'loading') {
+      return h + '<div class="skel-stack" aria-busy="true"><div class="skel"></div><div class="skel"></div><div class="skel"></div><span class="sr-only">Loading plans</span></div>';
+    }
+    if (S.plansStatus === 'empty') {
+      return h + '<div class="alert info" role="status">' + icon('info') + '<div><strong>No plans are available right now</strong>Plans couldn’t be loaded. Try again in a moment.<div class="act"><button class="btn" type="button" data-action="retry-plans">Retry</button></div></div></div>';
+    }
+    h += '<fieldset><legend class="group-label">Plan</legend><div class="plans" role="radiogroup" aria-label="Plan">' + PLANS.map(function (p) {
+      var sel = p.id === S.planId;
+      var meta = p.renews ? '' : '<span class="pc-meta"><span class="tag">Does not renew</span><span>Ends ' + SY_END + '</span></span>';
+      return '<label class="plan-card' + (sel ? ' selected' : '') + '"><input type="radio" name="plan" value="' + p.id + '"' + (sel ? ' checked' : '') + '>' +
+        '<span class="pc-body"><span class="pc-top"><span class="pc-name">' + p.name + '</span><span class="pc-price">' + p.priceText + '</span></span>' + meta +
+        '<span class="pc-desc">' + p.desc + '</span></span></label>';
+    }).join('') + '</div></fieldset>';
+    h += '<fieldset><legend class="group-label">Add-on</legend><label class="addon check' + (S.tutor ? ' on' : '') + '" id="addon-box"><input type="checkbox" id="tutor"' + (S.tutor ? ' checked' : '') + '>' +
+      '<span><span class="addon-head"><span class="pc-name">Tutor</span><span class="pc-price">+' + money(TUTOR) + '/month</span></span>' +
+      '<span class="muted" style="display:block">4 live 30-minute sessions per month; unused sessions expire.</span></span></label></fieldset>';
+    if (S.signedIn) {
+      h += '<p class="muted">Signed in as <strong style="color:var(--ink);font-weight:500">' + SIGNED_EMAIL + '</strong>. <button type="button" class="linkbtn inline" data-action="signout">Not you?</button>' +
+        (S.useSaved ? '<br>You’ll pay with your saved Visa ending 4242. You can change it on the next screen.' : '') + '</p>';
+    } else {
+      h += field({ key: 'email', label: 'Email', type: 'email', auto: 'email', inputmode: 'email', placeholder: 'name@example.com', value: S.email, helper: 'We’ll send your receipt here. No password needed to check out.' });
+    }
+    h += '<div class="actions"><button class="btn primary" type="button" data-action="to-payment">' + planCta() + '</button></div>';
+    return h;
+  }
+
+  /* ---------- Step: Payment ---------- */
+  function countryOptions() { return Object.keys(COUNTRIES).map(function (k) { return '<option value="' + k + '"' + (S.card.country === k ? ' selected' : '') + '>' + COUNTRIES[k].name + '</option>'; }).join(''); }
+  function paymentStepHTML() {
+    var h = '<div id="pay-alerts"></div>';
+    var back = '<div class="actions"><button class="btn" type="button" data-action="back-plan">Back</button><button class="btn primary" type="button" data-action="to-confirm">Review order</button></div>';
+    if (S.signedIn && S.useSaved) {
+      h += '<div><p class="group-label">Pay with</p><div class="saved">' + '<span class="radio-dot" aria-hidden="true"></span><div>' +
+        '<div class="saved-main"><span style="display:inline-flex;gap:8px;align-items:center">' + brandChip('visa') + '<strong style="font-weight:600">Visa ending 4242</strong></span><span class="muted">Expires 08/28</span></div>' +
+        '<p class="muted">Billing ZIP 78701, United States</p>' +
+        '<button type="button" class="linkbtn" data-action="change-card" aria-label="Change payment method, use a different card">Change</button></div></div></div>';
+      h += back;
+      return h;
+    }
+    var a = walletOn('apple'), g = walletOn('google');
+    if (a || g) {
+      h += '<div class="wallets' + (a && g ? ' two' : '') + '">' +
+        (a ? '<button type="button" class="wallet" data-wallet="Apple Pay">' + (S.walletBusy === 'Apple Pay' ? icon('loader', 'spin') + '<span class="pre">Opening Apple Pay…</span>' : '<span class="pre">Pay with</span> Apple&nbsp;Pay') + '</button>' : '') +
+        (g ? '<button type="button" class="wallet" data-wallet="Google Pay">' + (S.walletBusy === 'Google Pay' ? icon('loader', 'spin') + '<span class="pre">Opening Google Pay…</span>' : '<span class="pre">Pay with</span> Google&nbsp;Pay') + '</button>' : '') +
+        '</div><div class="divider" role="separator">or pay with card</div>';
+    }
+    if (S.signedIn) h += '<p><button type="button" class="linkbtn" data-action="use-saved">Use Visa ending 4242 instead</button></p>';
+    var brand = detectBrand(digits(S.card.number));
+    var amex = brand === 'amex';
+    var c = COUNTRIES[S.card.country];
+    h += '<fieldset class="secure"><legend><span class="secure-head"><span class="secure-title">' + icon('lock') + 'Secure payment</span>' +
+      '<ul class="brands" aria-label="Accepted cards"><li>' + brandChip('visa') + '</li><li>' + brandChip('mastercard') + '</li><li>' + brandChip('amex') + '</li><li>' + brandChip('discover') + '</li></ul></span></legend>' +
+      field({ key: 'number', label: 'Card number', auto: 'cc-number', inputmode: 'numeric', placeholder: '1234 1234 1234 1234', value: S.card.number }) +
+      '<div class="row-2">' +
+        field({ key: 'exp', label: 'Expiry date', auto: 'cc-exp', inputmode: 'numeric', placeholder: 'MM / YY', value: S.card.exp }) +
+        field({ key: 'cvc', label: 'Security code', auto: 'cc-csc', inputmode: 'numeric', placeholder: amex ? '4 digits' : '3 digits', value: S.card.cvc, helper: amex ? '4 digits on the front' : '3 digits on the back' }) +
+      '</div>' +
+      field({ key: 'name', label: 'Name on card', auto: 'cc-name', placeholder: 'As printed on the card', value: S.card.name }) +
+      '<p class="secure-note">Card details are encrypted and never stored on this device.</p>' +
+      '</fieldset>';
+    h += '<fieldset class="billing"><legend>Billing address</legend>' +
+      field({ key: 'country', label: 'Country or region', auto: 'country', select: countryOptions() }) +
+      field({ key: 'zip', label: S.card.country === 'US' ? 'ZIP code' : 'Postal code', auto: 'postal-code', inputmode: S.card.country === 'US' ? 'numeric' : 'text', placeholder: S.card.country === 'US' ? '78701' : '', value: S.card.zip, hidden: !c.postal, helper: S.card.country === 'US' ? 'Used to calculate sales tax' : '' }) +
+      '</fieldset>';
+    h += '<label class="check"><input type="checkbox" id="save-card"' + (S.card.save ? ' checked' : '') + '><span>Save this card for future purchases</span></label>';
+    h += back;
+    return h;
+  }
+  function renderPayAlerts() {
+    var box = $('#pay-alerts'); if (!box) return;
+    var out = '';
+    if (S.payAlert === 'declined') out += '<div class="alert error" role="alert">' + icon('alert') + '<div><strong>Your card was declined.</strong>Try another card or payment method. Your details are kept; re-enter the security code.</div></div>';
+    if (S.tax.status === 'error') out += '<div class="alert error" role="alert">' + icon('alert') + '<div><strong>We couldn’t calculate tax.</strong>Check your ZIP code or try again.<div class="act"><button class="btn" type="button" data-action="retry-tax">Try again</button></div></div></div>';
+    if (box.innerHTML !== out) box.innerHTML = out;
+  }
+  function updateBrandUI() {
+    var slot = $('#brand-slot'); if (!slot) return;
+    var b = detectBrand(digits(S.card.number));
+    slot.innerHTML = brandChip(b);
+    var cw = $('.field[data-key="cvc"]'); if (!cw) return;
+    var amex = b === 'amex';
+    cw.dataset.helper = amex ? '4 digits on the front' : '3 digits on the back';
+    $('#f-cvc').placeholder = amex ? '4 digits' : '3 digits';
+    if (S.errors.cvc) showError('cvc', V.cvc(S.card.cvc)); else showError('cvc', null);
+  }
+
+  /* ---------- Step: Confirm ---------- */
+  function payDesc(p) {
+    if (p.kind === 'wallet') return BRAND_NAMES[p.brand] + ' •• ' + p.last4 + ' via ' + p.wallet;
+    return BRAND_NAMES[p.brand] + ' ending ' + p.last4 + ', expires ' + p.exp;
+  }
+  function disclosureParts() {
+    var p = plan(), t = totals(), disc, btn;
+    if (p.renews) {
+      disc = '<strong>' + money(t.sub) + '/month plus tax.</strong> Renews automatically on ' + NEXT_CHARGE + ' and every month until you cancel. Cancel anytime in Settings → Subscription.' +
+        (S.tutor ? ' This includes ' + p.name + ' (' + money(p.price) + ') and Tutor (' + money(TUTOR) + ').' : '');
+      btn = 'Subscribe · ' + money(t.sub) + '/month';
+    } else {
+      disc = '<strong>' + money(p.price) + ' plus tax, charged once.</strong> Your school-year plan ends on ' + SY_END + ' and does not renew.' +
+        (S.tutor ? ' <strong>Tutor is ' + money(TUTOR) + '/month plus tax.</strong> It renews automatically on ' + NEXT_CHARGE + ' and every month until you cancel, and stops when your plan ends. Cancel anytime in Settings → Subscription.' : '');
+      btn = S.tutor ? 'Subscribe · ' + money(p.price) + ' + ' + money(TUTOR) + '/month' : 'Pay ' + money(p.price) + ' for the school year';
+    }
+    return { disc: disc, btn: btn, agree: (p.renews || S.tutor) ? 'I agree to the renewal terms above.' : 'I agree to the terms above.' };
+  }
+  function commitTotalsHTML() {
+    var t = totals(), taxL = 'Sales tax', taxV;
+    if (S.tax.status === 'ready') { taxL = S.tax.country === 'US' ? 'Sales tax <small>' + (+S.tax.rate.toFixed(3)) + '%</small>' : 'Tax'; taxV = money(t.tax); }
+    else if (S.tax.status === 'loading') taxV = '<span class="tax-wait">' + icon('loader', 'sm spin') + 'Calculating…</span>';
+    else taxV = '<span class="small">' + (S.tax.status === 'error' ? 'Couldn’t calculate' : 'Added after billing ZIP') + '</span>';
+    return '<dl class="lines" style="margin:0"><div><dt>Subtotal</dt><dd>' + money(t.sub) + '</dd></div><div><dt>' + taxL + '</dt><dd>' + taxV + '</dd></div></dl>' +
+      '<div class="total"><span class="t">Total due today</span><span class="amt">' + money(t.total) + (t.known ? '' : ' <small>+ tax</small>') + '</span></div>';
+  }
+  function commitHTML() {
+    var d = disclosureParts();
+    return '<div class="totals-box" id="commit-totals">' + commitTotalsHTML() + '</div>' +
+      '<p class="disclosure" id="disclosure">' + d.disc + '</p>' +
+      '<label class="check consent' + (S.consent ? ' on' : '') + '" id="consent-box"><input type="checkbox" id="consent" aria-describedby="disclosure"' + (S.consent ? ' checked' : '') + '><span id="consent-text">' + d.agree + '</span></label>' +
+      '<p class="hint" id="consent-hint"' + (S.consent ? ' hidden' : '') + '>' + icon('info', 'sm') + '<span>Check the box above to agree to the terms. The button stays off until you do.</span></p>' +
+      '<button class="btn primary block" type="button" id="subscribe" data-action="subscribe" aria-describedby="consent-hint"' + (S.consent && !S.submitting ? '' : ' disabled') + '>' +
+        (S.submitting ? icon('loader', 'spin') + 'Processing…' : esc(d.btn)) + '</button>' +
+      '<p class="fine">You won’t be charged until you press the button above.</p>';
+  }
+  function updateCommit() {
+    var box = $('#commit-totals'); if (!box || S.plansStatus !== 'ready') return;
+    var d = disclosureParts();
+    box.innerHTML = commitTotalsHTML();
+    $('#disclosure').innerHTML = d.disc;
+    $('#consent-text').textContent = d.agree;
+    if (!S.submitting) $('#subscribe').textContent = d.btn;
+  }
+  function confirmStepHTML() {
+    var h = '<div id="confirm-alert"></div>';
+    {
+      var p = plan(), pay = S.payment;
+      var email = S.signedIn ? SIGNED_EMAIL : S.email;
+      var loc = COUNTRIES[pay.country].name + (pay.zip ? ', ' + (pay.country === 'US' ? 'ZIP ' : '') + esc(pay.zip) : '');
+      h += '<dl class="recap">' +
+        '<div><dt>Plan</dt><dd>' + p.product + ' · ' + p.name + ', ' + p.priceText + (S.tutor ? '<br>Tutor add-on, ' + money(TUTOR) + '/month' : '') + '</dd><button type="button" class="linkbtn" data-edit="plan" aria-label="Change plan">Change</button></div>' +
+        '<div><dt>Receipt to</dt><dd>' + esc(email) + '</dd>' + (S.signedIn ? '' : '<button type="button" class="linkbtn" data-edit="plan" aria-label="Change email">Change</button>') + '</div>' +
+        '<div><dt>Payment</dt><dd>' + payDesc(pay) + '<br><span class="muted">Billing: ' + loc + '</span></dd><button type="button" class="linkbtn" data-edit="payment" aria-label="Change payment method">Change</button></div>' +
+      '</dl>';
+    }
+    return h + commitHTML();
+  }
+  function renderConfirmAlert() {
+    var box = $('#confirm-alert'); if (!box) return;
+    box.innerHTML = S.confirmAlert === 'timeout' ?
+      '<div class="alert error" role="alert">' + icon('alert') + '<div><strong>We couldn’t confirm your payment.</strong>You have not been charged.<div class="act"><button class="btn" type="button" data-action="subscribe-retry">Try again</button></div></div></div>' : '';
+  }
+
+  /* ---------- Done ---------- */
+  function doneHTML() {
+    var r = S.result, p = r.plan;
+    return '<div class="done"><div class="done-mark">' + icon('check') + '</div>' +
+      '<h2 class="step-h" id="step-h" tabindex="-1">You’re subscribed</h2>' +
+      '<p>' + p.product + ' is ready. ' + (p.renews ? 'Your plan renews monthly until you cancel.' : 'Your school-year plan runs until ' + SY_END + '.') + '</p>' +
+      '<dl>' +
+        '<div><dt>Plan</dt><dd>' + p.name + (r.tutor ? ' + Tutor' : '') + '</dd></div>' +
+        '<div><dt>Charged today</dt><dd>' + money(r.charged) + '</dd></div>' +
+        (p.renews || r.tutor ? '<div><dt>Next charge</dt><dd>' + money(r.recurring) + ' plus tax on ' + NEXT_CHARGE + '</dd></div>' : '') +
+        (!p.renews ? '<div><dt>Plan ends</dt><dd>' + SY_END + '</dd></div>' : '') +
+        '<div><dt>Paid with</dt><dd>' + payDesc(r.pay) + '</dd></div>' +
+      '</dl>' +
+      '<p>A receipt is on its way to <strong style="font-weight:500">' + esc(r.email) + '</strong>.' + (r.saved ? ' Your card is saved for next time.' : '') + '</p>' +
+      '<div class="actions"><button class="btn primary" type="button" data-action="manage">Manage subscription</button><button class="btn" type="button" data-action="restart">Back to Tempest Line</button></div>' +
+      '<p class="muted" id="manage-note" hidden>Subscription settings are outside this prototype.</p></div>';
+  }
+
+  /* ---------- Rendering and navigation ---------- */
+  var TITLES = { plan: 'Choose your plan', payment: 'Payment', confirm: 'Review and subscribe' };
+  var BODY = { plan: planStepHTML, payment: paymentStepHTML, confirm: confirmStepHTML };
+  function renderStep() {
+    var el = $('#step');
+    document.body.classList.toggle('is-done', S.step === 'done');
+    if (S.step === 'done') { el.innerHTML = doneHTML(); return; }
+    el.innerHTML = '<h2 class="step-h" id="step-h" tabindex="-1">' + TITLES[S.step] + '</h2><div id="err-summary"></div>' + BODY[S.step]();
+    renderPayAlerts(); updateBrandUI(); renderConfirmAlert();
+  }
+  function goStep(step, opts) {
+    opts = opts || {};
+    S.step = step; S.errors = {};
+    renderProgress(); renderStep(); renderSummary();
+    var i = stepIndex();
+    $('#live-step').textContent = step === 'done' ? 'Subscription complete' : 'Step ' + (i + 1) + ' of 3: ' + STEPS[i][1];
+    if (opts.focus !== false) {
+      try { window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); } catch (e) { window.scrollTo(0, 0); }
+      var h = $('#step-h'); if (h) h.focus({ preventScroll: true });
+    }
+    if (opts.push !== false) { try { history.pushState({ step: step }, '', '#' + step); } catch (e) {} }
+  }
+  function loadPlans() {
+    S.plansStatus = 'loading'; if (S.step === 'plan') renderStep(); renderSummary();
+    setTimeout(function () {
+      S.plansStatus = S.dev.empty ? 'empty' : 'ready';
+      if (S.step === 'plan') renderStep();
+      renderSummary();
+    }, 800);
+  }
+
+  /* ---------- Actions ---------- */
+  function planCta() { return S.signedIn && S.useSaved ? 'Continue to review' : 'Continue to payment'; }
+  function savedPay() { return { kind: 'saved', brand: 'visa', last4: SAVED.last4, exp: SAVED.exp, country: SAVED.country, zip: SAVED.zip }; }
+  function toPayment(btn) {
+    if (!S.signedIn) {
+      var list = validateKeys(['email']);
+      if (list.length) return errorSummary(list);
+    }
+    if (S.returnToConfirm && S.payment) { S.returnToConfirm = false; return goStep('confirm'); }
+    if (S.signedIn && S.useSaved) {
+      // Returning user: the saved card is the payment, so skip straight to Confirm (pick plan, then Subscribe)
+      if (btn) { btn.disabled = true; btn.innerHTML = icon('loader', 'spin') + 'Checking tax…'; }
+      return setBilling({ country: SAVED.country, zip: SAVED.zip }).then(function () {
+        if (S.step !== 'plan') return;
+        if (S.tax.status !== 'ready') return goStep('payment');
+        S.payment = savedPay(); S.payAlert = null; S.returnToConfirm = false;
+        goStep('confirm');
+      });
+    }
+    goStep('payment');
+    if (S.signedIn && S.useSaved) setBilling({ country: SAVED.country, zip: SAVED.zip });
+    else setBilling({ country: S.card.country, zip: S.card.zip });
+  }
+  function toConfirm(btn) {
+    S.returnToConfirm = false;
+    var pay, loc;
+    if (S.signedIn && S.useSaved) {
+      loc = { country: SAVED.country, zip: SAVED.zip };
+      pay = savedPay();
+    } else {
+      var keys = ['number', 'exp', 'cvc', 'name'];
+      if (COUNTRIES[S.card.country].postal) keys.push('zip');
+      var list = validateKeys(keys);
+      if (S.tax.status === 'error') list.push({ target: 'f-zip', label: 'Tax', msg: 'We couldn’t calculate tax. Check the ZIP code or try again.' });
+      if (list.length) return errorSummary(list);
+      var d = digits(S.card.number), b = detectBrand(d);
+      loc = { country: S.card.country, zip: COUNTRIES[S.card.country].postal ? S.card.zip.trim() : '' };
+      pay = { kind: 'card', brand: b, last4: d.slice(-4), exp: S.card.exp.replace(/\s/g, ''), digits: d, country: loc.country, zip: loc.zip };
+    }
+    errorSummary([]);
+    if (btn) { btn.disabled = true; btn.innerHTML = icon('loader', 'spin') + 'Checking tax…'; }
+    setBilling(loc).then(function () {
+      if (S.step !== 'payment') return;
+      if (S.tax.status !== 'ready') { if (btn) { btn.disabled = false; btn.textContent = 'Review order'; } return; }
+      S.payment = pay; S.payAlert = null; S.consent = S.consent && true;
+      goStep('confirm');
+    });
+  }
+  function chooseWallet(name) {
+    if (S.walletBusy) return;
+    S.walletBusy = name; renderStep();
+    setTimeout(function () {
+      S.walletBusy = null;
+      var loc = { country: 'US', zip: '94103' };
+      setBilling(loc).then(function () {
+        if (S.tax.status !== 'ready') { renderStep(); return; }
+        S.payment = { kind: 'wallet', wallet: name, brand: 'visa', last4: '4242', country: 'US', zip: '94103' };
+        S.payAlert = null;
+        goStep('confirm');
+      });
+    }, 700);
+  }
+  function subscribe() {
+    if (S.submitting || !S.consent) return;
+    S.submitting = true; S.confirmAlert = null;
+    var btn = $('#subscribe');
+    btn.disabled = true; btn.innerHTML = icon('loader', 'spin') + 'Processing…';
+    renderConfirmAlert();
+    var t = totals(), pay = S.payment;
+    submitPayment({ kind: pay.kind, digits: pay.digits, amount: t.total }).then(function (r) {
+      S.submitting = false;
+      S.result = { plan: plan(), tutor: S.tutor, charged: r.charged, recurring: (plan().renews ? plan().price : 0) + (S.tutor ? TUTOR : 0), pay: pay, email: S.signedIn ? SIGNED_EMAIL : S.email, saved: pay.kind === 'card' && S.card.save };
+      S.card.number = ''; S.card.cvc = ''; // drop card data once the payment is done
+      goStep('done');
+    }, function (err) {
+      S.submitting = false;
+      if (err.message === 'declined') {
+        S.card.cvc = ''; S.payment = null; S.payAlert = 'declined';
+        goStep('payment');
+        setTimeout(function () { var c = $('#f-cvc'); if (c) showError('cvc', null); }, 0);
+      } else {
+        S.confirmAlert = 'timeout';
+        renderStep();
+        var a = $('#confirm-alert .alert'); if (a) { a.setAttribute('tabindex', '-1'); a.focus(); }
+      }
+    });
+  }
+  function signIn() {
+    S.signedIn = true; S.useSaved = true; $('#dev-saved').checked = true;
+    if (S.step === 'plan' || S.step === 'payment') renderStep();
+    var h = $('#step-h'); if (h) h.focus();
+  }
+  function fillCard(num) {
+    var b = detectBrand(num);
+    S.card.number = formatCard(num, b); S.card.exp = '08 / 28'; S.card.cvc = b === 'amex' ? '1234' : '123';
+    S.card.name = 'Alexandria Montgomery-Okonkwo'; S.card.country = 'US'; if (!/^\d{5}/.test(S.card.zip)) S.card.zip = '78701';
+    S.useSaved = false; S.payAlert = null;
+    if (S.step === 'done') return;
+    if (S.step === 'plan' && !S.signedIn && V.email(S.email)) S.email = 'alexandria.mo@example.com';
+    if (S.step !== 'payment') goStep('payment'); else { S.errors = {}; if (S.payment && S.payment.kind === 'wallet') S.payment = null; renderStep(); errorSummary([]); }
+    setBilling({ country: 'US', zip: S.card.zip });
+  }
+  function restart() {
+    var dev = S.dev, signed = S.signedIn;
+    S = freshState(); S.dev = dev; S.signedIn = signed;
+    goStep('plan', { focus: true });
+    loadPlans();
+  }
+
+  /* ---------- Events ---------- */
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-action],[data-goto],[data-edit],[data-wallet],[data-fill],[data-focus]');
+    if (!t) return;
+    if (t.dataset.focus) { e.preventDefault(); var f = document.getElementById(t.dataset.focus); if (f) f.focus(); return; }
+    if (t.dataset.goto) { if (t.dataset.goto === 'confirm' && !S.payment) return goStep('payment'); return goStep(t.dataset.goto); }
+    if (t.dataset.edit) { S.returnToConfirm = true; if (t.dataset.edit === 'payment') { S.payAlert = null; } return t.dataset.edit === 'plan' ? goStep('plan') : (goStep('payment'), setBilling(S.signedIn && S.useSaved ? { country: 'US', zip: SAVED.zip } : { country: S.card.country, zip: S.card.zip })); }
+    if (t.dataset.wallet) return chooseWallet(t.dataset.wallet);
+    if (t.dataset.fill) return fillCard(t.dataset.fill);
+    switch (t.dataset.action) {
+      case 'to-payment': return toPayment(t);
+      case 'to-confirm': return toConfirm(t);
+      case 'back-plan': return goStep('plan');
+      case 'retry-plans': return loadPlans();
+      case 'retry-tax': S.tax.key = ''; return requestTax();
+      case 'change-card': S.useSaved = false; renderStep(); setBilling({ country: S.card.country, zip: S.card.zip }); var n = $('#f-number'); if (n) n.focus(); return;
+      case 'use-saved': S.useSaved = true; renderStep(); setBilling({ country: 'US', zip: SAVED.zip }); return;
+      case 'subscribe': return subscribe();
+      case 'subscribe-retry': return subscribe();
+      case 'signin': return signIn();
+      case 'signout': S.signedIn = false; $('#dev-saved').checked = false; renderStep(); return;
+      case 'manage': $('#manage-note').hidden = false; return;
+      case 'restart': return restart();
+    }
+  });
+  $('#back-plans').addEventListener('click', function () { if (S.step === 'done') return restart(); if (S.step === 'plan') { var h = $('#step-h'); if (h) h.focus(); return; } goStep('plan'); });
+  $('#restart').addEventListener('click', restart);
+
+  var stepEl = $('#step');
+  stepEl.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t.name === 'plan') {
+      S.planId = t.value;
+      $$('.plan-card').forEach(function (c) { c.classList.toggle('selected', $('input', c).checked); });
+      renderSummary();
+    } else if (t.id === 'tutor') {
+      S.tutor = t.checked; $('#addon-box').classList.toggle('on', t.checked); renderSummary();
+    } else if (t.id === 'save-card') {
+      S.card.save = t.checked;
+    } else if (t.id === 'consent') {
+      S.consent = t.checked;
+      $('#consent-box').classList.toggle('on', t.checked);
+      $('#consent-hint').hidden = t.checked;
+      if (!S.submitting) $('#subscribe').disabled = !t.checked;
+    } else if (t.name === 'country') {
+      S.card.country = t.value;
+      var c = COUNTRIES[t.value], zw = $('.field[data-key="zip"]'), zi = $('#f-zip');
+      zw.hidden = !c.postal;
+      $('label', zw).textContent = t.value === 'US' ? 'ZIP code' : 'Postal code';
+      zi.setAttribute('inputmode', t.value === 'US' ? 'numeric' : 'text');
+      zi.placeholder = t.value === 'US' ? '78701' : '';
+      zw.dataset.helper = t.value === 'US' ? 'Used to calculate sales tax' : '';
+      showError('zip', null);
+      setBilling({ country: S.card.country, zip: S.card.zip.trim() });
+    }
+  });
+  stepEl.addEventListener('input', function (e) {
+    var el = e.target, key = el.name;
+    if (key === 'email') { S.email = el.value; }
+    else if (key === 'number') {
+      var caret = el.selectionStart, before = digits(el.value.slice(0, caret)).length;
+      var d = digits(el.value), b = detectBrand(d);
+      d = d.slice(0, b === 'amex' ? 15 : 16);
+      var f = formatCard(d, b);
+      el.value = f; S.card.number = f;
+      var pos = 0, count = 0; while (pos < f.length && count < before) { if (/\d/.test(f[pos])) count++; pos++; }
+      try { el.setSelectionRange(pos, pos); } catch (x) {}
+      updateBrandUI();
+    } else if (key === 'exp') {
+      var dd = digits(el.value).slice(0, 4);
+      if (dd.length === 1 && +dd > 1) dd = '0' + dd;
+      var del = e.inputType && e.inputType.indexOf('delete') === 0;
+      el.value = dd.length > 2 ? dd.slice(0, 2) + ' / ' + dd.slice(2) : (dd.length === 2 && !del ? dd + ' / ' : dd);
+      S.card.exp = el.value;
+    } else if (key === 'cvc') {
+      el.value = digits(el.value).slice(0, detectBrand(digits(S.card.number)) === 'amex' ? 4 : 3); S.card.cvc = el.value;
+    } else if (key === 'name') { S.card.name = el.value; }
+    else if (key === 'zip') {
+      if (S.card.country === 'US') el.value = el.value.replace(/[^\d-]/g, '').slice(0, 10);
+      S.card.zip = el.value;
+      setBilling({ country: S.card.country, zip: el.value.trim() });
+    } else return;
+    if (S.errors[key]) showError(key, V[key](valueOf(key)));
+  });
+  stepEl.addEventListener('focusout', function (e) {
+    var key = e.target.name;
+    if (!V[key] || !e.target.value && !S.errors[key]) return; // don't scold an untouched empty field
+    showError(key, V[key](valueOf(key)));
+  });
+
+  $('#sumbar-btn').addEventListener('click', function () {
+    var open = this.getAttribute('aria-expanded') === 'true';
+    this.setAttribute('aria-expanded', String(!open));
+    $('#sheet').hidden = open;
+  });
+
+  ['apple', 'google', 'empty'].forEach(function (k) {
+    $('#dev-' + k).addEventListener('change', function () {
+      S.dev[k] = this.checked;
+      if (k === 'empty') { if (S.step === 'plan') loadPlans(); return; }
+      if (S.step === 'payment') renderStep();
+    });
+  });
+  $('#dev-saved').addEventListener('change', function () {
+    S.signedIn = this.checked; S.useSaved = true;
+    if (S.step === 'plan') renderStep();
+    if (S.step === 'payment') { renderStep(); setBilling(S.signedIn ? { country: 'US', zip: SAVED.zip } : { country: S.card.country, zip: S.card.zip }); }
+  });
+
+  window.addEventListener('popstate', function (e) {
+    var st = e.state && e.state.step;
+    if (!st || S.step === 'done' || S.submitting) return;
+    if (st === 'confirm' && !S.payment) st = 'payment';
+    if (st === 'done') return;
+    goStep(st, { push: false });
+  });
+
+
+  /* ---------- Boot ---------- */
+  S = freshState();
+  try { history.replaceState({ step: 'plan' }, ''); } catch (e) {}
+  renderProgress(); renderStep(); renderSummary();
+  loadPlans();
+})();
+</script>
+</body>
+</html>

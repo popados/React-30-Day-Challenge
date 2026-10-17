@@ -1,10 +1,9 @@
 @import 'tailwindcss';
 
 /*
- * Tempest Line design tokens, Blueprint (dark) theme. Source of truth: the
- * Tempest Line design system (see docs/tempest-line-design-system.md).
- * The Minutely landing page is designed dark-only, so Blueprint is the one
- * theme here. Raw values live in CSS variables; the @theme block below maps
+ * Tempest Line design tokens. Source of truth: the Tempest Line design system
+ * (see docs/tempest-line-design-system.md). Blueprint (dark) is the default
+ * theme; Graph Paper and High Contrast are further down, set with data-skin. Raw values live in CSS variables; the @theme block below maps
  * them to Tailwind utilities (bg-surface, text-ink-muted, text-display, ...).
  */
 :root {

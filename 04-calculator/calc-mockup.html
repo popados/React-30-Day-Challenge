@@ -1,0 +1,1062 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Calculator Workbench</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;700&family=Red+Hat+Mono:wght@400;500;600&family=Red+Hat+Text:wght@400;500;600&display=swap">
+<style>
+/* Layout: one working panel (pinned readout over the active mode's controls) beside a history tape.
+   Desktop >=1024px: tape sidebar 330px. Tablet 700-1023px: tape sidebar 280px.
+   Phone portrait <700px: one column, mode tabs become a bottom bar, tape opens as a bottom sheet, extra functions fold away.
+   Phone landscape (height <=520px): readout on the left, both keypads side by side on the right, tape opens as a side drawer. */
+:root {
+  --bg: #E9EDF1; --panel: #FBFCFD; --sunk: #F1F4F7; --ink: #131C26; --muted: #56636F; --line: #D3DAE1;
+  --num: #FFFFFF; --num-ink: #131C26;
+  --op: #DCE4FA; --op-ink: #1D3EA6;
+  --fn: #ECEFF3; --fn-ink: #36424F;
+  --eq: #E8962A; --eq-ink: #1F1300;
+  --clr: #F6DFD9; --clr-ink: #982B16;
+  --accent: #1E4FD8; --danger: #B42318;
+  --m-sci: #1E4FD8; --m-conv: #0B7A6E; --m-pct: #B5650B; --m-date: #7A3FC4;
+  --shadow: 0 1px 0 rgba(19,28,38,.07), 0 4px 14px rgba(19,28,38,.06);
+  --scrim: rgba(19,28,38,.38);
+  --f-display: "Red Hat Display", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Red Hat Text", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "Red Hat Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1318; --panel: #151C24; --sunk: #10161D; --ink: #E5ECF2; --muted: #95A2AF; --line: #283340;
+    --num: #1F2833; --num-ink: #E5ECF2; --op: #1C2C55; --op-ink: #B3C6FF; --fn: #19222C; --fn-ink: #BAC6D2;
+    --eq: #F0A43C; --eq-ink: #1F1300; --clr: #3B1F1A; --clr-ink: #FFB4A3;
+    --accent: #8AA9FF; --danger: #FF8A7A;
+    --m-sci: #8AA9FF; --m-conv: #4FC9B9; --m-pct: #F0A43C; --m-date: #C29BFF;
+    --shadow: 0 1px 0 rgba(0,0,0,.35), 0 4px 14px rgba(0,0,0,.25); --scrim: rgba(0,0,0,.55);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1318; --panel: #151C24; --sunk: #10161D; --ink: #E5ECF2; --muted: #95A2AF; --line: #283340;
+  --num: #1F2833; --num-ink: #E5ECF2; --op: #1C2C55; --op-ink: #B3C6FF; --fn: #19222C; --fn-ink: #BAC6D2;
+  --eq: #F0A43C; --eq-ink: #1F1300; --clr: #3B1F1A; --clr-ink: #FFB4A3;
+  --accent: #8AA9FF; --danger: #FF8A7A;
+  --m-sci: #8AA9FF; --m-conv: #4FC9B9; --m-pct: #F0A43C; --m-date: #C29BFF;
+  --shadow: 0 1px 0 rgba(0,0,0,.35), 0 4px 14px rgba(0,0,0,.25); --scrim: rgba(0,0,0,.55);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.45; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.wrap { max-width: 1120px; margin: 0 auto; padding-block: 20px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 24px; margin-bottom: 16px; }
+h1 { font-family: var(--f-display); font-weight: 700; font-size: 1.6rem; letter-spacing: -.01em; margin: 0; text-wrap: balance; }
+.sub { color: var(--muted); margin: 2px 0 0; }
+
+.tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; padding: 4px; background: var(--sunk);
+  border: 1px solid var(--line); border-radius: 14px; min-width: min(100%, 460px); }
+.tab { min-height: 48px; border: 0; border-radius: 10px; background: transparent; font-weight: 600; color: var(--muted);
+  display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0 10px; }
+.tab .kbd { font-family: var(--f-mono); font-size: .72rem; font-weight: 500; opacity: .7; }
+.tab .mdot { width: 8px; height: 8px; border-radius: 50%; flex: none; opacity: .55; }
+.tab[aria-selected="true"] .mdot { opacity: 1; }
+.tab[aria-selected="true"] { background: var(--panel); color: var(--ink); box-shadow: var(--shadow); }
+
+.app { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 20px; align-items: start; }
+
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); min-width: 0; }
+
+/* Readout: always visible */
+.ro-head { container-type: inline-size; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--panel);
+  border-radius: 20px 20px 0 0; padding: 16px 20px 14px; border-bottom: 1px solid var(--line); }
+.ro-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 32px; }
+.kicker { font-size: .75rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.angle { min-height: 44px; min-width: 64px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--sunk); font-family: var(--f-mono); font-weight: 600; font-size: .85rem; }
+.ro-line { font-family: var(--f-mono); color: var(--muted); font-size: 1rem; min-height: 1.5em; margin-top: 6px;
+  overflow-wrap: anywhere; }
+.ro-line .ghost { opacity: .4; }
+.ro-value { display: block; font-family: var(--f-mono); font-weight: 600; line-height: 1.1;
+  font-size: clamp(1.3rem, calc(100cqi / (var(--len, 6) * .62)), 3rem);
+  font-variant-numeric: tabular-nums; text-align: right; overflow-wrap: anywhere; margin-top: 4px; transition: opacity .15s; }
+.ro-value.is-preview { opacity: .55; }
+.ro-error { color: var(--danger); font-weight: 500; font-size: .9rem; text-align: right; margin-top: 4px; }
+.ro-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-top: 10px; }
+.btn.tape-open { display: none; margin-right: auto; }
+.badge { min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; background: var(--ink); color: var(--panel);
+  font-size: .75rem; font-weight: 700; display: inline-grid; place-items: center; font-variant-numeric: tabular-nums; }
+.badge:empty { display: none; }
+.btn { min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--sunk);
+  font-weight: 600; display: inline-flex; align-items: center; gap: 8px; }
+.btn svg { width: 18px; height: 18px; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--panel); }
+.ro-rows { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 16px; margin: 0; padding: 14px 20px;
+  border-bottom: 1px solid var(--line); background: var(--sunk); }
+.ro-rows dt { color: var(--muted); }
+.ro-rows dd { margin: 0; text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+
+.body { padding: 18px 20px 20px; }
+
+/* Keypad */
+.pad { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.pad + .pad { margin-top: 12px; }
+.k { min-height: 64px; border-radius: 14px; border: 1px solid transparent; font-family: var(--f-mono); font-size: 1.45rem;
+  font-weight: 500; touch-action: manipulation; user-select: none; -webkit-user-select: none;
+  transition: transform .06s, filter .12s; }
+.k:active, .k.pressed { transform: scale(.96); filter: brightness(.93); }
+.k.num { background: var(--num); color: var(--num-ink); border-color: var(--line); box-shadow: var(--shadow); }
+.k.op { background: var(--op); color: var(--op-ink); font-weight: 600; font-size: 1.7rem; }
+.k.fn { min-height: 48px; background: var(--fn); color: var(--fn-ink); font-size: 1rem; border-color: var(--line); }
+.k.eq { background: var(--eq); color: var(--eq-ink); font-weight: 700; font-size: 1.9rem; grid-row: span 2; }
+.k.clr { background: var(--clr); color: var(--clr-ink); font-weight: 600; font-size: 1.1rem; }
+.k.del { background: var(--clr); color: var(--clr-ink); font-size: 1.3rem; }
+.k.op[aria-label="Times ten to the power"] { font-size: 1.05rem; }
+.fn-toggle { display: none; }
+
+/* Forms */
+.seg { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; background: var(--sunk); border: 1px solid var(--line);
+  border-radius: 12px; margin-bottom: 16px; }
+.seg button, .seg label { flex: 1 1 auto; min-height: 44px; border: 0; border-radius: 9px; background: transparent;
+  font-weight: 600; color: var(--muted); padding: 0 12px; display: flex; align-items: center; justify-content: center; text-align: center; }
+.seg [aria-pressed="true"], .seg label:has(input:checked) { background: var(--panel); color: var(--ink); box-shadow: var(--shadow); }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label:has(input:focus-visible) { outline: 3px solid var(--accent); outline-offset: 1px; }
+.form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field > label, .field legend { font-size: .85rem; font-weight: 600; color: var(--muted); padding: 0; }
+.field fieldset { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.field fieldset .seg { margin: 0; }
+.inp { position: relative; display: flex; }
+.inp input, .field select, .field input[type="date"] { width: 100%; min-height: 54px; border-radius: 12px; border: 1px solid var(--line);
+  background: var(--num); padding: 0 14px; font-family: var(--f-mono); font-size: 1.2rem; }
+.inp input.has-suf { padding-right: 40px; }
+.inp .suf { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); font-family: var(--f-mono); pointer-events: none; }
+.field select { font-family: var(--f-body); font-size: 1.05rem; }
+.inp input[aria-invalid="true"] { border-color: var(--danger); }
+.check { flex-direction: row; align-items: center; gap: 12px; min-height: 54px; }
+.check input { width: 24px; height: 24px; accent-color: var(--accent); }
+.check label { font-weight: 500; color: var(--ink); font-size: 1rem; }
+.hint { color: var(--muted); font-size: .85rem; margin: 14px 0 0; }
+
+/* Convert */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.chip { min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--sunk); font-weight: 600; color: var(--muted); }
+.chip[aria-pressed="true"] { background: var(--m-conv); border-color: var(--m-conv); color: var(--panel); }
+.conv { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 12px; align-items: end; }
+.conv .side { display: grid; gap: 8px; min-width: 0; }
+.swap { width: 54px; height: 54px; border-radius: 50%; border: 1px solid var(--line); background: var(--op); color: var(--op-ink);
+  display: grid; place-items: center; }
+.swap svg { width: 22px; height: 22px; }
+@media (max-width: 560px) { .conv { grid-template-columns: minmax(0, 1fr); } .swap { justify-self: center; transform: rotate(90deg); } }
+.conv-opts { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: end; margin-top: 16px; }
+.conv-opts .field { flex: 1 1 200px; }
+.all { margin-top: 20px; }
+.all h3 { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+.all-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 6px; }
+.all-grid button { min-height: 48px; text-align: left; padding: 6px 12px; border-radius: 10px; border: 1px solid var(--line);
+  background: var(--sunk); display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+.all-grid .v { font-family: var(--f-mono); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.all-grid .u { font-size: .8rem; color: var(--muted); }
+
+/* Tape */
+.tape { display: flex; flex-direction: column; max-height: calc(100vh - 140px); position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); }
+.tape-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+.tape-head h2 { font-family: var(--f-display); font-size: 1.1rem; margin: 0; }
+.tape-head .count { color: var(--muted); font-weight: 500; font-family: var(--f-body); font-size: .9rem; margin-left: 6px; }
+.tape-list { list-style: none; margin: 0; padding: 6px; overflow-y: auto; flex: 1; min-height: 120px; }
+.tape-item { display: flex; align-items: stretch; gap: 4px; }
+.tape-item + .tape-item { border-top: 1px dashed var(--line); }
+.tape-restore { flex: 1; min-width: 0; text-align: left; border: 0; background: transparent; border-radius: 10px; padding: 8px 10px; min-height: 60px; }
+.tape-restore:hover { background: var(--sunk); }
+.tape-meta { display: flex; align-items: center; gap: 6px; font-size: .72rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.tape-label { font-family: var(--f-mono); color: var(--muted); font-size: .85rem; overflow-wrap: anywhere; }
+.tape-val { font-family: var(--f-mono); font-weight: 600; font-size: 1.1rem; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.icon-btn { width: 44px; min-height: 44px; border: 0; background: transparent; border-radius: 10px; color: var(--muted); display: grid; place-items: center; align-self: center; }
+.icon-btn:hover { background: var(--sunk); color: var(--ink); }
+.icon-btn svg { width: 18px; height: 18px; }
+.tape-close { display: none; }
+.scrim { display: none; }
+.empty { padding: 24px 16px; color: var(--muted); text-align: center; background: var(--panel); }
+.empty strong { display: block; color: var(--ink); margin-bottom: 4px; }
+.keys { border-top: 1px solid var(--line); padding: 12px 16px 14px; font-size: .85rem; }
+.keys summary { font-weight: 600; cursor: pointer; min-height: 32px; display: flex; align-items: center; }
+.keys dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 12px; margin: 8px 0 0; }
+.keys dt { white-space: nowrap; }
+.keys dd { margin: 0; color: var(--muted); }
+kbd { font-family: var(--f-mono); font-size: .78rem; padding: 1px 6px; border-radius: 6px; border: 1px solid var(--line); background: var(--sunk); }
+
+.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 20px); opacity: 0;
+  background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 12px; font-weight: 600; pointer-events: none;
+  transition: opacity .2s, transform .2s; z-index: 20; max-width: calc(100% - 32px); overflow-wrap: anywhere; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* ---------- Responsive ---------- */
+@media (hover: none) { .tab .kbd, .keys { display: none; } }
+
+/* Tablet */
+@media (max-width: 1023px) {
+  .app { grid-template-columns: minmax(0, 1fr) 280px; gap: 16px; }
+  .tabs { min-width: min(100%, 420px); }
+  .tab .kbd { display: none; }
+  .k { min-height: 60px; min-height: clamp(60px, 6.8svh, 84px); }
+}
+
+/* Phone and phone landscape: the tape becomes an overlay opened from the readout */
+@media (max-width: 699px), (orientation: landscape) and (max-height: 520px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .tape { position: fixed; z-index: 30; left: 0; right: 0; bottom: 0; top: auto; max-height: min(78vh, 640px);
+    border-radius: 20px 20px 0 0; border-bottom: 0;
+    padding-bottom: env(safe-area-inset-bottom, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px);
+    transform: translateY(105%); visibility: hidden; transition: transform .25s ease, visibility 0s linear .25s; }
+  .tape.open { transform: none; visibility: visible; transition: transform .25s ease; }
+  .tape-head::before { content: ""; position: absolute; left: 50%; top: 6px; width: 40px; height: 4px; margin-left: -20px; border-radius: 2px; background: var(--line); }
+  .tape-head { position: relative; padding-top: 18px; }
+  .tape-head .btn { margin-left: auto; }
+  .btn.tape-open { display: inline-flex; }
+  .tape-close { display: grid; }
+  .scrim.show { display: block; position: fixed; inset: 0; z-index: 25; background: var(--scrim); }
+}
+
+/* Phone portrait */
+@media (max-width: 699px) and (min-height: 521px) {
+  .wrap { padding-block: 12px calc(88px + env(safe-area-inset-bottom, 0px)); }
+  header { margin-bottom: 12px; }
+  h1 { font-size: 1.25rem; }
+  .sub { display: none; }
+  .tabs { position: fixed; z-index: 15; left: 0; right: 0; bottom: 0; min-width: 0; gap: 2px; border-radius: 0; border-width: 1px 0 0;
+    background: var(--panel); padding: 6px max(10px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(10px, env(safe-area-inset-left, 0px)); }
+  .tab { flex-direction: column; gap: 4px; min-height: 56px; padding: 0 4px; font-size: .82rem; }
+  .tab[aria-selected="true"] { background: var(--sunk); box-shadow: none; }
+  .panel { border-radius: 16px; }
+  .ro-head { padding: 12px 16px; border-radius: 16px 16px 0 0; }
+  .ro-rows { padding: 10px 16px; font-size: .9rem; }
+  .ro-actions { gap: 6px; }
+  .ro-actions .btn { padding: 0 12px; }
+  .body { padding: 12px 12px 14px; }
+  .pad { gap: 6px; }
+  .pad + .pad { margin-top: 8px; }
+  .k { min-height: 56px; min-height: clamp(52px, 9.4svh, 80px); }
+  .k.fn { min-height: 46px; font-size: .95rem; }
+  .chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -12px; padding-inline: 12px; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip { flex: none; }
+  .all-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  .toast { bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* Narrow screens fold the less-used functions behind a More key */
+@media (max-width: 699px) and (min-height: 521px), (orientation: landscape) and (max-height: 520px) and (max-width: 759px) {
+  .fn-toggle { display: block; font-family: var(--f-body); font-weight: 600; font-size: .85rem; }
+  .fn-pad:not(.open) .k:not(.quick):not(.fn-toggle) { display: none; }
+  .fn-pad:not(.open) .quick { order: -1; }
+  .fn-pad.open .fn-toggle { grid-column: 1 / -1; }
+}
+
+/* Phone landscape */
+@media (orientation: landscape) and (max-height: 520px) {
+  .wrap { max-width: none; padding-block: 8px 12px; }
+  header { flex-wrap: nowrap; align-items: center; margin-bottom: 8px; }
+  h1 { font-size: 1.1rem; white-space: nowrap; }
+  .sub { display: none; }
+  .tabs { min-width: 0; flex: 0 1 440px; padding: 3px; }
+  .tab { min-height: 44px; }
+  .tab .kbd { display: none; }
+  .calc { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); grid-template-rows: auto 1fr; border-radius: 16px; }
+  .calc .ro-head { grid-column: 1; grid-row: 1; position: static; border-bottom: 0; border-radius: 16px 0 0 0; padding: 12px 14px; }
+  .calc .ro-rows { grid-column: 1; grid-row: 2; align-self: start; border-bottom: 0; padding: 10px 14px; font-size: .85rem; }
+  .calc .body { grid-column: 2; grid-row: 1 / span 2; border-left: 1px solid var(--line); padding: 10px; }
+  #mode-sci { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+  #mode-sci .pad + .pad { margin-top: 0; }
+  .pad { gap: 5px; }
+  .k, .k.fn { min-height: 44px; min-height: clamp(44px, 14svh, 60px); font-size: 1.1rem; }
+  .k.fn { font-size: .85rem; }
+  .k.op { font-size: 1.35rem; }
+  .tape { left: auto; top: 0; width: min(360px, 82vw); max-height: none; border-radius: 20px 0 0 20px; border: 1px solid var(--line); border-right: 0;
+    padding-top: env(safe-area-inset-top, 0px); transform: translateX(105%); }
+  .tape-head::before { display: none; }
+  .tape-head { padding-top: 14px; }
+}
+@media (orientation: landscape) and (max-height: 520px) and (max-width: 759px) {
+  #mode-sci { grid-template-columns: minmax(0, 1fr); gap: 5px; }
+  .k, .k.fn { min-height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Calculator Workbench</h1>
+      <p class="sub">Scientific, unit and currency, percentage and tax, and date math in one place.</p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Calculator mode" id="tabs"></div>
+  </header>
+
+  <main class="app">
+    <section class="panel calc" id="calc" aria-label="Calculator">
+      <div class="ro-head">
+        <div class="ro-top">
+          <span class="kicker" id="ro-kicker">Scientific</span>
+          <button class="angle" id="angle" type="button" title="Switch angle unit">DEG</button>
+        </div>
+        <div class="ro-line" id="ro-line" aria-label="Expression"></div>
+        <output class="ro-value" id="ro-value" aria-live="polite">0</output>
+        <div class="ro-error" id="ro-error" role="alert" hidden></div>
+        <div class="ro-actions">
+          <button class="btn tape-open" id="tape-open" type="button" aria-controls="tape" aria-expanded="false">Tape <span class="badge" id="tape-badge"></span></button>
+          <button class="btn" id="copy" type="button" title="Copy result (Alt+C)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+            Copy
+          </button>
+          <button class="btn primary" id="save" type="button" title="Save to tape (Enter)">Save to tape</button>
+        </div>
+      </div>
+      <dl class="ro-rows" id="ro-rows" hidden></dl>
+      <div class="body" id="mode-sci"></div>
+      <div class="body" id="mode-conv" hidden></div>
+      <div class="body" id="mode-pct" hidden></div>
+      <div class="body" id="mode-date" hidden></div>
+    </section>
+
+    <aside class="panel tape" id="tape" aria-label="History tape">
+      <div class="tape-head">
+        <h2>Tape<span class="count" id="tape-count"></span></h2>
+        <button class="btn" id="tape-clear" type="button">Clear</button>
+        <button class="icon-btn tape-close" id="tape-close" type="button" aria-label="Close tape"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <ul class="tape-list" id="tape-list"></ul>
+      <details class="keys">
+        <summary>Keyboard shortcuts</summary>
+        <dl>
+          <dt><kbd>Alt</kbd> <kbd>1</kbd>–<kbd>4</kbd></dt><dd>Switch mode</dd>
+          <dt><kbd>0</kbd>–<kbd>9</kbd> <kbd>+</kbd> <kbd>-</kbd> <kbd>*</kbd> <kbd>/</kbd></dt><dd>Type in Scientific</dd>
+          <dt><kbd>^</kbd> <kbd>(</kbd> <kbd>)</kbd> <kbd>!</kbd> <kbd>%</kbd></dt><dd>Power, brackets, factorial, percent</dd>
+          <dt><kbd>s</kbd> <kbd>c</kbd> <kbd>t</kbd> <kbd>l</kbd> <kbd>g</kbd></dt><dd>sin, cos, tan, ln, log</dd>
+          <dt><kbd>r</kbd> <kbd>p</kbd> <kbd>e</kbd> <kbd>a</kbd></dt><dd>√, π, e, Ans</dd>
+          <dt><kbd>Enter</kbd></dt><dd>Evaluate, or save the result to the tape</dd>
+          <dt><kbd>⌫</kbd> <kbd>Esc</kbd></dt><dd>Delete, clear</dd>
+          <dt><kbd>Alt</kbd> <kbd>C</kbd></dt><dd>Copy the result</dd>
+        </dl>
+        <p class="hint">Number fields in every mode also accept arithmetic, such as <kbd>12*3.5</kbd>.</p>
+      </details>
+    </aside>
+  </main>
+</div>
+<div class="scrim" id="scrim"></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(() => {
+'use strict';
+const $ = (s) => document.querySelector(s);
+const el = (tag, props = {}, kids = []) => {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(props)) {
+    if (k === 'class') n.className = v; else if (k === 'text') n.textContent = v;
+    else if (k.startsWith('on')) n.addEventListener(k.slice(2), v); else n.setAttribute(k, v);
+  }
+  for (const c of [].concat(kids)) if (c != null) n.append(c);
+  return n;
+};
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+
+/* ---------- Number formatting and rounding ---------- */
+function fmt(x, sig = 12) {
+  if (!Number.isFinite(x)) throw new Error('The result is too large to show');
+  if (x === 0) return '0';
+  const a = Math.abs(x);
+  if (a >= 1e15 || a < 1e-9) return x.toExponential(sig - 1).replace(/\.?0+e/, 'e').replace('e+', 'e');
+  return String(parseFloat(x.toPrecision(sig)));
+}
+function grp(s) {
+  if (/e/.test(s)) return s;
+  const neg = s.startsWith('-'); if (neg) s = s.slice(1);
+  const [i, f] = s.split('.');
+  return (neg ? '−' : '') + i.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (f != null ? '.' + f : '');
+}
+const cents = (x) => Math.sign(x) * Math.round(Math.abs(x) * 100 + 1e-7) / 100;
+const money = (x) => grp(cents(x).toFixed(2));
+const pctTxt = (x) => grp(String(parseFloat(x.toFixed(2))));
+const numTxt = (x) => grp(fmt(x, 10));
+
+/* ---------- Expression parser (no eval) ---------- */
+function tokenize(s) {
+  const out = []; let i = 0;
+  while (i < s.length) {
+    const c = s[i];
+    if (c === ' ') { i++; continue; }
+    if (/[0-9.]/.test(c)) {
+      let j = i; while (j < s.length && /[0-9.]/.test(s[j])) j++;
+      const t = s.slice(i, j);
+      if (t === '.' || (t.match(/\./g) || []).length > 1) throw new Error('Check the decimal point');
+      out.push({ t: 'num', v: parseFloat(t) }); i = j; continue;
+    }
+    if (/[a-z]/i.test(c)) {
+      let j = i; while (j < s.length && /[a-z]/i.test(s[j])) j++;
+      out.push({ t: 'id', v: s.slice(i, j).toLowerCase() }); i = j; continue;
+    }
+    if ('+-*/^!%()'.includes(c)) { out.push({ t: c }); i++; continue; }
+    throw new Error('“' + c + '” isn’t something I can calculate');
+  }
+  return out;
+}
+function fact(n) {
+  if (n < 0 || !Number.isInteger(n)) throw new Error('n! needs a whole number of 0 or more');
+  if (n > 170) throw new Error('The result is too large to show');
+  let r = 1; for (let k = 2; k <= n; k++) r *= k; return r;
+}
+function evaluate(src, ctx) {
+  const tk = tokenize(src); let p = 0;
+  const peek = () => tk[p], next = () => tk[p++];
+  const toRad = (x) => ctx.deg ? x * Math.PI / 180 : x;
+  const fromRad = (x) => ctx.deg ? x * 180 / Math.PI : x;
+  const snap = (x) => Math.abs(x) < 1e-12 ? 0 : x;
+  const inv = (f, name) => (x) => { if (x < -1 || x > 1) throw new Error(name + ' needs a value from −1 to 1'); return fromRad(f(x)); };
+  const fns = {
+    sin: (x) => snap(Math.sin(toRad(x))),
+    cos: (x) => snap(Math.cos(toRad(x))),
+    tan: (x) => {
+      const r = toRad(x);
+      if (Math.abs(Math.cos(r)) < 1e-12) throw new Error('tan is undefined at this angle');
+      return snap(Math.tan(r));
+    },
+    asin: inv(Math.asin, 'sin⁻¹'), acos: inv(Math.acos, 'cos⁻¹'),
+    atan: (x) => fromRad(Math.atan(x)),
+    ln: (x) => { if (x <= 0) throw new Error('ln needs a number above 0'); return Math.log(x); },
+    log: (x) => { if (x <= 0) throw new Error('log needs a number above 0'); return Math.log10(x); },
+    sqrt: (x) => { if (x < 0) throw new Error('√ needs a number of 0 or more'); return Math.sqrt(x); }
+  };
+  const closeParen = () => {
+    if (peek() && peek().t === ')') next();
+    else if (peek()) throw new Error('A closing bracket is missing');
+  };
+  const startsPrimary = (t) => t && (t.t === 'num' || t.t === 'id' || t.t === '(');
+  function expr() {
+    let v = term();
+    while (peek() && (peek().t === '+' || peek().t === '-')) { const o = next().t; const r = term(); v = o === '+' ? v + r : v - r; }
+    return v;
+  }
+  function term() {
+    let v = unary();
+    for (;;) {
+      const t = peek();
+      if (t && (t.t === '*' || t.t === '/')) {
+        next(); const r = unary();
+        if (t.t === '/') { if (r === 0) throw new Error('Can’t divide by 0'); v /= r; } else v *= r;
+      } else if (startsPrimary(t)) v *= unary();
+      else break;
+    }
+    return v;
+  }
+  function unary() {
+    const t = peek();
+    if (t && (t.t === '-' || t.t === '+')) { next(); const v = unary(); return t.t === '-' ? -v : v; }
+    return power();
+  }
+  function power() {
+    const b = postfix();
+    if (peek() && peek().t === '^') {
+      next(); const r = Math.pow(b, unary());
+      if (Number.isNaN(r)) throw new Error('There’s no real-number result');
+      return r;
+    }
+    return b;
+  }
+  function postfix() {
+    let v = primary();
+    while (peek() && (peek().t === '!' || peek().t === '%')) v = next().t === '%' ? v / 100 : fact(v);
+    return v;
+  }
+  function primary() {
+    const t = next();
+    if (!t) throw new Error('Finish the expression');
+    if (t.t === 'num') return t.v;
+    if (t.t === '(') { const v = expr(); closeParen(); return v; }
+    if (t.t === 'id') {
+      if (t.v === 'pi') return Math.PI;
+      if (t.v === 'e') return Math.E;
+      if (t.v === 'ans') return ctx.ans;
+      const f = fns[t.v];
+      if (!f) throw new Error('Unknown name “' + t.v + '”');
+      if (peek() && peek().t === '(') { next(); const a = expr(); closeParen(); return f(a); }
+      return f(power());
+    }
+    if (t.t === ')') throw new Error('There’s an extra closing bracket');
+    throw new Error('Something is missing before “' + t.t + '”');
+  }
+  const v = expr();
+  if (p < tk.length) throw new Error(tk[p].t === ')' ? 'There’s an extra closing bracket' : 'Check the expression');
+  if (!Number.isFinite(v)) throw new Error('The result is too large to show');
+  return v;
+}
+
+/* ---------- Shared state ---------- */
+const MODES = ['sci', 'conv', 'pct', 'date'];
+const MODE_NAMES = { sci: 'Scientific', conv: 'Convert', pct: 'Percent', date: 'Dates' };
+let mode = MODES.includes(store.get('cw.mode')) ? store.get('cw.mode') : 'sci';
+let deg = store.get('cw.deg', true) !== false;
+let tape = Array.isArray(store.get('cw.tape')) ? store.get('cw.tape') : [];
+let cur = null;
+
+function parseField(str, pct) {
+  let s = String(str).replace(/,/g, '').replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-').trim();
+  if (pct) s = s.replace(/%\s*$/, '');
+  if (!s) return null;
+  return evaluate(s, { deg, ans: sci.ans });
+}
+
+/* ---------- Readout ---------- */
+const roKicker = $('#ro-kicker'), roLine = $('#ro-line'), roValue = $('#ro-value'), roError = $('#ro-error'), roRows = $('#ro-rows');
+function show(r) {
+  cur = r;
+  roLine.replaceChildren(r.line || '', r.ghost ? el('span', { class: 'ghost', text: r.ghost }) : '');
+  roValue.textContent = r.value;
+  roValue.classList.toggle('is-preview', !!r.preview);
+  roValue.style.setProperty('--len', Math.max(r.value.length, 6));
+  roError.hidden = !r.error; roError.textContent = r.error || '';
+  const rows = r.rows || [];
+  roRows.replaceChildren(...rows.flatMap(([k, v]) => [el('dt', { text: k }), el('dd', { text: v })]));
+  roRows.hidden = !rows.length;
+}
+
+/* ---------- Toast and copy ---------- */
+let toastTimer;
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+}
+function fallbackCopy(text) {
+  const ta = el('textarea', { readonly: '', style: 'position:fixed;opacity:0;top:0;left:0' }); ta.value = text;
+  document.body.append(ta); ta.select();
+  let ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+  ta.remove(); return ok;
+}
+function copyText(text) {
+  const done = () => toast('Copied ' + text);
+  const fail = () => fallbackCopy(text) ? done() : toast('Copy was blocked. Select the result to copy it.');
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fail);
+    else fail();
+  } catch (e) { fail(); }
+}
+function copyResult() {
+  if (!cur || cur.raw == null) return toast('There’s no result to copy yet');
+  copyText(cur.raw);
+}
+
+/* ---------- Tape ---------- */
+const COPY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
+function pushTape(entry) {
+  tape.unshift({ ...entry, t: Date.now() });
+  tape = tape.slice(0, 60);
+  store.set('cw.tape', tape); renderTape();
+}
+function renderTape() {
+  const list = $('#tape-list');
+  $('#tape-count').textContent = $('#tape-badge').textContent = tape.length ? String(tape.length) : '';
+  if (!tape.length) {
+    list.replaceChildren(el('li', { class: 'empty' }, [
+      el('strong', { text: 'Nothing saved yet' }),
+      'Press = in Scientific, or Save to tape in the other modes. Tap a saved line to bring it back.'
+    ]));
+    return;
+  }
+  list.replaceChildren(...tape.map((it, i) => {
+    const copyBtn = el('button', { class: 'icon-btn', type: 'button', title: 'Copy ' + it.raw, 'aria-label': 'Copy ' + it.raw, onclick: () => copyText(it.raw) });
+    copyBtn.innerHTML = COPY_SVG;
+    return el('li', { class: 'tape-item' }, [
+      el('button', { class: 'tape-restore', type: 'button', title: 'Load this calculation', onclick: () => restore(tape[i]) }, [
+        el('span', { class: 'tape-meta' }, [el('span', { class: 'dot', style: 'background:var(--m-' + it.mode + ')' }), MODE_NAMES[it.mode]]),
+        el('div', { class: 'tape-label', text: it.label }),
+        el('div', { class: 'tape-val', text: it.display })
+      ]),
+      copyBtn
+    ]);
+  }));
+}
+let clearArmed = false, clearTimer;
+$('#tape-clear').addEventListener('click', (e) => {
+  if (!tape.length) return;
+  if (!clearArmed) {
+    clearArmed = true; e.currentTarget.textContent = 'Confirm clear';
+    clearTimer = setTimeout(() => { clearArmed = false; $('#tape-clear').textContent = 'Clear'; }, 3000);
+    return;
+  }
+  clearTimeout(clearTimer); clearArmed = false; e.currentTarget.textContent = 'Clear';
+  tape = []; store.set('cw.tape', tape); renderTape(); toast('Tape cleared');
+});
+/* On phones the tape is an overlay sheet; on wider screens these do nothing visible. */
+const tapeEl = $('#tape'), scrim = $('#scrim'), tapeOpenBtn = $('#tape-open');
+function openTape() {
+  tapeEl.classList.add('open'); scrim.classList.add('show'); tapeOpenBtn.setAttribute('aria-expanded', 'true');
+  $('#calc').inert = true; $('#tabs').inert = true;
+  $('#tape-close').focus();
+}
+function closeTape() {
+  if (!tapeEl.classList.contains('open')) return;
+  tapeEl.classList.remove('open'); scrim.classList.remove('show'); tapeOpenBtn.setAttribute('aria-expanded', 'false');
+  $('#calc').inert = false; $('#tabs').inert = false;
+  if (getComputedStyle(tapeOpenBtn).display !== 'none') tapeOpenBtn.focus();
+}
+tapeOpenBtn.addEventListener('click', openTape);
+$('#tape-close').addEventListener('click', closeTape);
+scrim.addEventListener('click', closeTape);
+function restore(it) {
+  closeTape();
+  setMode(it.mode);
+  if (it.mode === 'sci') { sci.tokens = it.state.tokens.map((t) => ({ ...t })); sci.just = false; sci.err = ''; sciRender(); }
+  else if (it.mode === 'conv') { Object.assign(conv, it.state); convBuild(); }
+  else if (it.mode === 'pct') { pct.sub = it.state.sub; pct.vals[pct.sub] = { ...it.state.vals }; pct.build(); }
+  else if (it.mode === 'date') { dt.sub = it.state.sub; dt.vals[dt.sub] = { ...it.state.vals }; dt.build(); }
+}
+function saveCurrent() {
+  if (mode === 'sci') return sciPress('eq');
+  if (!cur || cur.error || cur.preview || !cur.tape) return toast('Fix the input first, then save');
+  pushTape(cur.tape); toast('Saved to tape');
+}
+
+/* ---------- Scientific ---------- */
+const T = (d, v, op = false) => ({ d, v, op });
+const ANS = T('Ans', ' ans ');
+const sci = { tokens: [], ans: store.get('cw.ans', 0) || 0, just: false, last: null, err: '' };
+const SCI_QUICK = ['(', ')', 'xʸ', '√'];
+const SCI_FN = [
+  ['sin', T('sin(', ' sin(')], ['cos', T('cos(', ' cos(')], ['tan', T('tan(', ' tan(')], ['ln', T('ln(', ' ln(')], ['log', T('log(', ' log(')],
+  ['sin⁻¹', T('sin⁻¹(', ' asin(')], ['cos⁻¹', T('cos⁻¹(', ' acos(')], ['tan⁻¹', T('tan⁻¹(', ' atan(')], ['eˣ', T('e^(', ' e^(')], ['10ˣ', T('10^(', ' 10^(')],
+  ['x²', T('²', '^2', true)], ['xʸ', T('^', '^', true)], ['√', T('√(', ' sqrt(')], ['(', T('(', '(')], [')', T(')', ')')],
+  ['π', T('π', ' pi ')], ['e', T('e', ' e ')], ['n!', T('!', '!', true)], ['%', T('%', '%', true)], ['Ans', ANS]
+];
+const SCI_MAIN = [
+  ['7', 'num'], ['8', 'num'], ['9', 'num'], ['÷', 'op', T('÷', '/', true)], ['AC', 'clr', 'clear'],
+  ['4', 'num'], ['5', 'num'], ['6', 'num'], ['×', 'op', T('×', '*', true)], ['⌫', 'del', 'del'],
+  ['1', 'num'], ['2', 'num'], ['3', 'num'], ['−', 'op', T('−', '-', true)], ['=', 'eq', 'eq'],
+  ['0', 'num'], ['.', 'num', T('.', '.')], ['EXP', 'op', T('×10^', '*10^', true)], ['+', 'op', T('+', '+', true)]
+];
+const KEY_ARIA = { '⌫': 'Delete', 'AC': 'Clear all', 'EXP': 'Times ten to the power', 'xʸ': 'Power', 'x²': 'Square', '√': 'Square root', 'n!': 'Factorial', 'eˣ': 'e to the power', '10ˣ': 'Ten to the power' };
+const keyBtns = {}, keyDefs = {};
+function sciBuild() {
+  const root = $('#mode-sci');
+  const mk = (label, cls, act) => {
+    keyDefs[label] = act;
+    const b = el('button', { class: 'k ' + cls, type: 'button', text: label });
+    if (KEY_ARIA[label]) b.setAttribute('aria-label', KEY_ARIA[label]);
+    b.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'keyboard') e.preventDefault(); });
+    b.addEventListener('click', () => sciPress(act));
+    keyBtns[label] = b; return b;
+  };
+  const fnPad = el('div', { class: 'pad fn-pad', id: 'fn-pad', role: 'group', 'aria-label': 'Functions' },
+    SCI_FN.map(([l, t]) => mk(l, 'fn' + (SCI_QUICK.includes(l) ? ' quick' : ''), t)));
+  const more = el('button', { class: 'k fn fn-toggle', type: 'button', 'aria-controls': 'fn-pad', 'aria-expanded': 'false', text: 'More' });
+  more.addEventListener('click', () => {
+    const open = fnPad.classList.toggle('open');
+    more.textContent = open ? 'Fewer functions' : 'More'; more.setAttribute('aria-expanded', String(open));
+  });
+  fnPad.append(more);
+  const mainPad = el('div', { class: 'pad', role: 'group', 'aria-label': 'Numbers and operators' },
+    SCI_MAIN.map(([l, cls, act]) => mk(l, cls, act || T(l, l))));
+  root.append(fnPad, mainPad);
+}
+function sciDisplay() { return sci.tokens.map((t) => t.d).join(''); }
+function sciSrc() { return sci.tokens.map((t) => t.v).join(''); }
+function openParens(s) { return Math.max(0, (s.match(/\(/g) || []).length - (s.match(/\)/g) || []).length); }
+function sciRender() {
+  if (mode !== 'sci') return;
+  const d = sciDisplay(), ghost = ')'.repeat(openParens(d));
+  if (sci.just) {
+    const raw = fmt(sci.ans);
+    return show({ line: d + ghost + ' =', value: grp(raw), raw });
+  }
+  if (!sci.tokens.length) sci.last = null;
+  else { try { sci.last = evaluate(sciSrc(), { deg, ans: sci.ans }); } catch (e) {} }
+  const raw = sci.last == null ? '0' : fmt(sci.last);
+  show({ line: d || ' ', ghost, value: grp(raw), raw, preview: !!sci.tokens.length, error: sci.err });
+}
+function sciPress(act) {
+  if (act === 'clear') { sci.tokens = []; sci.just = false; sci.err = ''; sci.last = null; }
+  else if (act === 'del') { if (sci.just) sci.just = false; else sci.tokens.pop(); sci.err = ''; }
+  else if (act === 'eq') {
+    if (!sci.tokens.length) return;
+    if (sci.just) return;
+    try {
+      const v = evaluate(sciSrc(), { deg, ans: sci.ans });
+      const label = sciDisplay() + ')'.repeat(openParens(sciDisplay()));
+      sci.ans = v; store.set('cw.ans', v); sci.just = true; sci.err = '';
+      const raw = fmt(v);
+      pushTape({ mode: 'sci', label: label + (/(sin|cos|tan)/.test(label) ? (deg ? '  [deg]' : '  [rad]') : ''), display: grp(raw), raw,
+        state: { tokens: sci.tokens.map((t) => ({ ...t })) } });
+    } catch (e) { sci.err = e.message; }
+  } else {
+    if (sci.just) { sci.just = false; sci.tokens = act.op ? [ANS] : []; }
+    sci.tokens.push(act); sci.err = '';
+  }
+  sciRender();
+}
+const SCI_KEYS = { '+': '+', '-': '−', '*': '×', 'x': '×', '/': '÷', '^': 'xʸ', '(': '(', ')': ')', '!': 'n!', '%': '%', '.': '.', ',': '.',
+  'Enter': '=', '=': '=', 'Backspace': '⌫', 'Escape': 'AC', 'Delete': 'AC',
+  's': 'sin', 'c': 'cos', 't': 'tan', 'l': 'ln', 'g': 'log', 'r': '√', 'p': 'π', 'e': 'e', 'a': 'Ans' };
+$('#angle').addEventListener('click', () => {
+  deg = !deg; store.set('cw.deg', deg);
+  $('#angle').textContent = deg ? 'DEG' : 'RAD'; $('#angle').setAttribute('aria-label', 'Angle unit: ' + (deg ? 'degrees' : 'radians'));
+  sciRender();
+});
+
+/* ---------- Convert ---------- */
+const CATS = {
+  length: { name: 'Length', units: [['mm', 'Millimeters', .001], ['cm', 'Centimeters', .01], ['m', 'Meters', 1], ['km', 'Kilometers', 1000],
+    ['in', 'Inches', .0254], ['ft', 'Feet', .3048], ['yd', 'Yards', .9144], ['mi', 'Miles', 1609.344], ['nmi', 'Nautical miles', 1852]] },
+  mass: { name: 'Mass', units: [['mg', 'Milligrams', 1e-6], ['g', 'Grams', .001], ['kg', 'Kilograms', 1], ['t', 'Metric tons', 1000],
+    ['oz', 'Ounces', .028349523125], ['lb', 'Pounds', .45359237], ['st', 'Stone', 6.35029318]] },
+  volume: { name: 'Volume', units: [['mL', 'Milliliters', .001], ['L', 'Liters', 1], ['m³', 'Cubic meters', 1000],
+    ['tsp', 'Teaspoons (US)', .00492892159375], ['tbsp', 'Tablespoons (US)', .01478676478125], ['fl oz', 'Fluid ounces (US)', .0295735295625],
+    ['cup', 'Cups (US)', .2365882365], ['pt', 'Pints (US)', .473176473], ['qt', 'Quarts (US)', .946352946],
+    ['gal', 'Gallons (US)', 3.785411784], ['imp gal', 'Gallons (UK)', 4.54609]] },
+  temperature: { name: 'Temperature', temp: true, units: [['°C', 'Celsius'], ['°F', 'Fahrenheit'], ['K', 'Kelvin']] },
+  area: { name: 'Area', units: [['cm²', 'Square centimeters', 1e-4], ['m²', 'Square meters', 1], ['ha', 'Hectares', 1e4], ['km²', 'Square kilometers', 1e6],
+    ['in²', 'Square inches', .00064516], ['ft²', 'Square feet', .09290304], ['yd²', 'Square yards', .83612736], ['ac', 'Acres', 4046.8564224], ['mi²', 'Square miles', 2589988.110336]] },
+  speed: { name: 'Speed', units: [['m/s', 'Meters per second', 1], ['km/h', 'Kilometers per hour', 1 / 3.6], ['mph', 'Miles per hour', .44704],
+    ['kn', 'Knots', 1852 / 3600], ['ft/s', 'Feet per second', .3048]] },
+  time: { name: 'Time', units: [['ms', 'Milliseconds', .001], ['s', 'Seconds', 1], ['min', 'Minutes', 60], ['h', 'Hours', 3600],
+    ['d', 'Days', 86400], ['wk', 'Weeks', 604800], ['yr', 'Years (365.25 d)', 31557600]] },
+  data: { name: 'Data', units: [['bit', 'Bits', .125], ['B', 'Bytes', 1], ['KB', 'Kilobytes (1000)', 1e3], ['MB', 'Megabytes (1000²)', 1e6],
+    ['GB', 'Gigabytes (1000³)', 1e9], ['TB', 'Terabytes (1000⁴)', 1e12], ['KiB', 'Kibibytes (1024)', 1024], ['MiB', 'Mebibytes (1024²)', 1048576],
+    ['GiB', 'Gibibytes (1024³)', 1073741824], ['TiB', 'Tebibytes (1024⁴)', 1099511627776]] },
+  pressure: { name: 'Pressure', units: [['Pa', 'Pascals', 1], ['kPa', 'Kilopascals', 1000], ['bar', 'Bar', 1e5], ['atm', 'Atmospheres', 101325],
+    ['psi', 'Pounds per sq inch', 6894.757293168], ['mmHg', 'Millimeters of mercury', 133.322387415]] },
+  energy: { name: 'Energy', units: [['J', 'Joules', 1], ['kJ', 'Kilojoules', 1000], ['cal', 'Calories', 4.184], ['kcal', 'Kilocalories', 4184],
+    ['Wh', 'Watt-hours', 3600], ['kWh', 'Kilowatt-hours', 3.6e6], ['BTU', 'BTU', 1055.05585262]] },
+  currency: { name: 'Currency', currency: true, units: [['USD', 'US dollar', 1], ['EUR', 'Euro', .92], ['GBP', 'British pound', .79],
+    ['JPY', 'Japanese yen', 150], ['CAD', 'Canadian dollar', 1.37], ['AUD', 'Australian dollar', 1.52], ['CHF', 'Swiss franc', .88],
+    ['CNY', 'Chinese yuan', 7.2], ['INR', 'Indian rupee', 83.5], ['MXN', 'Mexican peso', 18]] }
+};
+const MINOR = { JPY: 0 };
+const DEFAULT_PAIRS = { length: ['km', 'mi'], mass: ['kg', 'lb'], volume: ['L', 'gal'], temperature: ['°C', '°F'], area: ['m²', 'ft²'],
+  speed: ['km/h', 'mph'], time: ['h', 'min'], data: ['GB', 'GiB'], pressure: ['bar', 'psi'], energy: ['kWh', 'kJ'], currency: ['USD', 'EUR'] };
+const conv = { cat: 'length', from: 'km', to: 'mi', a: '10', b: '', edited: 'a', sig: 6, rate: '' };
+const unit = (cat, id) => CATS[cat].units.find((u) => u[0] === id);
+function toBase(cat, id, x) {
+  if (CATS[cat].temp) return id === '°C' ? x : id === '°F' ? (x - 32) * 5 / 9 : x - 273.15;
+  return x * unit(cat, id)[2];
+}
+function fromBase(cat, id, x) {
+  if (CATS[cat].temp) return id === '°C' ? x : id === '°F' ? x * 9 / 5 + 32 : x + 273.15;
+  return x / unit(cat, id)[2];
+}
+function sampleRate() { return unit('currency', conv.to)[2] / unit('currency', conv.from)[2]; }
+function convert(x, from, to) {
+  if (CATS[conv.cat].currency) {
+    const r = parseField(conv.rate);
+    if (r == null || !(r > 0)) throw new Error('Enter an exchange rate above 0');
+    if (from === conv.from && to === conv.to) return x * r;
+    if (from === conv.to && to === conv.from) return x / r;
+    return x * unit('currency', to)[2] / unit('currency', from)[2];
+  }
+  return fromBase(conv.cat, to, toBase(conv.cat, from, x));
+}
+function fmtUnit(x, id) {
+  if (CATS[conv.cat].currency) { const m = MINOR[id] ?? 2; return (Math.sign(x) * Math.round(Math.abs(x) * 10 ** m + 1e-7) / 10 ** m).toFixed(m); }
+  return fmt(x, conv.sig);
+}
+function convBuild() {
+  const root = $('#mode-conv'); root.replaceChildren();
+  const isCur = !!CATS[conv.cat].currency;
+  if (isCur && !conv.rate) conv.rate = String(parseFloat(sampleRate().toPrecision(6)));
+  const chips = el('div', { class: 'chips', role: 'group', 'aria-label': 'Category' }, Object.entries(CATS).map(([k, c]) =>
+    el('button', { class: 'chip', type: 'button', 'aria-pressed': String(k === conv.cat), text: c.name, onclick: () => {
+      conv.cat = k; [conv.from, conv.to] = DEFAULT_PAIRS[k]; conv.a = '1'; conv.edited = 'a'; conv.rate = ''; convBuild();
+    } })));
+  const opts = (sel) => CATS[conv.cat].units.map((u) => { const o = el('option', { value: u[0], text: u[1] + ' (' + u[0] + ')' }); if (u[0] === sel) o.selected = true; return o; });
+  const side = (key, label, unitKey) => {
+    const inp = el('input', { id: 'cv-' + key, type: 'text', inputmode: 'decimal', autocomplete: 'off', spellcheck: 'false', 'aria-label': label + ' value' });
+    inp.value = conv[key];
+    inp.addEventListener('input', () => { conv[key] = inp.value; conv.edited = key; convCompute(); });
+    const sel = el('select', { id: 'cv-' + key + '-unit', 'aria-label': label + ' unit' }, opts(conv[unitKey]));
+    sel.addEventListener('change', () => { conv[unitKey] = sel.value; if (isCur) conv.rate = ''; convBuild(); });
+    return el('div', { class: 'side field' }, [el('label', { for: 'cv-' + key, text: label }), el('div', { class: 'inp' }, inp), sel]);
+  };
+  const swap = el('button', { class: 'swap', type: 'button', title: 'Swap units', 'aria-label': 'Swap units', onclick: () => {
+    [conv.from, conv.to] = [conv.to, conv.from];
+    conv.a = conv.b || conv.a; conv.edited = 'a';
+    if (isCur) conv.rate = '';
+    convBuild();
+  } });
+  swap.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4"/></svg>';
+  const extra = el('div', { class: 'conv-opts' });
+  if (isCur) {
+    const r = el('input', { id: 'cv-rate', type: 'text', inputmode: 'decimal', autocomplete: 'off', spellcheck: 'false' });
+    r.value = conv.rate;
+    r.addEventListener('input', () => { conv.rate = r.value; convCompute(); });
+    extra.append(el('div', { class: 'field' }, [el('label', { for: 'cv-rate', text: 'Rate: 1 ' + conv.from + ' =' }),
+      el('div', { class: 'inp' }, [r, el('span', { class: 'suf', text: conv.to })])]));
+  } else {
+    const s = el('select', { id: 'cv-sig' }, [4, 6, 8, 10].map((n) => { const o = el('option', { value: String(n), text: n + ' significant digits' }); if (n === conv.sig) o.selected = true; return o; }));
+    s.addEventListener('change', () => { conv.sig = +s.value; convCompute(); });
+    extra.append(el('div', { class: 'field' }, [el('label', { for: 'cv-sig', text: 'Precision' }), s]));
+  }
+  root.append(chips, el('div', { class: 'conv' }, [side('a', 'From', 'from'), swap, side('b', 'To', 'to')]), extra);
+  if (isCur) root.append(el('p', { class: 'hint', text: 'Rates are fixed sample values for this prototype, not live market data. Type your own rate to override it.' }));
+  if (conv.cat === 'data') root.append(el('p', { class: 'hint', text: 'KB, MB and GB use powers of 1000. KiB, MiB and GiB use powers of 1024.' }));
+  root.append(el('div', { class: 'all' }, [el('h3', { text: 'In every unit' }), el('div', { class: 'all-grid', id: 'cv-all' })]));
+  convCompute();
+}
+const convLast = { r: null };
+function convCompute() {
+  if (mode !== 'conv') return;
+  const aIn = $('#cv-a'), bIn = $('#cv-b');
+  try {
+    const srcKey = conv.edited, src = parseField(conv[srcKey]);
+    if (src == null) throw new Error('Enter a value to convert');
+    let aVal, bVal;
+    if (srcKey === 'a') { aVal = src; bVal = convert(src, conv.from, conv.to); conv.b = fmtUnit(bVal, conv.to); if (document.activeElement !== bIn) bIn.value = conv.b; }
+    else { bVal = src; aVal = convert(src, conv.to, conv.from); conv.a = fmtUnit(aVal, conv.from); if (document.activeElement !== aIn) aIn.value = conv.a; }
+    aIn.removeAttribute('aria-invalid'); bIn.removeAttribute('aria-invalid');
+    const raw = fmtUnit(bVal, conv.to);
+    const fromTxt = grp(fmtUnit(aVal, conv.from));
+    const rows = [['1 ' + conv.from, grp(fmtUnit(convert(1, conv.from, conv.to), conv.to)) + ' ' + conv.to],
+      ['1 ' + conv.to, grp(fmtUnit(convert(1, conv.to, conv.from), conv.from)) + ' ' + conv.from]];
+    const r = { line: fromTxt + ' ' + conv.from + ' =', value: grp(raw) + ' ' + conv.to, raw, rows,
+      tape: { mode: 'conv', label: fromTxt + ' ' + conv.from + ' → ' + conv.to, display: grp(raw) + ' ' + conv.to, raw, state: { ...conv } } };
+    convLast.r = r; show(r);
+    const all = $('#cv-all');
+    all.replaceChildren(...CATS[conv.cat].units.filter((u) => u[0] !== conv.from).map((u) =>
+      el('button', { type: 'button', title: 'Convert to ' + u[1], onclick: () => { conv.to = u[0]; conv.edited = 'a'; if (CATS[conv.cat].currency) conv.rate = ''; convBuild(); } }, [
+        el('span', { class: 'v', text: grp(fmtUnit(convert(aVal, conv.from, u[0]), u[0])) + ' ' + u[0] }),
+        el('span', { class: 'u', text: u[1] })
+      ])));
+  } catch (e) {
+    (conv.edited === 'a' ? aIn : bIn).setAttribute('aria-invalid', 'true');
+    if (convLast.r) show({ ...convLast.r, preview: true, error: e.message });
+    else show({ line: '', value: '—', raw: null, error: e.message, preview: true });
+  }
+}
+
+/* ---------- Form-driven modes (Percent, Dates) ---------- */
+function formMode(key, cfg) {
+  const m = { sub: Object.keys(cfg)[0], vals: {}, last: {} };
+  for (const [k, c] of Object.entries(cfg)) m.vals[k] = Object.fromEntries(c.fields.map((f) => [f.k, typeof f.d === 'function' ? f.d() : f.d]));
+  m.build = () => {
+    const root = $('#mode-' + key); root.replaceChildren();
+    root.append(el('div', { class: 'seg', role: 'group', 'aria-label': 'Calculation' }, Object.entries(cfg).map(([k, c]) =>
+      el('button', { type: 'button', 'aria-pressed': String(k === m.sub), text: c.tab, onclick: () => { m.sub = k; m.build(); } }))));
+    const c = cfg[m.sub], vals = m.vals[m.sub];
+    const form = el('div', { class: 'form' });
+    c.fields.forEach((f) => {
+      const id = 'f-' + key + '-' + m.sub + '-' + f.k;
+      if (f.type === 'num' || f.type === 'date') {
+        const inp = el('input', f.type === 'num'
+          ? { id, type: 'text', inputmode: 'decimal', autocomplete: 'off', spellcheck: 'false', class: f.suf ? 'has-suf' : '' }
+          : { id, type: 'date' });
+        inp.value = vals[f.k];
+        inp.addEventListener('input', () => { vals[f.k] = inp.value; m.compute(); });
+        form.append(el('div', { class: 'field' }, [el('label', { for: id, text: f.l }), el('div', { class: 'inp' }, [inp, f.suf ? el('span', { class: 'suf', text: f.suf }) : null])]));
+      } else if (f.type === 'check') {
+        const inp = el('input', { id, type: 'checkbox' }); inp.checked = !!vals[f.k];
+        inp.addEventListener('change', () => { vals[f.k] = inp.checked; m.compute(); });
+        form.append(el('div', { class: 'field check' }, [inp, el('label', { for: id, text: f.l })]));
+      } else if (f.type === 'seg') {
+        const seg = el('div', { class: 'seg' }, f.opts.map(([v, l]) => {
+          const r = el('input', { type: 'radio', name: id, value: v, id: id + '-' + v }); r.checked = vals[f.k] === v;
+          r.addEventListener('change', () => { vals[f.k] = v; m.compute(); });
+          return el('label', { for: id + '-' + v }, [r, l]);
+        }));
+        form.append(el('div', { class: 'field' }, el('fieldset', {}, [el('legend', { text: f.l }), seg])));
+      } else if (f.type === 'select') {
+        const s = el('select', { id }, f.opts.map(([v, l]) => { const o = el('option', { value: v, text: l }); if (vals[f.k] === v) o.selected = true; return o; }));
+        s.addEventListener('change', () => { vals[f.k] = s.value; m.compute(); });
+        form.append(el('div', { class: 'field' }, [el('label', { for: id, text: f.l }), s]));
+      }
+    });
+    root.append(form);
+    if (c.hint) root.append(el('p', { class: 'hint', text: c.hint }));
+    m.compute();
+  };
+  m.compute = () => {
+    if (mode !== key) return;
+    const c = cfg[m.sub], vals = m.vals[m.sub];
+    document.querySelectorAll('#mode-' + key + ' [aria-invalid]').forEach((n) => n.removeAttribute('aria-invalid'));
+    try {
+      const v = {};
+      for (const f of c.fields) {
+        if (f.type !== 'num') { v[f.k] = vals[f.k]; continue; }
+        let x;
+        try { x = parseField(vals[f.k], f.suf === '%'); } catch (e) { throw Object.assign(new Error(f.l + ': ' + e.message), { field: f.k }); }
+        if (x == null) { if (f.opt) x = 0; else throw Object.assign(new Error('Enter ' + f.l.toLowerCase()), { field: f.k }); }
+        v[f.k] = x;
+      }
+      const r = c.calc(v);
+      r.tape = { mode: key, label: r.line, display: r.value, raw: r.raw, state: { sub: m.sub, vals: { ...vals } } };
+      m.last[m.sub] = r; show(r);
+    } catch (e) {
+      if (e.field) { const n = document.getElementById('f-' + key + '-' + m.sub + '-' + e.field); if (n) n.setAttribute('aria-invalid', 'true'); }
+      const last = m.last[m.sub];
+      show(last ? { ...last, preview: true, error: e.message } : { line: '', value: '—', raw: null, preview: true, error: e.message });
+    }
+  };
+  return m;
+}
+const num = (k, l, d, suf, opt) => ({ type: 'num', k, l, d, suf, opt });
+
+const pct = formMode('pct', {
+  of: { tab: '% of', fields: [num('p', 'Percent', '15', '%'), num('y', 'Of value', '240')],
+    calc: ({ p, y }) => { const r = p * y / 100; const raw = fmt(r, 10);
+      return { line: numTxt(p) + '% of ' + numTxt(y), value: grp(raw), raw,
+        rows: [[numTxt(y) + ' + ' + numTxt(p) + '%', numTxt(y + r)], [numTxt(y) + ' − ' + numTxt(p) + '%', numTxt(y - r)]] }; } },
+  ratio: { tab: 'What %', fields: [num('x', 'Value', '45'), num('y', 'Of total', '180')],
+    calc: ({ x, y }) => { if (y === 0) throw new Error('The total can’t be 0'); const r = x / y * 100;
+      return { line: numTxt(x) + ' is what % of ' + numTxt(y), value: pctTxt(r) + '%', raw: String(parseFloat(r.toFixed(2))),
+        rows: [['As a fraction', fmt(x / y, 8)]] }; } },
+  change: { tab: '% change', fields: [num('a', 'From', '80'), num('b', 'To', '92')],
+    calc: ({ a, b }) => { if (a === 0) throw new Error('The starting value can’t be 0'); const r = (b - a) / Math.abs(a) * 100;
+      return { line: numTxt(a) + ' → ' + numTxt(b), value: (r > 0 ? '+' : '') + pctTxt(r) + '%', raw: String(parseFloat(r.toFixed(2))),
+        rows: [['Difference', (b - a > 0 ? '+' : '') + numTxt(b - a)], ['Direction', r > 0 ? 'Increase' : r < 0 ? 'Decrease' : 'No change']] }; } },
+  discount: { tab: 'Discount', fields: [num('price', 'Price', '129.99'), num('d1', 'Discount', '25', '%'), num('d2', 'Extra discount', '10', '%', true), num('t', 'Sales tax', '8.25', '%', true)],
+    hint: 'Stacked discounts apply one after the other. Money is rounded to the cent at each step.',
+    calc: ({ price, d1, d2, t }) => {
+      if (price < 0) throw new Error('The price can’t be negative');
+      if (d1 > 100 || d2 > 100) throw new Error('A discount can’t be more than 100%');
+      const sale = cents(cents(price * (1 - d1 / 100)) * (1 - d2 / 100));
+      const saved = cents(price - sale), tax = cents(sale * t / 100), total = cents(sale + tax);
+      const rows = [['Sale price', money(sale)], ['You save', money(saved) + (price ? '  (' + pctTxt(saved / price * 100) + '%)' : '')]];
+      if (t) rows.push(['Tax ' + pctTxt(t) + '%', money(tax)], ['Total to pay', money(total)]);
+      return { line: money(price) + ' − ' + pctTxt(d1) + '%' + (d2 ? ' − ' + pctTxt(d2) + '%' : '') + (t ? ' + ' + pctTxt(t) + '% tax' : ''),
+        value: money(total), raw: total.toFixed(2), rows };
+    } },
+  tax: { tab: 'Tax / VAT', fields: [num('a', 'Amount', '250'), num('r', 'Tax rate', '20', '%'), { type: 'seg', k: 'm', l: 'The amount is', d: 'add', opts: [['add', 'Before tax'], ['extract', 'Tax included']] }],
+    calc: ({ a, r, m }) => {
+      if (r < 0) throw new Error('The tax rate can’t be negative');
+      let net, tax, gross;
+      if (m === 'add') { net = cents(a); tax = cents(a * r / 100); gross = cents(net + tax); }
+      else { gross = cents(a); net = cents(a / (1 + r / 100)); tax = cents(gross - net); }
+      const main = m === 'add' ? gross : net;
+      return { line: money(a) + (m === 'add' ? ' + ' : ' incl. ') + pctTxt(r) + '% tax', value: money(main), raw: main.toFixed(2),
+        rows: [['Net', money(net)], ['Tax', money(tax)], ['Gross', money(gross)]] };
+    } }
+});
+
+/* Dates: all math in UTC days so time zones and daylight saving never shift a result. */
+const DAY = 864e5;
+const parseISO = (s) => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ''); return m ? Date.UTC(+m[1], +m[2] - 1, +m[3]) : null; };
+const iso = (t) => new Date(t).toISOString().slice(0, 10);
+const dFmt = new Intl.DateTimeFormat(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+const wFmt = new Intl.DateTimeFormat(undefined, { weekday: 'long', timeZone: 'UTC' });
+const todayUTC = () => { const n = new Date(); return Date.UTC(n.getFullYear(), n.getMonth(), n.getDate()); };
+const dim = (y, m) => new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
+const isWeekday = (t) => { const w = new Date(t).getUTCDay(); return w !== 0 && w !== 6; };
+const plural = (n, w) => grp(String(n)) + ' ' + w + (n === 1 ? '' : 's');
+function ymd(lo, hi) {
+  const a = new Date(lo), b = new Date(hi);
+  let y = b.getUTCFullYear() - a.getUTCFullYear(), m = b.getUTCMonth() - a.getUTCMonth(), d = b.getUTCDate() - a.getUTCDate();
+  if (d < 0) { m--; d += dim(b.getUTCFullYear(), b.getUTCMonth() - 1); }
+  if (m < 0) { y--; m += 12; }
+  return [y, m, d];
+}
+function addMonths(t, n) {
+  const a = new Date(t), y = a.getUTCFullYear(), mo = a.getUTCMonth() + n, day = a.getUTCDate();
+  const ny = y + Math.floor(mo / 12), nm = ((mo % 12) + 12) % 12, nd = Math.min(day, dim(ny, nm));
+  return { t: Date.UTC(ny, nm, nd), clamped: nd < day };
+}
+const dt = formMode('date', {
+  between: { tab: 'Between dates', fields: [
+      { type: 'date', k: 's', l: 'Start date', d: () => iso(todayUTC()) },
+      { type: 'date', k: 'e', l: 'End date', d: () => iso(Date.UTC(new Date().getFullYear(), 11, 31)) },
+      { type: 'check', k: 'inc', l: 'Count the end date too', d: false }],
+    calc: ({ s, e, inc }) => {
+      const a = parseISO(s), b = parseISO(e);
+      if (a == null) throw new Error('Pick a start date'); if (b == null) throw new Error('Pick an end date');
+      const lo = Math.min(a, b), hi = Math.max(a, b) + (inc ? DAY : 0);
+      const days = Math.round((hi - lo) / DAY);
+      if (days > 3660000) throw new Error('Pick dates within 10,000 years of each other');
+      let biz = 0; for (let t = lo; t < hi; t += DAY) if (isWeekday(t)) biz++;
+      const [y, m, d] = ymd(lo, hi);
+      const rows = [['Weeks', plural(Math.floor(days / 7), 'week') + ', ' + plural(days % 7, 'day')],
+        ['Calendar', [y && plural(y, 'year'), m && plural(m, 'month'), plural(d, 'day')].filter(Boolean).join(', ')],
+        ['Business days (Mon–Fri)', grp(String(biz))], ['Start', dFmt.format(a)], ['End', dFmt.format(b)]];
+      if (b < a) rows.push(['Note', 'The end date is before the start date']);
+      return { line: dFmt.format(a) + ' → ' + dFmt.format(b) + (inc ? ', inclusive' : ''), value: plural(days, 'day'), raw: String(days), rows };
+    } },
+  add: { tab: 'Add or subtract', fields: [
+      { type: 'date', k: 'd', l: 'Start date', d: () => iso(todayUTC()) },
+      { type: 'seg', k: 'op', l: 'Operation', d: 'add', opts: [['add', 'Add'], ['sub', 'Subtract']] },
+      num('n', 'Amount', '90'),
+      { type: 'select', k: 'u', l: 'Unit', d: 'd', opts: [['d', 'Days'], ['w', 'Weeks'], ['m', 'Months'], ['y', 'Years'], ['b', 'Business days (Mon–Fri)']] }],
+    hint: 'Adding months keeps the day of the month. When that day doesn’t exist, the result moves to the month’s last day (31 Jan + 1 month = 28 or 29 Feb).',
+    calc: ({ d, op, n, u }) => {
+      const a = parseISO(d);
+      if (a == null) throw new Error('Pick a start date');
+      if (!Number.isInteger(n)) throw Object.assign(new Error('Use a whole number for the amount'), { field: 'n' });
+      if (Math.abs(n) > 100000) throw Object.assign(new Error('Use an amount up to 100,000'), { field: 'n' });
+      const k = op === 'sub' ? -n : n; let t, clamped = false;
+      if (u === 'd') t = a + k * DAY; else if (u === 'w') t = a + 7 * k * DAY;
+      else if (u === 'm' || u === 'y') ({ t, clamped } = addMonths(a, u === 'y' ? 12 * k : k));
+      else { t = a; const st = Math.sign(k); for (let c = 0; c < Math.abs(k);) { t += st * DAY; if (isWeekday(t)) c++; } }
+      const yr = new Date(t).getUTCFullYear();
+      if (yr < 1 || yr > 9999) throw new Error('The result falls outside the years 1 to 9999');
+      const names = { d: 'day', w: 'week', m: 'month', y: 'year', b: 'business day' };
+      const rows = [['Weekday', wFmt.format(t)], ['ISO date', iso(t)], ['Calendar days', (t >= a ? '+' : '−') + grp(String(Math.abs(Math.round((t - a) / DAY))))]];
+      if (clamped) rows.push(['Note', 'Moved to the last day of the month']);
+      return { line: dFmt.format(a) + (op === 'sub' ? ' − ' : ' + ') + plural(n, names[u]), value: dFmt.format(t), raw: iso(t), rows };
+    } }
+});
+
+/* ---------- Modes and keyboard ---------- */
+const tabs = $('#tabs');
+MODES.forEach((m, i) => tabs.append(el('button', { class: 'tab', type: 'button', role: 'tab', id: 'tab-' + m, 'aria-controls': 'mode-' + m,
+  title: MODE_NAMES[m] + ' (Alt+' + (i + 1) + ')', onclick: () => setMode(m) }, [el('span', { class: 'mdot', 'aria-hidden': 'true', style: 'background:var(--m-' + m + ')' }), MODE_NAMES[m], el('span', { class: 'kbd', 'aria-hidden': 'true', text: String(i + 1) })])));
+tabs.addEventListener('keydown', (e) => {
+  if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+  const i = MODES.indexOf(mode) + (e.key === 'ArrowRight' ? 1 : -1);
+  setMode(MODES[(i + MODES.length) % MODES.length]); $('#tab-' + mode).focus(); e.preventDefault();
+});
+function setMode(m) {
+  mode = m; store.set('cw.mode', m);
+  MODES.forEach((k) => {
+    const t = $('#tab-' + k); t.setAttribute('aria-selected', String(k === m)); t.tabIndex = k === m ? 0 : -1;
+    $('#mode-' + k).hidden = k !== m;
+  });
+  roKicker.textContent = MODE_NAMES[m];
+  $('#angle').hidden = m !== 'sci';
+  $('#save').hidden = m === 'sci';
+  if (m === 'sci') sciRender(); else if (m === 'conv') convCompute(); else if (m === 'pct') pct.compute(); else dt.compute();
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && tapeEl.classList.contains('open')) { closeTape(); e.preventDefault(); return; }
+  if (tapeEl.classList.contains('open')) return;
+  if (e.altKey && /^Digit[1-4]$/.test(e.code)) { setMode(MODES[+e.code.slice(5) - 1]); e.preventDefault(); return; }
+  if (e.altKey && e.code === 'KeyC') { copyResult(); e.preventDefault(); return; }
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const tag = e.target.tagName, inField = tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA';
+  if (mode !== 'sci') {
+    if (e.key === 'Enter' && inField && e.target.type !== 'checkbox' && e.target.type !== 'radio') { saveCurrent(); e.preventDefault(); }
+    return;
+  }
+  if (inField) return;
+  if (tag === 'BUTTON' && (e.key === 'Enter' || e.key === ' ')) return;
+  const label = /^[0-9]$/.test(e.key) ? e.key : SCI_KEYS[e.key];
+  if (!label || !(label in keyDefs)) return;
+  e.preventDefault();
+  sciPress(keyDefs[label]);
+  const b = keyBtns[label]; if (b) { b.classList.add('pressed'); setTimeout(() => b.classList.remove('pressed'), 110); }
+});
+$('#copy').addEventListener('click', copyResult);
+$('#save').addEventListener('click', saveCurrent);
+
+/* ---------- Start: open in a working state ---------- */
+$('#angle').textContent = deg ? 'DEG' : 'RAD';
+sciBuild();
+sci.tokens = [T('2', '2'), T('×', '*', true), T('sin(', ' sin('), T('3', '3'), T('0', '0'), T(')', ')'), T('+', '+', true), T('√(', ' sqrt('), T('1', '1'), T('6', '6'), T(')', ')')];
+convBuild(); pct.build(); dt.build();
+renderTape();
+setMode(mode);
+})();
+</script>
+
+
+</body></html>

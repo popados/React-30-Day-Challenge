@@ -1,6 +1,6 @@
 # Requirements: Day 2 Checkout / Payment Form Screen
 
-*Draft · October 13, 2026 · Front-end requirements for the `02-checkout-form` screen. Built from the five checkout docs in this folder and the Day 2 challenge brief in the project README.*
+_Draft · October 13, 2026 · Front-end requirements for the `02-checkout-form` screen. Built from the five checkout docs in this folder and the Day 2 challenge brief in the project README._
 
 ---
 
@@ -10,15 +10,15 @@ This document covers what one front-end checkout screen needs in order to be bui
 
 Defaults chosen where the sources leave a choice open (change any of these and the affected sections follow):
 
-| Decision | Default | Why |
-|---|---|---|
-| Product | **Tempest Line Plus**, the fictional study app from the PRD, bought by an adult or college learner on the web | The four product docs already describe it; the README says the product is still undecided |
-| Purchase type | Subscription (monthly, school-year and Family plans) | Matches the FR and PRD |
-| Shipping address | **Not collected.** "Same as shipping" is marked not applicable | Digital subscription; the FR checklist maps it out (REQ-3) |
-| Payment processing | **Mocked.** Card fields are our own inputs with formatting; a fake API resolves after a delay | No processor or backend on Day 2 |
-| Flow | One route with three steps: **Plan → Payment → Confirm** | FR REQ-8 |
-| Look | Fieldnote tokens and components from the scaffold | Already copied into `docs/design-system/` |
-| Stack | React 19, React Hook Form + Zod, Zustand, TanStack Query, Tailwind v4, Vitest + Testing Library | From `package.json` |
+| Decision           | Default                                                                                                       | Why                                                                                       |
+| ------------------ | ------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Product            | **Tempest Line Plus**, the fictional study app from the PRD, bought by an adult or college learner on the web | The four product docs already describe it; the README says the product is still undecided |
+| Purchase type      | Subscription (monthly, school-year and Family plans)                                                          | Matches the FR and PRD                                                                    |
+| Shipping address   | **Not collected.** "Same as shipping" is marked not applicable                                                | Digital subscription; the FR checklist maps it out (REQ-3)                                |
+| Payment processing | **Mocked.** Card fields are our own inputs with formatting; a fake API resolves after a delay                 | No processor or backend on Day 2                                                          |
+| Flow               | One route with three steps: **Plan → Payment → Confirm**                                                      | FR REQ-8                                                                                  |
+| Look               | Fieldnote tokens and components from the scaffold                                                             | Already copied into `docs/design-system/`                                                 |
+| Stack              | React 19, React Hook Form + Zod, Zustand, TanStack Query, Tailwind v4, Vitest + Testing Library               | From `package.json`                                                                       |
 
 Parent payment links, under-13 consent and minor gating (PRD P0-2 to P0-4) are left out because each is a separate flow, not part of the payment form.
 
@@ -36,11 +36,11 @@ Parent payment links, under-13 consent and minor gating (PRD P0-2 to P0-4) are l
 
 **Steps**
 
-| Step | Contents | Primary action |
-|---|---|---|
-| 1. Plan | Plan choice (Plus monthly, Plus school-year, Family monthly), optional Tutor add-on, email (signed-out users only) | "Continue to payment" |
-| 2. Payment | Saved card (if present) or wallet buttons, "or pay with card" divider, card form, billing country and postal code, "Save this card" checkbox | "Review order" |
-| 3. Confirm | Read-only recap with "Change" links, tax-inclusive total, renewal disclosure, consent checkbox | "Subscribe · $X.XX/month" |
+| Step       | Contents                                                                                                                                     | Primary action            |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| 1. Plan    | Plan choice (Plus monthly, Plus school-year, Family monthly), optional Tutor add-on, email (signed-out users only)                           | "Continue to payment"     |
+| 2. Payment | Saved card (if present) or wallet buttons, "or pay with card" divider, card form, billing country and postal code, "Save this card" checkbox | "Review order"            |
+| 3. Confirm | Read-only recap with "Change" links, tax-inclusive total, renewal disclosure, consent checkbox                                               | "Subscribe · $X.XX/month" |
 
 After success, a confirmation view replaces the steps (section 6).
 
@@ -138,19 +138,19 @@ Fields, in order: card number, expiry, CVC, name on card, billing country, posta
 
 ## 4. Screen states
 
-| State | What the user sees |
-|---|---|
-| Default | Plan step with Plus monthly preselected and the summary filled in |
-| Loading (initial) | Skeletons for plan cards and summary while the mock plans query resolves; layout does not shift when they load |
-| Loading (tax) | Tax line shows a small spinner and "Calculating…"; the Review button stays enabled |
-| Loading (submit) | Subscribe shows a spinner and "Processing…", is disabled from first press, and repeat presses do nothing |
-| Empty | Plans query returns none: "No plans are available right now" with a Retry button |
-| Field error | Message below the field, red border plus an icon (not colour alone), `aria-invalid="true"` |
-| Submit error summary | Alert at the top of the step listing each error as a link |
-| Card declined | Alert: "Your card was declined. Try another card or payment method." CVC cleared, everything else kept |
-| Tax service down | Alert on Payment: "We couldn't calculate tax. Try again." Review is blocked until tax resolves |
-| Timeout | "We couldn't confirm your payment. You have not been charged." with Try again; never retry silently |
-| Success | Confirmation view (section 6) |
+| State                | What the user sees                                                                                             |
+| -------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Default              | Plan step with Plus monthly preselected and the summary filled in                                              |
+| Loading (initial)    | Skeletons for plan cards and summary while the mock plans query resolves; layout does not shift when they load |
+| Loading (tax)        | Tax line shows a small spinner and "Calculating…"; the Review button stays enabled                             |
+| Loading (submit)     | Subscribe shows a spinner and "Processing…", is disabled from first press, and repeat presses do nothing       |
+| Empty                | Plans query returns none: "No plans are available right now" with a Retry button                               |
+| Field error          | Message below the field, red border plus an icon (not colour alone), `aria-invalid="true"`                     |
+| Submit error summary | Alert at the top of the step listing each error as a link                                                      |
+| Card declined        | Alert: "Your card was declined. Try another card or payment method." CVC cleared, everything else kept         |
+| Tax service down     | Alert on Payment: "We couldn't calculate tax. Try again." Review is blocked until tax resolves                 |
+| Timeout              | "We couldn't confirm your payment. You have not been charged." with Try again; never retry silently            |
+| Success              | Confirmation view (section 6)                                                                                  |
 
 The mock API needs test card numbers that trigger these outcomes (section 9).
 
@@ -158,16 +158,16 @@ The mock API needs test card numbers that trigger these outcomes (section 9).
 
 ## 5. Field rules
 
-| Field | `autocomplete` | `inputmode` | Rule | Error message |
-|---|---|---|---|---|
-| Email | `email` | `email` | Required, valid format | "Enter an email like name@example.com" |
-| Card number | `cc-number` | `numeric` | Digits only after stripping; length fits brand (15 Amex, 16 others); passes Luhn | "Card number is 16 digits. You entered 15." / "Check the card number. It doesn't look right." |
-| Expiry | `cc-exp` | `numeric` | MM 01–12; not in the past | "Enter the expiry as MM / YY" / "This card has expired" |
-| CVC | `cc-csc` | `numeric` | 3 digits, or 4 for Amex | "Enter the 3-digit code on the back of your card" (4 and "front" for Amex) |
-| Name on card | `cc-name` | `text` | Required, 2+ characters | "Enter the name shown on your card" |
-| Billing country | `country` | — | Required; defaults to US | — |
-| Postal code | `postal-code` | `numeric` for US, `text` otherwise | US: 5 digits or ZIP+4 | "Enter a 5-digit ZIP code" |
-| Consent | — | — | Must be checked | "Agree to the renewal terms to subscribe" |
+| Field           | `autocomplete` | `inputmode`                        | Rule                                                                             | Error message                                                                                 |
+| --------------- | -------------- | ---------------------------------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Email           | `email`        | `email`                            | Required, valid format                                                           | "Enter an email like name@example.com"                                                        |
+| Card number     | `cc-number`    | `numeric`                          | Digits only after stripping; length fits brand (15 Amex, 16 others); passes Luhn | "Card number is 16 digits. You entered 15." / "Check the card number. It doesn't look right." |
+| Expiry          | `cc-exp`       | `numeric`                          | MM 01–12; not in the past                                                        | "Enter the expiry as MM / YY" / "This card has expired"                                       |
+| CVC             | `cc-csc`       | `numeric`                          | 3 digits, or 4 for Amex                                                          | "Enter the 3-digit code on the back of your card" (4 and "front" for Amex)                    |
+| Name on card    | `cc-name`      | `text`                             | Required, 2+ characters                                                          | "Enter the name shown on your card"                                                           |
+| Billing country | `country`      | —                                  | Required; defaults to US                                                         | —                                                                                             |
+| Postal code     | `postal-code`  | `numeric` for US, `text` otherwise | US: 5 digits or ZIP+4                                                            | "Enter a 5-digit ZIP code"                                                                    |
+| Consent         | —              | —                                  | Must be checked                                                                  | "Agree to the renewal terms to subscribe"                                                     |
 
 Every input has a visible `<label>` tied with `htmlFor`; placeholders are examples only. Errors and hints are linked with `aria-describedby`.
 
@@ -258,19 +258,19 @@ From the source docs, not part of a front-end form screen:
 
 ## Traceability to the README criteria
 
-| README criterion | Covered by |
-|---|---|
-| Order summary | R1 |
-| Payment methods | R3 |
-| Shipping vs. billing | R4 (billing only), R13 |
-| Taxes and fees | R1, R4 |
-| Security cues | R5 |
-| Total always visible | R1, section 2 layout |
-| Card auto-format | R4 |
-| Inline errors | R6 |
-| Progress indicator | R8 |
-| Address autocomplete | R12 |
-| Same-as-shipping toggle | R13 (N/A) |
-| Saved cards | R10 |
-| Edit path back to cart | R9 |
-| Guest checkout | R11 |
+| README criterion        | Covered by             |
+| ----------------------- | ---------------------- |
+| Order summary           | R1                     |
+| Payment methods         | R3                     |
+| Shipping vs. billing    | R4 (billing only), R13 |
+| Taxes and fees          | R1, R4                 |
+| Security cues           | R5                     |
+| Total always visible    | R1, section 2 layout   |
+| Card auto-format        | R4                     |
+| Inline errors           | R6                     |
+| Progress indicator      | R8                     |
+| Address autocomplete    | R12                    |
+| Same-as-shipping toggle | R13 (N/A)              |
+| Saved cards             | R10                    |
+| Edit path back to cart  | R9                     |
+| Guest checkout          | R11                    |

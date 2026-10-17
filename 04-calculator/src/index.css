@@ -14,60 +14,126 @@
 }
 
 /*
- * Fieldnote design tokens. Source of truth: docs/design-system/tokens.json.
- * Raw values live in CSS variables so the dark theme can swap them; the
- * @theme block below maps them to Tailwind utilities (bg-paper, text-ink,
- * rounded-md, text-heading-lg, min-h-control, max-w-card, ...).
+ * Layouts from calc-mockup.html:
+ *   tablet:    under 1024px, the tape sidebar narrows to 280px
+ *   compact:   phones (under 700px) and phone landscape; the tape becomes an overlay
+ *   phone:     phone portrait; mode tabs become a bottom bar
+ *   landscape: phone landscape (height 520px or less); readout beside the keypads
+ *   fold:      narrow enough to fold the less-used functions behind a More key
+ *   touch:     no hover (touch screens); keyboard hints are hidden
+ */
+@custom-variant tablet (@media (max-width: 1023px));
+/* Media lists need the block form: the one-line form stops at the first comma. */
+@custom-variant compact {
+  @media (max-width: 699px) {
+    @slot;
+  }
+  @media (orientation: landscape) and (max-height: 520px) {
+    @slot;
+  }
+}
+@custom-variant phone (@media (max-width: 699px) and (min-height: 521px));
+@custom-variant landscape (@media (orientation: landscape) and (max-height: 520px));
+@custom-variant landscape-narrow (@media (orientation: landscape) and (max-height: 520px) and (max-width: 759px));
+@custom-variant fold {
+  @media (max-width: 699px) and (min-height: 521px) {
+    @slot;
+  }
+  @media (orientation: landscape) and (max-height: 520px) and (max-width: 759px) {
+    @slot;
+  }
+}
+@custom-variant touch (@media (hover: none));
+
+/*
+ * Calculator Workbench tokens, from calc-mockup.html. Keys are coloured by role:
+ * numbers (num), operators (op), functions (fn), equals (eq), clear and delete (clr).
+ * Each mode has its own marker colour (m-sci, m-conv, m-pct, m-date).
  */
 :root {
   color-scheme: light;
-  --paper: #faf7f0;
-  --paper-deep: #efeae0;
-  --hairline: #e2dccf;
-  --ink: #1c1b19;
-  --graphite: #5f5b53;
-  --rule: #8a857b;
-  --moss: #2f5d50;
-  --on-moss: #ffffff;
-  --moss-soft: #e3ede8;
-  --error: #b42318;
-  --error-soft: #fbeae7;
-  --highlighter: #f2c94c;
-  --on-highlighter: #1c1b19;
-  --focus-ring: var(--moss);
-  --link: var(--moss);
+  --bg: #e9edf1;
+  --panel: #fbfcfd;
+  --sunk: #f1f4f7;
+  --ink: #131c26;
+  --muted: #56636f;
+  --line: #d3dae1;
+  --num: #ffffff;
+  --num-ink: #131c26;
+  --op: #dce4fa;
+  --op-ink: #1d3ea6;
+  --fn: #eceff3;
+  --fn-ink: #36424f;
+  --eq: #e8962a;
+  --eq-ink: #1f1300;
+  --clr: #f6dfd9;
+  --clr-ink: #982b16;
+  --accent: #1e4fd8;
+  --danger: #b42318;
+  --m-sci: #1e4fd8;
+  --m-conv: #0b7a6e;
+  --m-pct: #b5650b;
+  --m-date: #7a3fc4;
+  --shadow-soft: 0 1px 0 rgba(19, 28, 38, 0.07), 0 4px 14px rgba(19, 28, 38, 0.06);
+  --scrim: rgba(19, 28, 38, 0.38);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
-    --paper: #161513;
-    --paper-deep: #22201d;
-    --hairline: #34312c;
-    --ink: #f1ede4;
-    --graphite: #b4ad9f;
-    --rule: #7d776c;
-    --moss: #8cc3b0;
-    --on-moss: #10201b;
-    --moss-soft: #1d2e28;
-    --error: #f59389;
-    --error-soft: #3a1a16;
+    --bg: #0e1318;
+    --panel: #151c24;
+    --sunk: #10161d;
+    --ink: #e5ecf2;
+    --muted: #95a2af;
+    --line: #283340;
+    --num: #1f2833;
+    --num-ink: #e5ecf2;
+    --op: #1c2c55;
+    --op-ink: #b3c6ff;
+    --fn: #19222c;
+    --fn-ink: #bac6d2;
+    --eq: #f0a43c;
+    --eq-ink: #1f1300;
+    --clr: #3b1f1a;
+    --clr-ink: #ffb4a3;
+    --accent: #8aa9ff;
+    --danger: #ff8a7a;
+    --m-sci: #8aa9ff;
+    --m-conv: #4fc9b9;
+    --m-pct: #f0a43c;
+    --m-date: #c29bff;
+    --shadow-soft: 0 1px 0 rgba(0, 0, 0, 0.35), 0 4px 14px rgba(0, 0, 0, 0.25);
+    --scrim: rgba(0, 0, 0, 0.55);
   }
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --paper: #161513;
-  --paper-deep: #22201d;
-  --hairline: #34312c;
-  --ink: #f1ede4;
-  --graphite: #b4ad9f;
-  --rule: #7d776c;
-  --moss: #8cc3b0;
-  --on-moss: #10201b;
-  --moss-soft: #1d2e28;
-  --error: #f59389;
-  --error-soft: #3a1a16;
+  --bg: #0e1318;
+  --panel: #151c24;
+  --sunk: #10161d;
+  --ink: #e5ecf2;
+  --muted: #95a2af;
+  --line: #283340;
+  --num: #1f2833;
+  --num-ink: #e5ecf2;
+  --op: #1c2c55;
+  --op-ink: #b3c6ff;
+  --fn: #19222c;
+  --fn-ink: #bac6d2;
+  --eq: #f0a43c;
+  --eq-ink: #1f1300;
+  --clr: #3b1f1a;
+  --clr-ink: #ffb4a3;
+  --accent: #8aa9ff;
+  --danger: #ff8a7a;
+  --m-sci: #8aa9ff;
+  --m-conv: #4fc9b9;
+  --m-pct: #f0a43c;
+  --m-date: #c29bff;
+  --shadow-soft: 0 1px 0 rgba(0, 0, 0, 0.35), 0 4px 14px rgba(0, 0, 0, 0.25);
+  --scrim: rgba(0, 0, 0, 0.55);
 }
 
 @theme inline {
@@ -76,87 +142,107 @@
   --color-white: #ffffff;
   --color-black: #000000;
   --color-transparent: transparent;
-  --color-paper: var(--paper);
-  --color-paper-deep: var(--paper-deep);
-  --color-hairline: var(--hairline);
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-sunk: var(--sunk);
   --color-ink: var(--ink);
-  --color-graphite: var(--graphite);
-  --color-rule: var(--rule);
-  --color-moss: var(--moss);
-  --color-on-moss: var(--on-moss);
-  --color-moss-soft: var(--moss-soft);
-  --color-error: var(--error);
-  --color-error-soft: var(--error-soft);
-  --color-highlighter: var(--highlighter);
-  --color-on-highlighter: var(--on-highlighter);
-  --color-focus-ring: var(--focus-ring);
-  --color-link: var(--link);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-num: var(--num);
+  --color-num-ink: var(--num-ink);
+  --color-op: var(--op);
+  --color-op-ink: var(--op-ink);
+  --color-fn: var(--fn);
+  --color-fn-ink: var(--fn-ink);
+  --color-eq: var(--eq);
+  --color-eq-ink: var(--eq-ink);
+  --color-clr: var(--clr);
+  --color-clr-ink: var(--clr-ink);
+  --color-accent: var(--accent);
+  --color-danger: var(--danger);
+  --color-m-sci: var(--m-sci);
+  --color-m-conv: var(--m-conv);
+  --color-m-pct: var(--m-pct);
+  --color-m-date: var(--m-date);
+  --color-scrim: var(--scrim);
+
+  /* Fieldnote names, kept as aliases so the scaffold components still render. */
+  --color-paper: var(--panel);
+  --color-paper-deep: var(--sunk);
+  --color-hairline: var(--line);
+  --color-graphite: var(--muted);
+  --color-rule: var(--muted);
+  --color-moss: var(--accent);
+  --color-on-moss: var(--panel);
+  --color-moss-soft: var(--sunk);
+  --color-error: var(--danger);
+  --color-error-soft: var(--clr);
+  --color-highlighter: var(--eq);
+  --color-on-highlighter: var(--eq-ink);
+  --color-focus-ring: var(--accent);
+  --color-link: var(--accent);
+
+  /* Shadow: shadow-soft (panels, number keys, selected tabs) */
+  --shadow-*: initial;
+  --shadow-soft: var(--shadow-soft);
 }
 
 @theme {
-  /* Type families: font-serif, font-sans */
-  --font-serif: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
-  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Type families: font-display (headings), font-sans (interface), font-mono (numbers and keys) */
+  --font-display: 'Red Hat Display', 'Segoe UI', system-ui, sans-serif;
+  --font-sans: 'Red Hat Text', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'Red Hat Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font-serif: var(--font-display);
 
-  /* Type styles: text-heading-xl ... text-caption (size, line height, weight, tracking) */
-  --text-heading-xl: 40px;
-  --text-heading-xl--line-height: 48px;
-  --text-heading-xl--font-weight: 600;
-  --text-heading-xl--letter-spacing: -0.01em;
+  /* Scaffold type styles, still used by the shared components */
   --text-heading-lg: 32px;
   --text-heading-lg--line-height: 40px;
   --text-heading-lg--font-weight: 600;
-  --text-heading-lg--letter-spacing: -0.01em;
-  --text-heading-md: 24px;
-  --text-heading-md--line-height: 32px;
-  --text-heading-md--font-weight: 600;
-  --text-heading-sm: 20px;
-  --text-heading-sm--line-height: 28px;
-  --text-heading-sm--font-weight: 600;
-  --text-note: 17px;
-  --text-note--line-height: 28px;
-  --text-note--font-weight: 400;
   --text-body: 16px;
   --text-body--line-height: 24px;
-  --text-body--font-weight: 400;
   --text-label: 16px;
   --text-label--line-height: 24px;
   --text-label--font-weight: 500;
   --text-body-sm: 14px;
   --text-body-sm--line-height: 20px;
-  --text-body-sm--font-weight: 400;
   --text-caption: 13px;
   --text-caption--line-height: 18px;
   --text-caption--font-weight: 500;
-  --text-caption--letter-spacing: 0.01em;
 
-  /* Spacing: the 4px base means p-2 = space-2 (8px), gap-3 = space-3 (12px), p-8 = space-8 (32px) */
+  /* Spacing: the 4px base means p-2 = 8px, gap-3 = 12px */
   --spacing: 4px;
   --spacing-target: 44px;
   --spacing-control: 48px;
 
-  /* Widths: max-w-card */
+  /* Widths: max-w-shell (the page), w-tape (the history sidebar) */
   --container-card: 440px;
+  --container-shell: 1120px;
 
-  /* Radius: rounded-sm / rounded-md / rounded-lg. No shadows in this system. */
+  /* Radius: panels, keys and tabs, controls (buttons and inputs), inner tabs */
   --radius-sm: 3px;
   --radius-md: 8px;
   --radius-lg: 12px;
+  --radius-panel: 20px;
+  --radius-key: 14px;
+  --radius-control: 12px;
+  --radius-tab: 10px;
 }
 
 @layer base {
   body {
-    @apply bg-paper font-sans text-body text-ink antialiased;
+    @apply bg-bg font-sans text-[15px] leading-[1.45] text-ink antialiased;
   }
 
   :focus-visible {
-    outline: 2px solid var(--focus-ring);
+    outline: 3px solid var(--accent);
     outline-offset: 2px;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .animate-spin {
-      animation-duration: 3s;
+    *,
+    *::before,
+    *::after {
+      transition: none !important;
     }
   }
 }

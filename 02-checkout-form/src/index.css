@@ -14,60 +14,89 @@
 }
 
 /*
- * Fieldnote design tokens. Source of truth: docs/design-system/tokens.json.
+ * Fieldnote token names with the Ivy Hall palette (docs/markdown/checkout-form-palette.md),
+ * as in the checkout-ivy-hall.html mockup: bg = page, paper = surface, paper-deep = raised
+ * surface, hairline = border, rule = control border, graphite = muted ink, moss = action.
+ * Hairline, hover, soft and disabled values are retints the palette doesn't list.
  * Raw values live in CSS variables so the dark theme can swap them; the
  * @theme block below maps them to Tailwind utilities (bg-paper, text-ink,
  * rounded-md, text-heading-lg, min-h-control, max-w-card, ...).
  */
 :root {
   color-scheme: light;
-  --paper: #faf7f0;
-  --paper-deep: #efeae0;
-  --hairline: #e2dccf;
-  --ink: #1c1b19;
-  --graphite: #5f5b53;
-  --rule: #8a857b;
-  --moss: #2f5d50;
+  --bg: #f7f6f1;
+  --paper: #ffffff;
+  --paper-deep: #eeede6;
+  --hairline: #dedcd2;
+  --ink: #1a2238;
+  --graphite: #535b70;
+  --rule: #7d8396;
+  --moss: #1f2f4d;
   --on-moss: #ffffff;
-  --moss-soft: #e3ede8;
-  --error: #b42318;
-  --error-soft: #fbeae7;
-  --highlighter: #f2c94c;
-  --on-highlighter: #1c1b19;
-  --focus-ring: var(--moss);
-  --link: var(--moss);
+  --moss-hover: #2c3f63;
+  --moss-soft: #e5e7ec;
+  --action-disabled: #eeede6;
+  --on-action-disabled: #535b70;
+  --error: #b3261e;
+  --error-soft: #fbe7e9;
+  --highlighter: #c9a227;
+  --on-highlighter: #1a2238;
+  --wallet-bg: #000000;
+  --wallet-fg: #ffffff;
+  --focus-ring: #2f6b4f;
+  --link: #1f2f4d;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
-    --paper: #161513;
-    --paper-deep: #22201d;
-    --hairline: #34312c;
-    --ink: #f1ede4;
-    --graphite: #b4ad9f;
-    --rule: #7d776c;
-    --moss: #8cc3b0;
-    --on-moss: #10201b;
-    --moss-soft: #1d2e28;
-    --error: #f59389;
-    --error-soft: #3a1a16;
+    --bg: #0f1626;
+    --paper: #17213a;
+    --paper-deep: #1f2b48;
+    --hairline: #2c3a5c;
+    --ink: #eef0f5;
+    --graphite: #a7afc2;
+    --rule: #7e89a6;
+    --moss: #d9b54a;
+    --on-moss: #1a2238;
+    --moss-hover: #e3c46c;
+    --moss-soft: #353a3e;
+    --action-disabled: #1f2b48;
+    --on-action-disabled: #a7afc2;
+    --error: #ff8a80;
+    --error-soft: #4a1520;
+    --highlighter: #d9b54a;
+    --on-highlighter: #1a2238;
+    --wallet-bg: #ffffff;
+    --wallet-fg: #000000;
+    --focus-ring: #d9b54a;
+    --link: #d9b54a;
   }
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --paper: #161513;
-  --paper-deep: #22201d;
-  --hairline: #34312c;
-  --ink: #f1ede4;
-  --graphite: #b4ad9f;
-  --rule: #7d776c;
-  --moss: #8cc3b0;
-  --on-moss: #10201b;
-  --moss-soft: #1d2e28;
-  --error: #f59389;
-  --error-soft: #3a1a16;
+  --bg: #0f1626;
+  --paper: #17213a;
+  --paper-deep: #1f2b48;
+  --hairline: #2c3a5c;
+  --ink: #eef0f5;
+  --graphite: #a7afc2;
+  --rule: #7e89a6;
+  --moss: #d9b54a;
+  --on-moss: #1a2238;
+  --moss-hover: #e3c46c;
+  --moss-soft: #353a3e;
+  --action-disabled: #1f2b48;
+  --on-action-disabled: #a7afc2;
+  --error: #ff8a80;
+  --error-soft: #4a1520;
+  --highlighter: #d9b54a;
+  --on-highlighter: #1a2238;
+  --wallet-bg: #ffffff;
+  --wallet-fg: #000000;
+  --focus-ring: #d9b54a;
+  --link: #d9b54a;
 }
 
 @theme inline {
@@ -76,6 +105,7 @@
   --color-white: #ffffff;
   --color-black: #000000;
   --color-transparent: transparent;
+  --color-bg: var(--bg);
   --color-paper: var(--paper);
   --color-paper-deep: var(--paper-deep);
   --color-hairline: var(--hairline);
@@ -84,7 +114,12 @@
   --color-rule: var(--rule);
   --color-moss: var(--moss);
   --color-on-moss: var(--on-moss);
+  --color-moss-hover: var(--moss-hover);
   --color-moss-soft: var(--moss-soft);
+  --color-action-disabled: var(--action-disabled);
+  --color-on-action-disabled: var(--on-action-disabled);
+  --color-wallet-bg: var(--wallet-bg);
+  --color-wallet-fg: var(--wallet-fg);
   --color-error: var(--error);
   --color-error-soft: var(--error-soft);
   --color-highlighter: var(--highlighter);
@@ -113,6 +148,10 @@
   --text-heading-sm: 20px;
   --text-heading-sm--line-height: 28px;
   --text-heading-sm--font-weight: 600;
+  /* Order total: Source Serif 4, 28/34, weight 600 */
+  --text-total: 28px;
+  --text-total--line-height: 34px;
+  --text-total--font-weight: 600;
   --text-note: 17px;
   --text-note--line-height: 28px;
   --text-note--font-weight: 400;
@@ -137,6 +176,7 @@
 
   /* Widths: max-w-card */
   --container-card: 440px;
+  --container-shell: 1120px;
 
   /* Radius: rounded-sm / rounded-md / rounded-lg. No shadows in this system. */
   --radius-sm: 3px;
@@ -146,7 +186,7 @@
 
 @layer base {
   body {
-    @apply bg-paper font-sans text-body text-ink antialiased;
+    @apply bg-bg font-sans text-body text-ink antialiased;
   }
 
   :focus-visible {

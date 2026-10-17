@@ -1,11 +1,3 @@
----
-stale-refs:
-  - source: README.md
-    changed_at: '2026-10-17T16:24:43'
-    sections_changed: []
-    summary: externally modified
----
-
 # Day 2: Checkout / payment form
 
 The Day 2 entry of the [30-Day Daily UI Challenge](../daily-ui-challenge.md): the subscription checkout for Tempest Line, a fictional study app whose learners are mostly under 18 and whose plans are usually paid for by a parent.

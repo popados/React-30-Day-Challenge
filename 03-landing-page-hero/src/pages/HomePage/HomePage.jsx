@@ -1,24 +1,28 @@
-import { CtaBand } from '@/features/landing/CtaBand'
-import { Hero } from '@/features/landing/Hero'
-import { HowItWorks } from '@/features/landing/HowItWorks'
-import { ProofSidebar } from '@/features/landing/ProofSidebar'
-import { SiteHeader } from '@/features/landing/SiteHeader'
+import { HowItWorksSection } from '@/features/tempest/HowItWorksSection'
+import { ProofStrip } from '@/features/tempest/ProofStrip'
+import { SkinBar } from '@/features/tempest/SkinBar'
+import { StartBand } from '@/features/tempest/StartBand'
+import { TempestHeader } from '@/features/tempest/TempestHeader'
+import { TempestHero } from '@/features/tempest/TempestHero'
+import { useSkin } from '@/features/tempest/useSkin'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 
+/** The Tempest Line landing page, following second-tempest-lines.html. */
 export function HomePage() {
-  useDocumentTitle('Meetings in, action items out')
+  useDocumentTitle()
+  const [skin, setSkin] = useSkin()
 
   return (
-    <div className="min-h-screen pb-24">
-      <SiteHeader />
+    <div id="top" data-skin={skin} className="@container min-h-screen bg-bg font-sans text-ink">
+      <SkinBar skin={skin} onSkinChange={setSkin} />
+      <TempestHeader />
       <main>
-        <Hero />
-        <div className="mx-auto grid max-w-page gap-8 px-4 py-16 md:px-6 md:py-20 lg:grid-cols-[1fr_300px]">
-          <HowItWorks />
-          <ProofSidebar />
-        </div>
-        <CtaBand />
+        <TempestHero />
+        <ProofStrip />
+        <HowItWorksSection />
+        <StartBand />
       </main>
+      <div aria-hidden="true" className="h-28" />
     </div>
   )
 }

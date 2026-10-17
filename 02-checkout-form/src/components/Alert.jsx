@@ -12,13 +12,15 @@ const TONES = {
  * @param {'error'|'info'|'success'} [props.tone]
  * @param {React.ReactNode} [props.title]
  * @param {React.ReactNode} [props.action] A follow-up control, e.g. a Button.
+ * Other props (ref, tabIndex, id) go to the root element.
  */
-export function Alert({ tone = 'info', title, action, className = '', children }) {
+export function Alert({ tone = 'info', title, action, className = '', children, ...props }) {
   const t = TONES[tone]
   return (
     <div
       role={t.role}
       className={`flex items-start gap-2 rounded-md px-4 py-3 text-body text-ink ${t.box} ${className}`}
+      {...props}
     >
       <Icon name={t.icon} className={`mt-0.5 ${t.iconColor}`} />
       <div>

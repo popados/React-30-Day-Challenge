@@ -143,3 +143,4 @@ src/
 ```
 
 `docs/design-system/` is excluded from Prettier.
+tem/` is excluded from Prettier.
