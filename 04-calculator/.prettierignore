@@ -1,0 +1,6 @@
+dist
+coverage
+node_modules
+package-lock.json
+# Design system docs are copied verbatim from the source system
+docs/design-system

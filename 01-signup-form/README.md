@@ -14,13 +14,33 @@ From [daily-ui-challenge.md](../daily-ui-challenge.md#1-sign-up-screen), Day 1: 
 
 **Self-review checklist**
 
-- [ ] **Hierarchy:** Can you tell what matters most in 3 seconds?
-- [ ] **Contrast:** Does text meet 4.5:1 against its background?
-- [ ] **Spacing:** Are you using a consistent spacing scale (such as 4 or 8px steps)?
-- [ ] **States:** Did you design empty, loading, and error states, not just the ideal one?
-- [ ] **Real content:** Does it still work with long names, missing photos, or big numbers?
-- [ ] **Touch targets:** Are buttons at least 44×44px on mobile?
-- [ ] **Consistency:** Do repeated elements look and behave the same everywhere?
+- [x] **Hierarchy:**
+  - Can you tell what matters most in 3 seconds?
+    - Yes. "Continue with your institution" is the only filled Moss button, under a serif heading, with Google, Apple and email below it as outlined secondary options (design system §1, `Main.dc.html`). The desktop notebook panel is decorative on `paper-deep`, so it doesn't compete with the card.
+- [x] **Contrast:**
+  - Does text meet 4.5:1 against its background?
+    - Yes. Every text pairing in the design system's contrast table (§2.4) passes, from Graphite on Paper (6.32:1) to Ink on Paper (16.09:1), and borders and the focus ring clear the 3:1 non-text floor. The one failing pair, white on Highlighter (1.59:1), is banned by rule.
+- [ ] **Spacing:**
+  - Are you using a consistent spacing scale (such as 4 or 8px steps)?
+    - Mostly. All spacing sits on a 4px scale from 4 to 64px (§2.6), but desktop card padding conflicts: the spec says 40px (`space.7`) while `tokens.json` uses 32px (`space-8`), so one value needs to win.
+- [x] **States:**
+  - Did you design empty, loading, and error states, not just the ideal one?
+    - Yes. The picker covers empty, no match, searching (skeleton rows), redirecting and search failed, and §5 specifies the no-email, institution-not-connected and cancel errors. The social sign-up state mockups add provider outage, consent cancelled, Apple relay email, no email returned and the "Welcome, Maya." success screen.
+- [ ] **Real content:**
+  - Does it still work with long names, missing photos, or big numbers?
+    - Partly. The Apple relay mockup wraps a long address with `overflow-wrap`, containers grow instead of fixing heights, and monogram tiles mean there are no missing logos (decision D6). No mockup yet tests a long institution name in a 56px picker row, a long name in "Welcome, Maya.", or a large result count.
+- [x] **Touch targets:**
+  - Are buttons at least 44×44px on mobile?
+    - Yes. Buttons and the input are 48px tall, picker rows are 56px, and text links like Terms and Cancel are padded to a 44px hit area (§2.7, §6). Stacked buttons keep 12px between them on mobile.
+- [ ] **Consistency:**
+  - Do repeated elements look and behave the same everywhere?
+    - Mostly. Institution, Google and Apple buttons share one Button component and keep the same size and position on sign-up and sign-in (PRD R1), and every error uses the same Alert with an icon and text. The gap is Microsoft, which the PRD lists but the screen order leaves out.
+- [x] **Keyboard and screen readers:**
+  - Can someone finish sign-up without a mouse or without sight?
+    - Yes. DOM order matches visual and tab order, every control shows a 2px Moss focus ring, the picker supports arrows, Enter and Escape, and results, searching and errors are announced through live regions (§4.4, §5, §6).
+- [ ] **Account safety:**
+  - Does the screen avoid duplicate or insecure accounts (goal 5)?
+    - Mostly. A matching verified email asks for a password or emailed code before linking, and unverified emails are never matched (PRD R3, mockups S07 to S09). The same case on the institution path is still an open question (design system Q2).
 
 ## Brief
 

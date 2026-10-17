@@ -67,12 +67,13 @@
       "last_indexed": "2026-10-12T19:20:02.684460+00:00"
     },
     "README.md": {
-      "content_hash": "sha256:acbfe6c661c5f3b2",
+      "content_hash": "sha256:be457c2b459606bb",
       "headings": [
         "React 30-Day UI",
         "Days",
         "Day 1: Fieldnote sign-up",
-        "Day 2: Checkout / payment form"
+        "Day 2: Checkout / payment form",
+        "Day 3: Landing page hero"
       ],
       "outgoing": [
         {
@@ -94,62 +95,92 @@
           "line": 12
         },
         {
-          "target": "daily-ui-challenge.md",
+          "target": "03-landing-page-hero/",
           "section": null,
           "type": "markdown",
           "line": 13
         },
         {
+          "target": "daily-ui-challenge.md",
+          "section": null,
+          "type": "markdown",
+          "line": 14
+        },
+        {
           "target": "01-signup-form\\README.md",
-          "section": null,
-          "type": "markdown",
-          "line": 35
-        },
-        {
-          "target": "01-signup-form\\docs\\fieldnote-signup-design-system.md",
-          "section": null,
-          "type": "markdown",
-          "line": 36
-        },
-        {
-          "target": "01-signup-form\\docs\\fieldnote-signup-mood-palettes.md",
-          "section": null,
-          "type": "markdown",
-          "line": 37
-        },
-        {
-          "target": "01-signup-form/docs/design-system/",
-          "section": null,
-          "type": "markdown",
-          "line": 38
-        },
-        {
-          "target": "01-signup-form\\docs\\fieldnote-signup-campaign-plan.md",
-          "section": null,
-          "type": "markdown",
-          "line": 39
-        },
-        {
-          "target": "01-signup-form/PRD_Social_Sign-Up_Google_Apple_Microsoft.md",
           "section": null,
           "type": "markdown",
           "line": 40
         },
         {
+          "target": "01-signup-form\\docs\\fieldnote-signup-design-system.md",
+          "section": null,
+          "type": "markdown",
+          "line": 41
+        },
+        {
+          "target": "01-signup-form\\docs\\fieldnote-signup-mood-palettes.md",
+          "section": null,
+          "type": "markdown",
+          "line": 42
+        },
+        {
+          "target": "01-signup-form/docs/design-system/",
+          "section": null,
+          "type": "markdown",
+          "line": 43
+        },
+        {
+          "target": "01-signup-form\\docs\\fieldnote-signup-campaign-plan.md",
+          "section": null,
+          "type": "markdown",
+          "line": 44
+        },
+        {
+          "target": "01-signup-form\\docs\\fieldnote-signup-prd-google-apple-microsoft.md",
+          "section": null,
+          "type": "markdown",
+          "line": 45
+        },
+        {
+          "target": "02-checkout-form\\README.md",
+          "section": null,
+          "type": "markdown",
+          "line": 73
+        },
+        {
           "target": "daily-ui-challenge.md",
           "section": "2-checkout--payment-form",
           "type": "markdown",
-          "line": 58
+          "line": 74
         },
         {
-          "target": "02-checkout-form/",
+          "target": "02-checkout-form\\docs\\design-system\\README.md",
           "section": null,
           "type": "markdown",
-          "line": 60
+          "line": 75
+        },
+        {
+          "target": "03-landing-page-hero\\README.md",
+          "section": null,
+          "type": "markdown",
+          "line": 103
+        },
+        {
+          "target": "daily-ui-challenge.md",
+          "section": "3-landing-page-hero",
+          "type": "markdown",
+          "line": 104
+        },
+        {
+          "target": "03-landing-page-hero\\docs\\design-system\\README.md",
+          "section": null,
+          "type": "markdown",
+          "line": 105
         }
       ],
       "frontmatter_deps": [],
-      "last_indexed": "2026-10-12T19:37:18.935316+00:00"
+      "last_indexed": "2026-10-15T20:55:37.040140+00:00"
     },
     "01-signup-form\\docs\\fieldnote-signup-design-audit.md": {
       "content_hash": "sha256:75855ca03288838f",
@@ -13084,6 +13115,208 @@
       ],
       "frontmatter_deps": [],
       "last_indexed": "2026-10-12T21:33:20.930655+00:00"
+    },
+    "02-checkout-form\\README.md": {
+      "content_hash": "sha256:f31b60270bc2823f",
+      "headings": [
+        "Day 2: Checkout / payment form",
+        "Challenge brief",
+        "Brief",
+        "Overview",
+        "Getting started",
+        "The screen",
+        "Criteria",
+        "Design system",
+        "Components",
+        "Project layout"
+      ],
+      "outgoing": [
+        {
+          "target": "daily-ui-challenge.md",
+          "section": null,
+          "type": "markdown",
+          "line": 3
+        },
+        {
+          "target": "02-checkout-form\\docs\\design-system\\README.md",
+          "section": null,
+          "type": "markdown",
+          "line": 5
+        },
+        {
+          "target": "daily-ui-challenge.md",
+          "section": "2-checkout--payment-form",
+          "type": "markdown",
+          "line": 9
+        },
+        {
+          "target": "daily-ui-challenge.md",
+          "section": "brief-template-fill-this-in-each-day",
+          "type": "markdown",
+          "line": 27
+        },
+        {
+          "target": "README.md",
+          "section": "day-2-checkout--payment-form",
+          "type": "markdown",
+          "line": 38
+        },
+        {
+          "target": "daily-ui-challenge.md",
+          "section": "2-checkout--payment-form",
+          "type": "markdown",
+          "line": 52
+        },
+        {
+          "target": "02-checkout-form\\docs\\design-system\\README.md",
+          "section": null,
+          "type": "markdown",
+          "line": 53
+        },
+        {
+          "target": "02-checkout-form\\docs\\design-system\\README.md",
+          "section": null,
+          "type": "markdown",
+          "line": 104
+        },
+        {
+          "target": "02-checkout-form\\docs\\design-system\\tokens.json",
+          "section": null,
+          "type": "markdown",
+          "line": 106
+        },
+        {
+          "target": "docs/design-system/components/",
+          "section": null,
+          "type": "markdown",
+          "line": 107
+        },
+        {
+          "target": "02-checkout-form\\docs\\design-system\\USING-IN-CODE.md",
+          "section": null,
+          "type": "markdown",
+          "line": 108
+        }
+      ],
+      "frontmatter_deps": [],
+      "last_indexed": "2026-10-12T23:46:42.638668+00:00"
+    },
+    "01-signup-form\\docs\\fieldnote-signup-palette.md": {
+      "content_hash": "sha256:4c4a96156f049121",
+      "headings": [
+        "Fieldnote palette: Field Journal",
+        "Tokens",
+        "Contrast",
+        "Rules",
+        "In code"
+      ],
+      "outgoing": [
+        {
+          "target": "01-signup-form\\src\\index.css",
+          "section": null,
+          "type": "markdown",
+          "line": 3
+        },
+        {
+          "target": "01-signup-form\\docs\\design-system\\tokens.json",
+          "section": null,
+          "type": "markdown",
+          "line": 3
+        },
+        {
+          "target": "01-signup-form\\docs\\fieldnote-signup-mood-palettes.md",
+          "section": null,
+          "type": "markdown",
+          "line": 3
+        }
+      ],
+      "frontmatter_deps": [],
+      "last_indexed": "2026-10-13T03:22:57.271678+00:00"
+    },
+    "03-landing-page-hero\\README.md": {
+      "content_hash": "sha256:cbaf84e55fef50de",
+      "headings": [
+        "Day 3: Landing page hero",
+        "Challenge brief",
+        "Brief",
+        "Overview",
+        "Getting started",
+        "The screen",
+        "Criteria",
+        "Design system",
+        "Components",
+        "Project layout"
+      ],
+      "outgoing": [
+        {
+          "target": "daily-ui-challenge.md",
+          "section": null,
+          "type": "markdown",
+          "line": 3
+        },
+        {
+          "target": "03-landing-page-hero\\docs\\design-system\\README.md",
+          "section": null,
+          "type": "markdown",
+          "line": 5
+        },
+        {
+          "target": "daily-ui-challenge.md",
+          "section": "3-landing-page-hero",
+          "type": "markdown",
+          "line": 9
+        },
+        {
+          "target": "daily-ui-challenge.md",
+          "section": "brief-template-fill-this-in-each-day",
+          "type": "markdown",
+          "line": 34
+        },
+        {
+          "target": "README.md",
+          "section": "day-3-landing-page-hero",
+          "type": "markdown",
+          "line": 45
+        },
+        {
+          "target": "daily-ui-challenge.md",
+          "section": "3-landing-page-hero",
+          "type": "markdown",
+          "line": 59
+        },
+        {
+          "target": "03-landing-page-hero\\docs\\design-system\\README.md",
+          "section": null,
+          "type": "markdown",
+          "line": 60
+        },
+        {
+          "target": "03-landing-page-hero\\docs\\design-system\\README.md",
+          "section": null,
+          "type": "markdown",
+          "line": 108
+        },
+        {
+          "target": "03-landing-page-hero\\docs\\design-system\\tokens.json",
+          "section": null,
+          "type": "markdown",
+          "line": 110
+        },
+        {
+          "target": "docs/design-system/components/",
+          "section": null,
+          "type": "markdown",
+          "line": 111
+        },
+        {
+          "target": "03-landing-page-hero\\docs\\design-system\\USING-IN-CODE.md",
+          "section": null,
+          "type": "markdown",
+          "line": 112
+        }
+      ],
+      "frontmatter_deps": [],
+      "last_indexed": "2026-10-15T20:52:44.268255+00:00"
     }
   }
 }

@@ -9,8 +9,10 @@ Each day starts by filling in the brief template from the challenge doc (product
 | Day | Screen | Folder | Status |
 | --- | --- | --- | --- |
 | 1 | Sign-up screen | [01-signup-form/](01-signup-form/) | In progress |
-| 2 | Checkout / payment form | [02-checkout-form/](02-checkout-form/) | Not started |
-| 3–30 | See [daily-ui-challenge.md](daily-ui-challenge.md) | — | Not started |
+| 2 | Checkout / payment form | [02-checkout-form/](02-checkout-form/) | Scaffolded |
+| 3 | Landing page hero | [03-landing-page-hero/](03-landing-page-hero/) | Built |
+| 4 | Calculator | [04-calculator/](04-calculator/) | Scaffolded |
+| 5–30 | See [daily-ui-challenge.md](daily-ui-challenge.md) | — | Not started |
 
 ## Day 1: Fieldnote sign-up
 
@@ -59,10 +61,79 @@ npm run dev
 
 **Voice.** To be decided.
 
-**Stack.** To be decided. The folder is empty so far.
+**Stack.** React 19 (JavaScript), Vite, React Router, TanStack Query, Zustand, React Hook Form with Zod, Tailwind CSS v4, ESLint with Prettier, and Vitest with Testing Library.
+
+```bash
+cd 02-checkout-form
+npm install
+npm run dev
+```
 
 **Documents**
 
+- [README.md](02-checkout-form/README.md): brief, criteria, setup, scripts and project layout
 - [Day 2 brief](daily-ui-challenge.md#2-checkout--payment-form): needs, key points, improvements and the self-review checklist
+- [Design system reference](02-checkout-form/docs/design-system/README.md): the Fieldnote design-system docs copied in with the scaffold
 
-**Status.** Not started. The [02-checkout-form/](02-checkout-form/) folder exists but is empty.
+**Status.** Scaffolded, with Fieldnote's components and tokens copied in from the Day 1 starter. The checkout screen hasn't been started.
+
+## Day 3: Landing page hero
+
+- **Needs:** product value proposition, audience, main call to action, one supporting visual, any proof (users, ratings)
+- **Key:** a headline that says what it does in under 10 words, one dominant button, strong visual hierarchy
+- **Improve:** a secondary low-commitment action ("see how it works"), a trust strip with logos or stats, and a version tested at phone width
+
+**Company.** Minutely is a fictional meeting assistant. It joins calls from the calendar, catches every commitment, and sends each attendee a short list of what they promised to do, with an owner and a date on each item.
+
+**Screen.** Built from the "Divided hero + bento sidebar (Tempest Line)" mockup in [images/mockups/](03-landing-page-hero/images/mockups/). From top to bottom: a header with the name, nav links and "Sign in"; a split hero with the headline "Meetings in. Action items out." on graph paper, the main "Try it on your next call" button and a "See how it works" link, beside a blueprint panel showing a sample meeting recap; "How it works" in three numbered steps with a demo placeholder, next to a bento sidebar of usage, time saved, rating, integrations, a customer quote and logo slots; and a closing call-to-action band. At phone width (390px) everything stacks into one column. Stats, the quote, trial terms and logos are bracketed placeholders.
+
+**Look.** Tempest Line's dark Blueprint theme: deep navy, graph-paper lines, blueprint-blue panels and one lime highlighter for the headline and main buttons. Headings use Bricolage Grotesque and the interface uses Atkinson Hyperlegible Next. Text meets WCAG AA, controls are at least 44px tall, and every control shows a visible focus ring.
+
+**Voice.** Short and concrete: sentence case, verbs first on buttons, no exclamation marks or emoji.
+
+**Stack.** React 19 (JavaScript), Vite, React Router, TanStack Query, Zustand, React Hook Form with Zod, Tailwind CSS v4, ESLint with Prettier, and Vitest with Testing Library.
+
+```bash
+cd 03-landing-page-hero
+npm install
+npm run dev
+```
+
+**Documents**
+
+- [README.md](03-landing-page-hero/README.md): brief, criteria, setup, scripts and project layout
+- [Day 3 brief](daily-ui-challenge.md#3-landing-page-hero): needs, key points, improvements and the self-review checklist
+- [Mockups](03-landing-page-hero/images/mockups/): the five layout options and the Tempest Line mockup the page is built from
+- [Tempest Line design system](03-landing-page-hero/docs/tempest-line-design-system.md): the tokens, type and component rules the page uses
+
+**Status.** Built and tested at desktop and phone widths. Next: real stats, quote, logos and trial terms in place of the placeholders, and destinations for the "Try it on your next call", "Sign in" and "Pricing" links.
+
+## Day 4: Calculator
+
+- **Needs:** calculator type (basic, tip, mortgage, unit conversion), inputs and outputs, rounding rules
+- **Key:** large touch targets, an always-visible result, a clear distinction between operators and numbers
+- **Improve:** a history tape, keyboard support, a copy-result button, and live recalculation for financial calculators
+
+**Company.** To be decided. Day 4 needs a fictional product with a reason to calculate something, which also decides the calculator type.
+
+**Screen.** To be designed, covering the needs above.
+
+**Look.** To be decided. The text contrast, spacing scale and touch-target rules from the self-review checklist still apply.
+
+**Voice.** To be decided.
+
+**Stack.** React 19 (JavaScript), Vite, React Router, TanStack Query, Zustand, React Hook Form with Zod, Tailwind CSS v4, ESLint with Prettier, and Vitest with Testing Library.
+
+```bash
+cd 04-calculator
+npm install
+npm run dev
+```
+
+**Documents**
+
+- [README.md](04-calculator/README.md): brief, criteria, setup, scripts and project layout
+- [Day 4 brief](daily-ui-challenge.md#4-calculator): needs, key points, improvements and the self-review checklist
+- [Design system reference](04-calculator/docs/design-system/README.md): the Fieldnote design-system docs copied in with the scaffold
+
+**Status.** Scaffolded, with Fieldnote's components and tokens copied in from the Day 1 starter. The calculator hasn't been started.

@@ -1,0 +1,232 @@
+@import 'tailwindcss';
+
+/*
+ * Tempest Line design tokens, Blueprint (dark) theme. Source of truth: the
+ * Tempest Line design system (see docs/tempest-line-design-system.md).
+ * The Minutely landing page is designed dark-only, so Blueprint is the one
+ * theme here. Raw values live in CSS variables; the @theme block below maps
+ * them to Tailwind utilities (bg-surface, text-ink-muted, text-display, ...).
+ */
+:root {
+  color-scheme: dark;
+
+  /* Brand */
+  --blueprint: #1f4fa3;
+  --highlighter: #d7f25c;
+  --on-highlighter: #0f1e3a;
+  --grid: #1e3a68;
+
+  /* Surfaces and text */
+  --bg: #0b1a33;
+  --surface: #102446;
+  --surface-raised: #16305a;
+  --border: #2a4372;
+  --control-border: #7d94c0;
+  --ink: #eaf1ff;
+  --ink-muted: #a3b5d6;
+
+  /* Actions, links, focus */
+  --action: #d7f25c;
+  --action-hover: #e4f78a;
+  --on-action: #0f1e3a;
+  --action-disabled: #2a4372;
+  --on-action-disabled: #a3b5d6;
+  --link: #9cc2ff;
+  --focus-ring: #6fd6d0;
+
+  /* Roles */
+  --learner: #6fd6d0;
+  --learner-soft: #0e3d45;
+  --payer: #cda8f0;
+  --payer-soft: #33215a;
+
+  /* Status */
+  --success: #5fd394;
+  --success-soft: #0f3a27;
+  --danger: #ff8f87;
+  --danger-soft: #4a1520;
+  --caution: #ffd166;
+  --caution-soft: #3d2e08;
+
+  --shadow-raised: 0 1px 2px #00000066, 0 8px 24px #00000066;
+
+  /* Fieldnote names, kept as aliases so the scaffold components still render. */
+  --paper: var(--bg);
+  --paper-deep: var(--surface-raised);
+  --hairline: var(--border);
+  --graphite: var(--ink-muted);
+  --rule: var(--control-border);
+  --moss: var(--action);
+  --on-moss: var(--on-action);
+  --moss-soft: var(--learner-soft);
+  --error: var(--danger);
+  --error-soft: var(--danger-soft);
+}
+
+@theme inline {
+  /* Colour: bg-*, text-*, border-*, outline-*, stroke-* */
+  --color-*: initial;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-transparent: transparent;
+  --color-blueprint: var(--blueprint);
+  --color-highlighter: var(--highlighter);
+  --color-on-highlighter: var(--on-highlighter);
+  --color-grid: var(--grid);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-border: var(--border);
+  --color-control-border: var(--control-border);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-action: var(--action);
+  --color-action-hover: var(--action-hover);
+  --color-on-action: var(--on-action);
+  --color-action-disabled: var(--action-disabled);
+  --color-on-action-disabled: var(--on-action-disabled);
+  --color-link: var(--link);
+  --color-focus-ring: var(--focus-ring);
+  --color-learner: var(--learner);
+  --color-learner-soft: var(--learner-soft);
+  --color-payer: var(--payer);
+  --color-payer-soft: var(--payer-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-caution: var(--caution);
+  --color-caution-soft: var(--caution-soft);
+
+  --color-paper: var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-hairline: var(--hairline);
+  --color-graphite: var(--graphite);
+  --color-rule: var(--rule);
+  --color-moss: var(--moss);
+  --color-on-moss: var(--on-moss);
+  --color-moss-soft: var(--moss-soft);
+  --color-error: var(--error);
+  --color-error-soft: var(--error-soft);
+
+  /* Shadow: shadow-raised */
+  --shadow-*: initial;
+  --shadow-raised: var(--shadow-raised);
+}
+
+@theme {
+  /* Type families: font-display, font-sans, font-mono (font-serif kept for scaffold components) */
+  --font-display: 'Bricolage Grotesque', 'Avenir Next', system-ui, sans-serif;
+  --font-sans:
+    'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Atkinson Hyperlegible Mono', ui-monospace, monospace;
+  --font-serif: var(--font-display);
+
+  /*
+   * Type styles. hero, display-lg and lead are landing-page additions to the
+   * Tempest scale, for the hero headline, big numbers and the intro paragraph.
+   */
+  --text-hero: 72px;
+  --text-hero--line-height: 76px;
+  --text-hero--font-weight: 700;
+  --text-hero--letter-spacing: -0.03em;
+  --text-display-lg: 48px;
+  --text-display-lg--line-height: 54px;
+  --text-display-lg--font-weight: 700;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display: 40px;
+  --text-display--line-height: 44px;
+  --text-display--font-weight: 700;
+  --text-display--letter-spacing: -0.02em;
+  --text-title: 24px;
+  --text-title--line-height: 30px;
+  --text-title--font-weight: 700;
+  --text-title--letter-spacing: -0.01em;
+  --text-price: 28px;
+  --text-price--line-height: 32px;
+  --text-price--font-weight: 700;
+  --text-lead: 19px;
+  --text-lead--line-height: 30px;
+  --text-lead--font-weight: 400;
+  --text-heading: 18px;
+  --text-heading--line-height: 24px;
+  --text-heading--font-weight: 700;
+  --text-body: 16px;
+  --text-body--line-height: 24px;
+  --text-body--font-weight: 400;
+  --text-body-strong: 16px;
+  --text-body-strong--line-height: 24px;
+  --text-body-strong--font-weight: 700;
+  --text-label: 14px;
+  --text-label--line-height: 20px;
+  --text-label--font-weight: 700;
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 20px;
+  --text-body-sm--font-weight: 400;
+  --text-caption: 13px;
+  --text-caption--line-height: 18px;
+  --text-caption--font-weight: 400;
+  --text-heading-lg: 32px;
+  --text-heading-lg--line-height: 40px;
+  --text-heading-lg--font-weight: 700;
+
+  /* Spacing: 4px base, so p-4 = space-4 (16px), gap-6 = space-6 (24px) */
+  --spacing: 4px;
+  --spacing-target: 44px;
+  --spacing-control: 48px;
+
+  /* Widths: max-w-page, max-w-card */
+  --container-page: 1280px;
+  --container-card: 440px;
+
+  /* Radius: rounded-sm / rounded-md / rounded-lg / rounded-pill */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+}
+
+/* Graph-paper rule lines, decorative only. */
+@utility bg-graph-paper {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Blueprint blue with a soft light patch, for the hero panel and CTA band. */
+@utility bg-blueprint-glow {
+  background-color: var(--blueprint);
+  background-image: radial-gradient(
+    ellipse at 70% 15%,
+    color-mix(in srgb, var(--blueprint), white 12%),
+    var(--blueprint) 55%,
+    color-mix(in srgb, var(--blueprint), var(--bg) 25%)
+  );
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-bg font-sans text-body text-ink antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    .animate-spin {
+      animation-duration: 3s;
+    }
+  }
+}

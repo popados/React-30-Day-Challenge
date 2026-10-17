@@ -1,0 +1,163 @@
+# Day 3: Landing page hero
+
+The Day 3 entry of the [30-Day Daily UI Challenge](../daily-ui-challenge.md): the landing page for Minutely, a fictional meeting assistant.
+
+It's built from the "Divided hero + bento sidebar (Tempest Line)" mockup in [images/mockups/](images/mockups/) and styled with Tempest Line's dark Blueprint theme, documented in [docs/tempest-line-design-system.md](docs/tempest-line-design-system.md). The project started from the same scaffold as Day 1.
+
+## Challenge brief
+
+From [daily-ui-challenge.md](../daily-ui-challenge.md#3-landing-page-hero), Day 3: Landing page hero.
+
+- **Needs:** product value proposition, audience, main call to action, one supporting visual, any proof (users, ratings)
+- **Key:** a headline that says what it does in under 10 words, one dominant button, strong visual hierarchy
+- **Improve:** a secondary low-commitment action ("see how it works"), a trust strip with logos or stats, and a version tested at phone width
+
+**Self-review checklist**
+
+- [ ] **Hierarchy:**
+  - Can you tell what matters most in 3 seconds?
+- [ ] **Contrast:**
+  - Does text meet 4.5:1 against its background?
+- [ ] **Spacing:**
+  - Are you using a consistent spacing scale (such as 4 or 8px steps)?
+- [ ] **States:**
+  - Did you design empty, loading, and error states, not just the ideal one?
+- [ ] **Real content:**
+  - Does it still work with long names, missing photos, or big numbers?
+- [ ] **Touch targets:**
+  - Are buttons at least 44×44px on mobile?
+- [ ] **Consistency:**
+  - Do repeated elements look and behave the same everywhere?
+
+## Brief
+
+The [brief template](../daily-ui-challenge.md#brief-template-fill-this-in-each-day) from the challenge doc, filled in for Day 3.
+
+- **Product:** Minutely, a fictional meeting assistant for teams that lose track of who promised what in meetings
+- **User goal:** understand what Minutely does and try it on their next call
+- **Platform:** desktop (1280px wide) and phone (390px), one responsive page
+- **Content:** real headline, intro, steps and a sample recap; stats, the customer quote, trial terms and logos are bracketed placeholders until real ones exist
+- **States:** a static marketing page, so only the default state; the buttons have no destination yet
+- **Constraints:** Tempest Line Blueprint theme, Bricolage Grotesque and Atkinson Hyperlegible Next, WCAG AA, controls at least 44px
+
+## Overview
+
+From the [root README](../README.md#day-3-landing-page-hero).
+
+**Company.** Minutely is a fictional meeting assistant. It joins calls from the calendar, catches every commitment, and sends each attendee a short list of what they promised to do, with an owner and a date on each item.
+
+**Screen.** From top to bottom: a header with the name, nav links and "Sign in"; a split hero with the headline "Meetings in. Action items out." on graph paper, the main "Try it on your next call" button and a "See how it works" link, beside a blueprint panel showing a sample meeting recap; "How it works" in three numbered steps with a demo placeholder, next to a bento sidebar of usage, time saved, rating, integrations, a customer quote and logo slots; and a closing call-to-action band. At phone width (390px) everything stacks into one column.
+
+**Look.** Tempest Line's dark Blueprint theme: deep navy, graph-paper lines, blueprint-blue panels and one lime highlighter for the headline and main buttons. Headings use Bricolage Grotesque and the interface uses Atkinson Hyperlegible Next. Text meets WCAG AA, controls are at least 44px tall, and every control shows a visible focus ring.
+
+**Voice.** Short and concrete: sentence case, verbs first on buttons, no exclamation marks or emoji.
+
+**Stack.** React 19 (JavaScript), Vite, React Router, TanStack Query, Zustand, React Hook Form with Zod, Tailwind CSS v4, ESLint with Prettier, and Vitest with Testing Library.
+
+**Documents**
+
+- [Day 3 brief](../daily-ui-challenge.md#3-landing-page-hero): needs, key points, improvements and the self-review checklist
+- [Mockups](images/mockups/): the five layout options and the Tempest Line mockup the page is built from
+- [Tempest Line design system](docs/tempest-line-design-system.md): the tokens, type and component rules the page uses
+- [Fieldnote design-system reference](docs/design-system/README.md): the Day 1 docs copied in with the scaffold
+
+**Status.** Built and tested at desktop and phone widths. Next: real stats, quote, logos and trial terms in place of the placeholders, and destinations for the "Try it on your next call", "Sign in" and "Pricing" links.
+
+## Getting started
+
+```bash
+npm install
+npm run dev
+```
+
+| Script                 | What it does                   |
+| ---------------------- | ------------------------------ |
+| `npm run dev`          | Start the Vite dev server      |
+| `npm run build`        | Production build into `dist/`  |
+| `npm run preview`      | Serve the production build     |
+| `npm run lint`         | ESLint                         |
+| `npm run format`       | Format with Prettier           |
+| `npm run format:check` | Check formatting with Prettier |
+| `npm test`             | Run Vitest once                |
+| `npm run test:watch`   | Run Vitest in watch mode       |
+
+**Stack:** React 19 (JavaScript), Vite, React Router, TanStack Query, Zustand, React Hook Form + Zod, Tailwind CSS v4, ESLint + Prettier, Vitest + Testing Library.
+
+## The screen
+
+The page is `HomePage` ([src/pages/HomePage/](src/pages/HomePage/HomePage.jsx)), made from the sections in [src/features/landing/](src/features/landing/):
+
+| Section        | File               | What it shows                                                      |
+| -------------- | ------------------ | ------------------------------------------------------------------ |
+| Header         | `SiteHeader.jsx`   | Name, "How it works" and "Pricing" links, "Sign in"                |
+| Hero           | `Hero.jsx`         | Tag, headline, intro, main button, "See how it works", trial terms |
+| Recap card     | `RecapCard.jsx`    | Sample recap: three action items with owner and date               |
+| Contour lines  | `WaveLines.jsx`    | Decorative lines behind the recap card                             |
+| How it works   | `HowItWorks.jsx`   | Three numbered steps and the demo placeholder                      |
+| Proof sidebar  | `ProofSidebar.jsx` | Usage, time saved, rating, integrations, quote and logo slots      |
+| Call to action | `CtaBand.jsx`      | Closing line and the main button again                             |
+
+### Criteria
+
+What the hero covers. **Source** shows where each one comes from in the [challenge brief](#challenge-brief).
+
+| Criterion                   | Source  | Status      |
+| --------------------------- | ------- | ----------- |
+| Value proposition           | Needs   | Done        |
+| Audience                    | Needs   | Done        |
+| Main call to action         | Needs   | Done        |
+| One supporting visual       | Needs   | Done        |
+| Proof (users, ratings)      | Needs   | Placeholder |
+| Headline under 10 words     | Key     | Done        |
+| One dominant button         | Key     | Done        |
+| Strong visual hierarchy     | Key     | Done        |
+| Secondary low-commit action | Improve | Done        |
+| Trust strip (logos, stats)  | Improve | Placeholder |
+| Tested at phone width       | Improve | Done        |
+
+## Design system
+
+Day 3 uses Tempest Line, not Fieldnote. [docs/tempest-line-design-system.md](docs/tempest-line-design-system.md) is a copy of the Tempest Line spec from Day 2, and [src/index.css](src/index.css) holds its Blueprint (dark) tokens as Tailwind classes (`bg-surface`, `text-ink-muted`, `bg-highlighter`, `text-display`, ...). The page is dark only, because the light theme would put a blue main button on the blue panels.
+
+Changes on top of the spec:
+
+- Three extra type sizes for this page: `hero` (72px headline), `display-lg` (48px numbers and closing line) and `lead` (19px intro).
+- Two background utilities: `bg-graph-paper` (grid lines) and `bg-blueprint-glow` (blueprint blue with a soft light patch).
+- The Fieldnote colour names (`moss`, `paper`, `graphite`, ...) are kept as aliases of Tempest colours, so the scaffold components still render.
+
+[docs/design-system/](docs/design-system/README.md) still holds the Fieldnote docs that came with the scaffold.
+
+### Components
+
+These come with the scaffold, from Day 1. The page uses `Button` (restyled for Tempest Line), `Highlight` (now takes a `className`) and `Icon`:
+
+| Component           | Purpose                                               |
+| ------------------- | ----------------------------------------------------- |
+| `Button`            | `primary`, `secondary`, `google` and `apple` variants |
+| `InstitutionPicker` | Institution combobox, specific to Fieldnote sign-up   |
+| `TextField`         | Text entry with helper or error text                  |
+| `Divider`           | The lowercase "or"                                    |
+| `Alert`             | Error, info and success messages                      |
+| `Highlight`         | Highlighter marks in quoted text                      |
+| `Icon`              | Lucide icons by name, coloured with `currentColor`    |
+
+## Project layout
+
+```text
+docs/
+  design-system/               Fieldnote design-system docs (from the scaffold)
+  tempest-line-design-system.md  Tempest Line spec (copied from Day 2)
+images/mockups/                layout mockups, including the one built
+public/                        static files
+src/
+  app/          app shell, providers and router
+  components/   shared UI components and their tests
+  features/     feature modules; landing/ holds the page sections
+  hooks/        shared hooks
+  lib/          API client and query client
+  pages/        route pages
+  stores/       Zustand stores
+  test/         Vitest setup
+```
+
+`docs/design-system/` is excluded from Prettier.

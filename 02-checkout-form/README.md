@@ -1,16 +1,153 @@
-# React + Vite
+# Day 2: Checkout / payment form
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+The Day 2 entry of the [30-Day Daily UI Challenge](../daily-ui-challenge.md): a checkout and payment form. The product it belongs to hasn't been chosen yet.
 
-Currently, two official plugins are available:
+The look hasn't been chosen yet either. The project starts from the same scaffold as Day 1, including a copy of the Fieldnote design-system docs in [docs/design-system/](docs/design-system/README.md).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Challenge brief
 
-## React Compiler
+From [daily-ui-challenge.md](../daily-ui-challenge.md#2-checkout--payment-form), Day 2: Checkout / payment form.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Needs:** order summary, payment methods, shipping vs. billing address, taxes and fees, security cues
+- **Key:** the total is always visible, card fields format automatically, errors appear next to the field
+- **Improve:** a progress indicator, address autocomplete, a "same as shipping" toggle, saved cards, and a clear edit path back to the cart
 
-## Expanding the Oxlint configuration
+**Self-review checklist**
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+- [ ] **Hierarchy:**
+  - Can you tell what matters most in 3 seconds?
+- [ ] **Contrast:**
+  - Does text meet 4.5:1 against its background?
+- [ ] **Spacing:**
+  - Are you using a consistent spacing scale (such as 4 or 8px steps)?
+- [ ] **States:**
+  - Did you design empty, loading, and error states, not just the ideal one?
+- [ ] **Real content:**
+  - Does it still work with long names, missing photos, or big numbers?
+- [ ] **Touch targets:**
+  - Are buttons at least 44×44px on mobile?
+- [ ] **Consistency:**
+  - Do repeated elements look and behave the same everywhere?
+- [ ] **Keyboard and screen readers:**
+  - Can someone finish checkout without a mouse or without sight?
+- [ ] **Account safety:**
+  - Does the screen avoid duplicate or insecure accounts?
+
+## Brief
+
+The [brief template](../daily-ui-challenge.md#brief-template-fill-this-in-each-day) from the challenge doc, to fill in for Day 2.
+
+- **Product:** to be decided; a fictional product that sells something, with an order to pay for
+- **User goal:** pay for the order
+- **Platform:** to be decided
+- **Content:** to be decided; realistic prices, taxes, fees and addresses, no lorem ipsum
+- **States:** default, empty, loading, error and success, still to be designed
+- **Constraints:** to be decided; aim for WCAG AA
+
+## Overview
+
+From the [root README](../README.md#day-2-checkout--payment-form).
+
+**Company.** To be decided. Day 2 needs a fictional product that sells something, with an order to pay for.
+
+**Screen.** To be designed, covering the needs above.
+
+**Look.** To be decided. The text contrast, spacing scale and touch-target rules from the self-review checklist still apply.
+
+**Voice.** To be decided.
+
+**Stack.** React 19 (JavaScript), Vite, React Router, TanStack Query, Zustand, React Hook Form with Zod, Tailwind CSS v4, ESLint with Prettier, and Vitest with Testing Library.
+
+**Documents**
+
+- [Day 2 brief](../daily-ui-challenge.md#2-checkout--payment-form): needs, key points, improvements and the self-review checklist
+- [Design system reference](docs/design-system/README.md): the Fieldnote design-system docs copied in with the scaffold
+
+**Status.** Scaffolded. The project builds on the Day 1 starter, with Fieldnote's components and tokens copied in. The checkout screen hasn't been started.
+
+## Getting started
+
+```bash
+npm install
+npm run dev
+```
+
+| Script                 | What it does                   |
+| ---------------------- | ------------------------------ |
+| `npm run dev`          | Start the Vite dev server      |
+| `npm run build`        | Production build into `dist/`  |
+| `npm run preview`      | Serve the production build     |
+| `npm run lint`         | ESLint                         |
+| `npm run format`       | Format with Prettier           |
+| `npm run format:check` | Check formatting with Prettier |
+| `npm test`             | Run Vitest once                |
+| `npm run test:watch`   | Run Vitest in watch mode       |
+
+**Stack:** React 19 (JavaScript), Vite, React Router, TanStack Query, Zustand, React Hook Form + Zod, Tailwind CSS v4, ESLint + Prettier, Vitest + Testing Library.
+
+## The screen
+
+To be designed. It needs an order summary, payment methods, shipping and billing addresses, taxes and fees, and security cues, with the total always visible.
+
+### Criteria
+
+What the checkout has to cover. **Source** shows where each one comes from in the [challenge brief](#challenge-brief). Guest checkout is an addition.
+
+| Criterion               | Source  | Status      |
+| ----------------------- | ------- | ----------- |
+| Order summary           | Needs   | Not started |
+| Payment methods         | Needs   | Not started |
+| Shipping vs. billing    | Needs   | Not started |
+| Taxes and fees          | Needs   | Not started |
+| Security cues           | Needs   | Not started |
+| Total always visible    | Key     | Not started |
+| Card auto-format        | Key     | Not started |
+| Inline errors           | Key     | Not started |
+| Progress indicator      | Improve | Not started |
+| Address autocomplete    | Improve | Not started |
+| Same-as-shipping toggle | Improve | Not started |
+| Saved cards             | Improve | Not started |
+| Edit path back to cart  | Improve | Not started |
+| Guest checkout          | Added   | Not started |
+
+## Design system
+
+[docs/design-system/](docs/design-system/README.md) holds the Fieldnote design-system docs copied in with the scaffold:
+
+- [`tokens.json`](docs/design-system/tokens.json): colours (light and dark), type, spacing, radii and sizes
+- [`components/`](docs/design-system/components/): one doc per component
+- [`USING-IN-CODE.md`](docs/design-system/USING-IN-CODE.md): how the tokens map to code
+
+Whether Day 2 keeps the Fieldnote look or gets its own is still to be decided.
+
+### Components
+
+These come with the scaffold, from Day 1:
+
+| Component           | Purpose                                               |
+| ------------------- | ----------------------------------------------------- |
+| `Button`            | `primary`, `secondary`, `google` and `apple` variants |
+| `InstitutionPicker` | Institution combobox, specific to Fieldnote sign-up   |
+| `TextField`         | Text entry with helper or error text                  |
+| `Divider`           | The lowercase "or"                                    |
+| `Alert`             | Error, info and success messages                      |
+| `Highlight`         | Highlighter marks in quoted text                      |
+| `Icon`              | Lucide icons by name, coloured with `currentColor`    |
+
+## Project layout
+
+```text
+docs/design-system/            design-system docs (copied from Fieldnote)
+public/                        static files
+src/
+  app/          app shell, providers and router
+  components/   shared UI components and their tests
+  features/     feature modules (API calls, query hooks, views)
+  hooks/        shared hooks
+  lib/          API client and query client
+  pages/        route pages
+  stores/       Zustand stores
+  test/         Vitest setup
+```
+
+`docs/design-system/` is excluded from Prettier.
