@@ -17,7 +17,7 @@ describe('CalculatorPage', () => {
     render(<CalculatorPage />)
     expect(screen.getByRole('tab', { name: /Scientific/ })).toHaveAttribute('aria-selected', 'true')
     expect(readoutValue()).toHaveTextContent('5')
-    expect(readoutValue()).toHaveClass('opacity-55')
+    expect(readoutValue()).toHaveClass('opacity-65')
   })
 
   it('saves the answer to the tape on "=", with the angle unit', async () => {
@@ -25,7 +25,7 @@ describe('CalculatorPage', () => {
     render(<CalculatorPage />)
     await user.click(screen.getByRole('button', { name: '=' }))
 
-    expect(readoutValue()).not.toHaveClass('opacity-55')
+    expect(readoutValue()).not.toHaveClass('opacity-65')
     const tape = screen.getByRole('complementary', { name: 'History tape' })
     expect(within(tape).getByText(SAVED_LINE)).toBeInTheDocument()
   })

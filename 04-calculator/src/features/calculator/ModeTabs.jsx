@@ -48,7 +48,7 @@ export function ModeTabs() {
             {MODE_NAMES[m]}
             <span
               aria-hidden="true"
-              className="font-mono text-[0.72rem] font-medium opacity-70 tablet:hidden touch:hidden"
+              className="font-mono text-[0.72rem] font-medium tablet:hidden touch:hidden"
             >
               {index + 1}
             </span>

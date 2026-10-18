@@ -9,10 +9,11 @@ Each day starts by filling in the brief template from the challenge doc (product
 | Day | Screen | Folder | Status |
 | --- | --- | --- | --- |
 | 1 | Sign-up screen | [01-signup-form/](01-signup-form/) | In progress |
-| 2 | Checkout / payment form | [02-checkout-form/](02-checkout-form/) | Designed |
+| 2 | Checkout / payment form | [02-checkout-form/](02-checkout-form/) | Built |
 | 3 | Landing page hero | [03-landing-page-hero/](03-landing-page-hero/) | Built |
-| 4 | Calculator | [04-calculator/](04-calculator/) | Scaffolded |
-| 5–30 | See [daily-ui-challenge.md](daily-ui-challenge.md) | — | Not started |
+| 4 | Calculator | [04-calculator/](04-calculator/) | Built |
+| 5 | App icon | [05-app-icon/](05-app-icon/) | Scaffolded |
+| 6–30 | See [daily-ui-challenge.md](daily-ui-challenge.md) | — | Not started |
 
 ## Day 1: Fieldnote sign-up
 
@@ -55,9 +56,9 @@ npm run dev
 
 **Company.** Tempest Line is a fictional study app for students, most of them under 18 and on their phones late at night, whose plans are usually paid for by a parent. Today its checkout assumes the learner is the payer: 46% of checkouts started by learners under 18 are abandoned, mostly for lack of a card, and parents surprised by summer charges cause a June spike in refund requests. Day 2 is the redesigned subscription checkout, which separates the learner who uses the plan from the parent who pays.
 
-**Screen.** Three steps, Plan, Payment and Confirm, with a progress indicator and an order summary that names both roles ("Plan for: Maya", "Paid by: Dana R.") and keeps the total visible. Plan offers Plus monthly ($9.99/month), Plus for the school year ($59.99, Aug–May, does not renew) and Family ($17.99/month for up to 4 learners), with an optional Tutor add-on. Payment has wallet buttons above hosted card fields that format themselves; learners under 18 see "Ask a parent to pay" instead, which sends a payment link by text or email. Confirm shows the renewal terms and an unticked consent box directly above Subscribe. On phones it's one column with the summary as a pinned bar; at 1024px and up, a 560px form column with the summary panel beside it.
+**Screen.** Built from the mockup in [checkout-ivy-hall.html](02-checkout-form/checkout-ivy-hall.html). A header with "Back to plans", the name and "Secure checkout"; a three-step progress indicator (Plan, Payment, Confirm); and an order summary that keeps the total visible. Plan offers Plus monthly ($9.99/month), Plus for the school year ($59.99, Aug–May, does not renew) and Family ($17.99/month for up to 4 learners), an optional Tutor add-on and the receipt email. Payment has Apple Pay and Google Pay above card fields that format as you type, a billing country and ZIP that set the sales tax, and a saved card for returning customers. Confirm recaps the order with "Change" links, then the totals, the renewal terms and an unticked consent box directly above Subscribe. A Done screen confirms what was charged and what happens next. The summary sits beside the steps on desktop, above them on tablets, and as a pinned total bar on phones. A prototype-controls panel reaches every state: declined card, payment timeout, tax failure, no plans and an email that already has an account.
 
-**Look.** Tempest Line's Blueprint palette, a worked problem on graph paper: blueprint blue for structure and one lime highlighter stroke for the thing that matters, such as the current step. There are three themes: Graph Paper (light), Blueprint (dark, the learner's late-night default) and High Contrast. Learner things are teal and payer things violet, always with a word or icon too. Headings use Bricolage Grotesque, the interface uses Atkinson Hyperlegible Next, and card numbers use Atkinson Hyperlegible Mono. Every text pair meets WCAG 2.2 AA, and every control shows a visible focus ring.
+**Look.** The Ivy Hall palette from [checkout-form-palette.md](02-checkout-form/docs/markdown/checkout-form-palette.md): oxford navy for actions, academic gold for the current step and the "Does not renew" tag, ivy green for the focus ring, on warm off-white paper, with a dark theme in deep navy and gold. Headings use Source Serif 4 and the interface uses Inter. Every control is at least 44px tall and shows a visible focus ring, and errors always come with an icon and a fix-it sentence.
 
 **Voice.** Plain English in sentence case, speaking to "you", with no hype, exclamation marks or emoji. A price never appears without its interval, every screen says what happens next and whether money moved ("Nothing was charged."), and errors say how to fix them ("ZIP code is 5 digits — you entered 4."). Learner copy is short; parent copy puts cost and terms first.
 
@@ -73,12 +74,13 @@ npm run dev
 
 - [README.md](02-checkout-form/README.md): brief, criteria, setup, scripts and project layout
 - [Day 2 brief](daily-ui-challenge.md#2-checkout--payment-form): needs, key points, improvements and the self-review checklist
+- [Mockup](02-checkout-form/checkout-ivy-hall.html): the Ivy Hall checkout the app follows
 - [Tempest Line design system](02-checkout-form/docs/design-system.md): tokens, type, themes and component rules
 - [PRD](02-checkout-form/docs/markdown/checkout-form-spec-subscription.md): goals, user stories and requirements for learners and payers
 - [Technical brief](02-checkout-form/docs/markdown/checkout-form-technical-brief.md): scope, constraints, edge cases and open questions
 - [Planning docs](02-checkout-form/docs/markdown/): strategy, feature request, palettes and an SEO content brief
 
-**Status.** Designed on paper, not built. The PRD, technical brief, design system and palettes are written, and the project is scaffolded, but the code still uses the Fieldnote tokens and components from Day 1. Next: move `src/index.css` to the Tempest Line tokens, then build the Plan step.
+**Status.** Built and tested from the Ivy Hall mockup: all three steps, the Done screen, the order summary and every error state, against mock plan, tax and payment services. Next: the parts of the PRD the mockup doesn't cover, chiefly the "Ask a parent to pay" link for learners under 18 and the "Plan for" and "Paid by" roles, and official card-network and wallet artwork in place of the text stand-ins.
 
 ## Day 3: Tempest Line landing page
 
@@ -112,19 +114,19 @@ npm run dev
 
 **Status.** Built and tested in all three themes, at desktop and phone widths. The first version, a Minutely landing page, was replaced and is still in the git history. Next: real stats, ratings, quote and logos in place of the placeholders, and destinations for "Log in", "Pricing" and "Start free".
 
-## Day 4: Calculator
+## Day 4: Calculator Workbench
 
 - **Needs:** calculator type (basic, tip, mortgage, unit conversion), inputs and outputs, rounding rules
 - **Key:** large touch targets, an always-visible result, a clear distinction between operators and numbers
 - **Improve:** a history tape, keyboard support, a copy-result button, and live recalculation for financial calculators
 
-**Company.** To be decided. Day 4 needs a fictional product with a reason to calculate something, which also decides the calculator type.
+**Company.** Calculator Workbench is a fictional all-in-one calculator: scientific, unit and currency conversion, percentage and tax, and date maths in one place, for anyone who would otherwise switch between four apps.
 
-**Screen.** To be designed, covering the needs above.
+**Screen.** Built from the mockup in [calc-mockup.html](04-calculator/calc-mockup.html). Four mode tabs (Scientific, Convert, Percent, Dates) above one working panel: a pinned readout with the expression, the result, any error, Copy and Save to tape, over the active mode's controls. Scientific has a function pad and a number pad with colour-coded keys and a two-row "=". Convert covers 11 categories, typed in either direction, with swap, precision and an "In every unit" grid. Percent and Dates are short forms that recalculate as you type. Beside the panel, a history tape keeps the last 60 results; tapping one restores its inputs. On desktop and tablet the tape is a sidebar; on phones the tabs become a bottom bar, the tape opens as a bottom sheet and the less-used functions fold behind "More"; in phone landscape the readout sits beside both keypads.
 
-**Look.** To be decided. The text contrast, spacing scale and touch-target rules from the self-review checklist still apply.
+**Look.** A cool grey workbench in light and dark: white number keys, blue operators, grey functions, red clear and delete, and an orange equals key, with one marker colour per mode. Headings use Red Hat Display, the interface uses Red Hat Text, and numbers and keys use Red Hat Mono. Keys are at least 44px tall, and every control shows a visible focus ring.
 
-**Voice.** To be decided.
+**Voice.** Short and plain. Errors say what's wrong in everyday words ("Can't divide by 0", "ln needs a number above 0", "Enter of value"), and the last good result stays on screen, faded, while you fix it.
 
 **Stack.** React 19 (JavaScript), Vite, React Router, TanStack Query, Zustand, React Hook Form with Zod, Tailwind CSS v4, ESLint with Prettier, and Vitest with Testing Library.
 
@@ -138,10 +140,38 @@ npm run dev
 
 - [README.md](04-calculator/README.md): brief, criteria, setup, scripts and project layout
 - [Day 4 brief](daily-ui-challenge.md#4-calculator): needs, key points, improvements and the self-review checklist
-- [Design system reference](04-calculator/docs/design-system/README.md): the Fieldnote design-system docs copied in with the scaffold
+- [Mockup](04-calculator/calc-mockup.html): the Calculator Workbench the app follows
+- [Small details](04-calculator/docs/calculator-small-details.md): concrete behaviours for each mode, which the tests check
+- [Screen mockups](04-calculator/images/mockups/): desktop, tablet, phone and phone-landscape layouts
 
-**Status.** Scaffolded, with Fieldnote's components and tokens copied in from the Day 1 starter. The calculator hasn't been started.
- calculator hasn't been started.
-er. The calculator hasn't been started.
- calculator hasn't been started.
- calculator hasn't been started.
+**Status.** Built and tested from the mockup: all four modes, the tape, copy, keyboard shortcuts and the four layouts. The mode, angle unit, last answer and tape are remembered per browser. Currency rates are fixed sample values, not live data. Next: the calculator types listed in the small-details doc but not in the workbench yet (basic, tip, mortgage, BMI, programmer and fraction).
+
+## Day 5: App icon
+
+- **Needs:** app name and purpose, brand colors, target platforms (iOS, Android, web favicon)
+- **Key:** recognizable at 16px and at 1024px, one simple idea, no small text
+- **Improve:** a test grid of the icon next to real app icons, dark and tinted versions, and a matching favicon set
+
+**Company.** To be decided. Day 5 needs a fictional app whose purpose fits one simple idea.
+
+**Screen.** To be designed, covering the needs above.
+
+**Look.** To be decided. The text contrast, spacing scale and touch-target rules from the self-review checklist still apply.
+
+**Voice.** To be decided.
+
+**Stack.** React 19 (JavaScript), Vite, React Router, TanStack Query, Zustand, React Hook Form with Zod, Tailwind CSS v4, ESLint with Prettier, and Vitest with Testing Library.
+
+```bash
+cd 05-app-icon
+npm install
+npm run dev
+```
+
+**Documents**
+
+- [README.md](05-app-icon/README.md): brief, criteria, setup, scripts and project layout
+- [Day 5 brief](daily-ui-challenge.md#5-app-icon): needs, key points, improvements and the self-review checklist
+- [Design system reference](05-app-icon/docs/design-system/README.md): the Fieldnote design-system docs copied in with the scaffold
+
+**Status.** Scaffolded, with Fieldnote's components and tokens copied in from the Day 1 starter. The icon hasn't been started.

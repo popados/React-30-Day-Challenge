@@ -36,14 +36,18 @@ export function Readout({ onCopy, onOpenTape, tapeButtonRef }) {
         className="mt-1.5 min-h-[1.5em] font-mono text-base text-muted [overflow-wrap:anywhere]"
       >
         {readout.line}
-        {readout.ghost ? <span className="opacity-40">{readout.ghost}</span> : null}
+        {readout.ghost ? (
+          <span title="Closed for you" className="underline decoration-dotted underline-offset-4">
+            {readout.ghost}
+          </span>
+        ) : null}
       </div>
       {/* Long results shrink to fit the readout width instead of wrapping. */}
       <output
         aria-live="polite"
         style={{ '--len': Math.max(readout.value.length, 6) }}
         className={`mt-1 block text-right font-mono text-[clamp(1.3rem,calc(100cqi/(var(--len,6)*0.62)),3rem)] leading-[1.1] font-semibold tabular-nums transition-opacity duration-150 [overflow-wrap:anywhere] ${
-          readout.preview ? 'opacity-55' : ''
+          readout.preview ? 'opacity-65' : ''
         }`}
       >
         {readout.value}

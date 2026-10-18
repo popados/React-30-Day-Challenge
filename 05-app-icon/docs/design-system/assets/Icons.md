@@ -1,0 +1,1 @@
+Lucide v1.48.0 line icons (lucide.dev, ISC License), copied unchanged except for the stroke: these files are inked in `ink` (#1c1b19) so they show as images. In code, use the `Icon` component, which draws the same paths in `currentColor`.

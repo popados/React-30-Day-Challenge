@@ -18,42 +18,48 @@ Checked against `prototype/checkout.html` on October 17, 2026. Ticked items pass
 
 - [x] **Hierarchy:**
   - Can you tell what matters most in 3 seconds?
-  - **Yes.** Each step has one large heading and one primary button, and the total stays visible (sticky on desktop, pinned bar on phones).
+    - **Yes.** Each step has one large heading and one primary button, and the total stays visible (sticky on desktop, pinned bar on phones).
 - [x] **Contrast:**
   - Does text meet 4.5:1 against its background?
-  - **Yes.** The lowest text pair is 5.64:1, in both light and dark. The faded disabled Subscribe button is about 2.6:1, which WCAG exempts.
+    - **Yes.** The lowest text pair is 5.64:1, in both light and dark. The faded disabled Subscribe button is about 2.6:1, which WCAG exempts.
 - [ ] **Spacing:**
   - Are you using a consistent spacing scale (such as 4 or 8px steps)?
-  - **Mostly.** 101 of 128 spacing values are 4px steps. 6px (7 times) and 20px (6 times) are off the token scale.
+    - **Mostly.** 101 of 128 spacing values are 4px steps. 6px (7 times) and 20px (6 times) are off the token scale.
 - [x] **States:**
   - Did you design empty, loading, and error states, not just the ideal one?
-  - **Yes.** Loading, empty, field errors, error summary, declined card, tax failure, timeout and success all exist. Gaps: "no plans" and "couldn't load plans" share one message, and wallets have no failure state.
+    - **Yes.** Loading, empty, field errors, error summary, declined card, tax failure, timeout and success all exist. Gaps: "no plans" and "couldn't load plans" share one message, and wallets have no failure state.
 - [ ] **Real content:**
   - Does it still work with long names, missing photos, or big numbers?
-  - **Partly.** Long names and emails wrap at 320px, and there are no photos. Big totals show as $15506.79 with no thousands separator.
+    - **Partly.** Long names and emails wrap at 320px, and there are no photos. Big totals show as $15506.79 with no thousands separator.
 - [ ] **Touch targets:**
   - Are buttons at least 44×44px on mobile?
-  - **Partly.** "Save this card" (24px tall), "Not you?" (20px) and the inline "Sign in" link are under 44px. Everything else passes.
+    - **Partly.** "Save this card" (24px tall), "Not you?" (20px) and the inline "Sign in" link are under 44px. Everything else passes.
 - [ ] **Consistency:**
   - Do repeated elements look and behave the same everywhere?
-  - **Partly.** It's consistent within itself, but it uses Fieldnote rather than the Tempest Line tokens now in `docs/design-system.md`. The summary also uses "/mo" vs "/month", and untaxed orders get two different labels.
+    - **Partly.** It's consistent within itself, but it uses Fieldnote rather than the Tempest Line tokens now in `docs/design-system.md`. The summary also uses "/mo" vs "/month", and untaxed orders get two different labels.
 - [ ] **Keyboard and screen readers:**
   - Can someone finish checkout without a mouse or without sight?
   - **Mostly.** A keyboard-only run reaches success. Focus is lost after Subscribe, choosing a wallet, and a few redraws. The Confirm recap list markup is invalid, and there is no `<h1>`.
 - [ ] **Account safety:**
   - Does the screen avoid duplicate or insecure accounts?
-  - **Partly.** An existing email is blocked with "Sign in to continue". A mistyped email isn't caught, and a guest has no stated way to manage or cancel later.
+    - **Partly.** An existing email is blocked with "Sign in to continue". A mistyped email isn't caught, and a guest has no stated way to manage or cancel later.
 
 ## Brief
 
 The [brief template](../daily-ui-challenge.md#brief-template-fill-this-in-each-day) from the challenge doc, filled in for Day 2 from the [PRD](docs/markdown/checkout-form-spec-subscription.md), [technical brief](docs/markdown/checkout-form-technical-brief.md) and [design system](docs/design-system.md).
 
-- **Product:** Tempest Line, a fictional study app for students, most of them under 18 and on their phones late at night, whose plans are usually paid for by a parent. Day 2 is its subscription checkout.
-- **User goal:** a learner gets access without a card by sending a parent a link to pay; the parent pays in under two minutes and is never surprised by a charge.
-- **Platform:** web, phone and desktop. On phones it's one column with the order summary as a pinned bar; at 1024px and up, a 560px form column with the summary panel beside it.
-- **Content:** real plans and prices, each with its interval: Plus at $9.99/month, Plus for the school year at $59.99 (Aug–May, does not renew), Family at $17.99/month for up to 4 learners, and the Tutor add-on (4 live 30-minute sessions per month). The learner and payer are named ("Plan for: Maya", "Paid by: Dana R."), and tax is shown before Confirm. No lorem ipsum.
-- **States:** default; empty (tax not known yet: "Tax calculated at next step"); loading (Pay pressed, spinner, button keeps its width); error (fix-it message next to the field, plus an error summary on submit); success ("Plus is active"); and the link states "Request sent", "Link expired" and "Already paid".
-- **Constraints:** Tempest Line Blueprint palette (Graph Paper light, Blueprint dark and High Contrast themes), Bricolage Grotesque and Atkinson Hyperlegible Next, WCAG 2.2 AA. No card fields for learners under 18, parental consent for under-13s (COPPA), renewal terms shown next to Subscribe with an unticked consent box, and card data only in the processor's hosted fields (PCI DSS). US only, in USD.
+- **Product:**
+  - Tempest Line, a fictional study app for students, most of them under 18 and on their phones late at night, whose plans are usually paid for by a parent. Day 2 is its subscription checkout.
+- **User goal:** 
+  - a learner gets access without a card by sending a parent a link to pay; the parent pays in under two minutes and is never surprised by a charge.
+- **Platform:** 
+  - web, phone and desktop. On phones it's one column with the order summary as a pinned bar; at 1024px and up, a 560px form column with the summary panel beside it.
+- **Content:** 
+  - real plans and prices, each with its interval: Plus at $9.99/month, Plus for the school year at $59.99 (Aug–May, does not renew), Family at $17.99/month for up to 4 learners, and the Tutor add-on (4 live 30-minute sessions per month). The learner and payer are named ("Plan for: Maya", "Paid by: Dana R."), and tax is shown before Confirm. No lorem ipsum.
+- **States:** 
+  - default; empty (tax not known yet: "Tax calculated at next step"); loading (Pay pressed, spinner, button keeps its width); error (fix-it message next to the field, plus an error summary on submit); success ("Plus is active"); and the link states "Request sent", "Link expired" and "Already paid".
+- **Constraints:** 
+  - Tempest Line Blueprint palette (Graph Paper light, Blueprint dark and High Contrast themes), Bricolage Grotesque and Atkinson Hyperlegible Next, WCAG 2.2 AA. No card fields for learners under 18, parental consent for under-13s (COPPA), renewal terms shown next to Subscribe with an unticked consent box, and card data only in the processor's hosted fields (PCI DSS). US only, in USD.
 
 ## Overview
 
